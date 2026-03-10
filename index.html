@@ -75,6 +75,7 @@
                 <input type="password" id="login-pass" class="input">
             </div>
             <button class="btn btn-primary w-full" onclick="handleLogin()">Entrar</button>
+            <button class="btn btn-secondary w-full" style="margin-top: 8px; border-color: var(--danger); color: var(--danger);" onclick="showView('view-superadmin'); fetchGlobalStores();">Debug: Entrar como Super Admin</button>
             <p style="margin-top: 16px; text-align: center; color: var(--text-sec); font-size: 14px;">
                 ¿No tienes tienda? <a style="color: var(--accent); cursor: pointer;" onclick="switchAuth('view-register')">Registrate</a>
             </p>
@@ -119,6 +120,7 @@
             <button class="btn btn-primary w-full" style="margin-top: 24px;" onclick="handleRegister()">
                 Crear mi Tienda
             </button>
+            <button class="btn btn-secondary w-full" style="margin-top: 8px; border-color: var(--danger); color: var(--danger);" onclick="showView('view-superadmin'); fetchGlobalStores();">Debug: Saltar Registro (Ir al Panel Maestro)</button>
         </div>
     </div>
 
