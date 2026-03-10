@@ -1,5 +1,13 @@
 // ======================= AUTH (SUPABASE) =======================
 async function checkSession() {
+    if (typeof DEV_MODE !== 'undefined' && DEV_MODE) {
+        console.warn("MODO DESARROLLADOR ACTIVO: Saltando autenticación real.");
+        appState.session = { user: { id: 'mock-user-id', email: SUPER_ADMIN_EMAIL } };
+        showView('view-superadmin');
+        fetchGlobalStores();
+        return;
+    }
+
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
         appState.session = session;

@@ -5,4 +5,7 @@ var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // Configuración de Super Admin (REEMPLAZA CON TU EMAIL)
 var SUPER_ADMIN_EMAIL = 'enich@ejemplo.com'; 
 
+// MODO DESARROLLADOR: Poner en true para saltar el login/registro si Supabase te bloquea
+var DEV_MODE = true; 
+
 console.log("Supabase initialized:", supabase);
