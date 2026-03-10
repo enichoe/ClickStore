@@ -111,7 +111,11 @@ async function handleRegister() {
         if (typeof initializeAdminUI === 'function') initializeAdminUI();
         showView('view-admin', 'dash');
     } catch (err) {
-        alert("Error en el registro: " + err.message);
+        if (err.message.includes("rate limit")) {
+            alert("Has intentado registrarte demasiadas veces. Espera unos minutos o desactiva el límite en Supabase (Auth > Settings).");
+        } else {
+            alert("Error en el registro: " + err.message);
+        }
     } finally {
         setLoading(btn, false);
     }
