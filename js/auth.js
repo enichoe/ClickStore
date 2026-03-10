@@ -39,9 +39,14 @@ async function loadStoreData(userId) {
 async function handleLogin() {
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-pass').value;
-    const btn = event.target;
+    const btn = window.event ? window.event.target : null;
 
-    setLoading(btn, true);
+    if (!supabase || !supabase.auth) {
+        console.error("Supabase client not found:", supabase);
+        return alert("Error: El cliente de Supabase no está listo.");
+    }
+
+    if (btn) setLoading(btn, true);
     try {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
         if (error) throw error;
@@ -61,11 +66,16 @@ async function handleRegister() {
     const ownerName = document.getElementById('reg-owner').value;
     const email = document.getElementById('reg-email').value;
     const pass = document.getElementById('reg-pass').value;
-    const btn = event.target;
+    const btn = window.event ? window.event.target : null;
 
     if (!storeName || !email || !pass) return alert("Completa todos los campos");
+    
+    if (!supabase || !supabase.auth) {
+        console.error("Supabase client not found at register:", supabase);
+        return alert("Error: El cliente de Supabase no está listo.");
+    }
 
-    setLoading(btn, true);
+    if (btn) setLoading(btn, true);
     try {
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email, password: pass,
@@ -98,7 +108,9 @@ async function handleRegister() {
 }
 
 async function logout() {
-    await supabase.auth.signOut();
+    if (supabase && supabase.auth) {
+        await supabase.auth.signOut();
+    }
     appState = { session: null, tenant: null, products: [], orders: [], cart: [] };
     localStorage.clear();
     showView('view-landing');
