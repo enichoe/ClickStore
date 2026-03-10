@@ -3,11 +3,15 @@ async function checkSession() {
     const { data: { session } } = await supabase.auth.getSession();
     if (session) {
         appState.session = session;
-        await loadStoreData(session.user.id);
+        console.log("Logged in as:", session.user.email);
         
-        const lastView = localStorage.getItem('clickSaaS_lastView') || 'view-admin';
-        const lastSection = localStorage.getItem('clickSaaS_lastSection') || 'dash';
-        showView(lastView, lastSection);
+        if (session.user.email === SUPER_ADMIN_EMAIL) {
+            showView('view-superadmin');
+            fetchGlobalStores();
+            return;
+        }
+
+        await loadStoreData(session.user.id);
     } else {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('store')) {
@@ -52,8 +56,14 @@ async function handleLogin() {
         if (error) throw error;
         
         appState.session = data.session;
+        
+        if (data.user.email === SUPER_ADMIN_EMAIL) {
+            showView('view-superadmin');
+            fetchGlobalStores();
+            return;
+        }
+
         await loadStoreData(data.user.id);
-        showView('view-admin', 'dash');
     } catch (err) {
         alert("Error al iniciar sesión: " + err.message);
     } finally {

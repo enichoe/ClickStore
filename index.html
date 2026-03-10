@@ -302,6 +302,41 @@
         </div>
     </div>
 
+    <!-- VISTA 5: SUPER ADMINISTRADOR (Platform Master) -->
+    <div id="view-superadmin" style="display: none;">
+        <nav class="nav-saas" style="background: var(--bg);">
+            <div class="nav-saas-inner">
+                <h2 style="color: var(--accent);">Super Admin Panel</h2>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="logout()">Cerrar Sesión</button>
+                </div>
+            </div>
+        </nav>
+
+        <main style="padding: 120px 24px 60px; max-width: 1200px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 40px;">
+                <div class="card">
+                    <p style="color: var(--text-sec);">Tiendas Totales</p>
+                    <p style="font-size: 32px; font-weight: 700;" id="super-total-stores">0</p>
+                </div>
+                <div class="card">
+                    <p style="color: var(--text-sec);">Pedidos Totales (Red)</p>
+                    <p style="font-size: 32px; font-weight: 700; color: var(--accent);" id="super-total-orders">0</p>
+                </div>
+            </div>
+
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Gestión de Tiendas</h3>
+                    <button class="btn btn-primary btn-sm" onclick="fetchGlobalStores()">Refrescar</button>
+                </div>
+                <div id="super-stores-list">
+                    <!-- Lista de tiendas -->
+                </div>
+            </div>
+        </main>
+    </div>
+
     <!-- SCRIPTS MODULARES -->
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>

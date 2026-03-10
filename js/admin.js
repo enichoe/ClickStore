@@ -152,3 +152,45 @@ function openModal(id) {
 function closeModal(id) {
     document.getElementById(id).classList.remove('active');
 }
+
+// ======================= SUPER ADMIN ACTIONS =======================
+async function fetchGlobalStores() {
+    try {
+        const { data: stores, error: sErr } = await supabase.from('stores').select('*');
+        if (sErr) throw sErr;
+
+        const { data: totalOrders, error: oErr } = await supabase.from('orders').select('id', { count: 'exact' });
+        
+        document.getElementById('super-total-stores').innerText = stores.length;
+        document.getElementById('super-total-orders').innerText = totalOrders ? totalOrders.length : 0;
+
+        const list = document.getElementById('super-stores-list');
+        list.innerHTML = stores.map(s => `
+            <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <p style="font-weight: 600;">${s.name}</p>
+                    <p style="font-size: 12px; color: var(--text-sec);">${s.type} | ID: ${s.id}</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary btn-sm" onclick="window.open('?store=${s.id}', '_blank')">Ver</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteStoreByAdmin('${s.id}')">Borrar</button>
+                </div>
+            </div>
+        `).join('');
+
+    } catch (err) {
+        console.error("SuperAdmin Error:", err);
+    }
+}
+
+async function deleteStoreByAdmin(id) {
+    if (!confirm("¿ESTÁS SEGURO? Esto borrará la tienda y TODOS sus productos y pedidos permanentemente.")) return;
+    try {
+        const { error } = await supabase.from('stores').delete().eq('id', id);
+        if (error) throw error;
+        alert("Tienda eliminada");
+        fetchGlobalStores();
+    } catch (err) {
+        alert("Error: " + err.message);
+    }
+}

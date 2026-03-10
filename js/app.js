@@ -9,7 +9,7 @@ let appState = {
 
 // ======================= VIEW CONTROLLER =======================
 async function showView(viewId, sectionId = null) {
-    document.querySelectorAll('#view-landing, #view-admin, #view-store, .modal, #view-error').forEach(el => {
+    document.querySelectorAll('#view-landing, #view-admin, #view-store, #view-superadmin, .modal, #view-error').forEach(el => {
         if (!el.classList.contains('modal')) el.style.display = 'none';
         else el.classList.remove('active');
     });
