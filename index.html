@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClickSaaS - Plataforma de Tiendas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Librería QR Code para SaaS -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 1: LANDING PAGE (SaaS Public Web) -->
+    <!-- ======================================================= -->
+    <div id="view-landing">
+        <nav class="nav-saas">
+            <div class="nav-saas-inner">
+                <div style="font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 8px;">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    ClickSaaS
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="showView('view-login')">Iniciar Sesión</button>
+                    <button class="btn btn-primary" onclick="showView('view-register')">Crear Tienda Gratis</button>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <h1>Tu Tienda Virtual en <br/><span class="hero-accent">Segundos</span></h1>
+            <p style="max-width: 600px; color: var(--text-sec); font-size: 18px; margin-bottom: 32px;">
+                Plataforma profesional para crear tu tienda online, recibir pedidos y gestionar tu negocio. Sin comisiones ocultas.
+            </p>
+            <button class="btn btn-primary" style="padding: 16px 32px; font-size: 16px;" onclick="showView('view-register')">
+                Comenzar Ahora
+            </button>
+            
+            <div style="margin-top: 64px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; width: 100%; max-width: 1000px;">
+                <div class="card" style="text-align: left;">
+                    <h3 style="color: var(--accent); margin-bottom: 8px;">Catalogo Digital</h3>
+                    <p style="color: var(--text-sec); font-size: 14px;">Sube tus productos con fotos y precios.</p>
+                </div>
+                <div class="card" style="text-align: left;">
+                    <h3 style="color: var(--accent); margin-bottom: 8px;">Pedidos en Vivo</h3>
+                    <p style="color: var(--text-sec); font-size: 14px;">Recibe notificaciones de nuevos pedidos.</p>
+                </div>
+                <div class="card" style="text-align: left;">
+                    <h3 style="color: var(--accent); margin-bottom: 8px;">Tu Marca</h3>
+                    <p style="color: var(--text-sec); font-size: 14px;">Personaliza con tu logo y colores.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 2: AUTH (Login / Registro) -->
+    <!-- ======================================================= -->
+    
+    <!-- Login -->
+    <div id="view-login" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 24px;">Iniciar Sesión</h2>
+            <div class="input-group" style="margin-bottom: 16px;">
+                <label>Email</label>
+                <input type="email" id="login-email" class="input" placeholder="tu@email.com">
+            </div>
+            <div class="input-group" style="margin-bottom: 24px;">
+                <label>Contraseña</label>
+                <input type="password" id="login-pass" class="input">
+            </div>
+            <button class="btn btn-primary w-full" onclick="handleLogin()">Entrar</button>
+            <p style="margin-top: 16px; text-align: center; color: var(--text-sec); font-size: 14px;">
+                ¿No tienes tienda? <a style="color: var(--accent); cursor: pointer;" onclick="switchAuth('view-register')">Registrate</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Registro (Onboarding) -->
+    <div id="view-register" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 style="margin-bottom: 8px;">Crea tu Tienda</h2>
+            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 14px;">Configura tu negocio en minutos.</p>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div class="input-group">
+                    <label>Nombre de tu Tienda</label>
+                    <input type="text" id="reg-store-name" class="input" placeholder="Ej: Pizza Don Luis">
+                </div>
+                <div class="input-group">
+                    <label>Tipo de Negocio</label>
+                    <select class="input">
+                        <option>Tienda de Ropa</option>
+                        <option>Restaurant</option>
+                        <option>Tecnología</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-4">
+                <div class="input-group">
+                    <label>Tu Nombre</label>
+                    <input type="text" id="reg-owner" class="input" placeholder="Tu nombre">
+                </div>
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" class="input" placeholder="tu@email.com">
+                </div>
+            </div>
+            <div class="input-group" style="margin-top: 16px;">
+                <label>Contraseña</label>
+                <input type="password" id="reg-pass" class="input">
+            </div>
+            
+            <button class="btn btn-primary w-full" style="margin-top: 24px;" onclick="handleRegister()">
+                Crear mi Tienda
+            </button>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 3: PANEL DE ADMINISTRACION (El SaaS Backend) -->
+    <!-- ======================================================= -->
+    <div id="view-admin" style="display: none;">
+        <aside class="sidebar" id="admin-sidebar">
+            <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+                <h2 id="admin-store-name" style="font-size: 18px; color: var(--accent);">Mi Tienda</h2>
+                <span style="font-size: 12px; color: var(--text-sec);">Panel de Control</span>
+            </div>
+            
+            <nav>
+                <div class="nav-item active" onclick="showAdminSection('dash')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    Dashboard
+                </div>
+                <div class="nav-item" onclick="showAdminSection('products')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    Productos
+                </div>
+                <div class="nav-item" onclick="showAdminSection('orders')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    Pedidos
+                    <span id="order-badge" class="badge" style="background: var(--danger); color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; display: none;">0</span>
+                </div>
+                <div class="nav-item" onclick="showAdminSection('settings')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+                    Configuración
+                </div>
+            </nav>
+
+            <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);">
+                <button class="btn btn-secondary w-full" onclick="openStorefront()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    Ver mi Tienda
+                </button>
+                <button class="btn btn-ghost w-full" style="margin-top: 8px; color: var(--text-sec);" onclick="logout()">Cerrar Sesion</button>
+            </div>
+        </aside>
+
+        <main class="main-admin">
+            <!-- Dashboard Section -->
+            <div id="section-dash" class="fade-in">
+                <h2 style="margin-bottom: 24px;">Resumen</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div class="card">
+                        <p style="color: var(--text-sec); font-size: 14px;">Ventas Hoy</p>
+                        <p style="font-size: 24px; font-weight: 700; color: var(--success);" id="stat-sales">$0</p>
+                    </div>
+                    <div class="card">
+                        <p style="color: var(--text-sec); font-size: 14px;">Pedidos Nuevos</p>
+                        <p style="font-size: 24px; font-weight: 700;" id="stat-orders">0</p>
+                    </div>
+                    <div class="card">
+                        <p style="color: var(--text-sec); font-size: 14px;">Visitas</p>
+                        <p style="font-size: 24px; font-weight: 700;">128</p>
+                    </div>
+                </div>
+                <div class="card" style="margin-top: 24px;">
+                    <h3>Pedidos Recientes</h3>
+                    <div id="dash-recent-orders" style="margin-top: 16px;"></div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div id="section-products" class="fade-in" style="display: none;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 24px;">
+                    <h2>Productos</h2>
+                    <button class="btn btn-primary" onclick="openModal('modal-product')">Agregar Producto</button>
+                </div>
+                <div id="grid-products" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;"></div>
+            </div>
+
+            <!-- Orders Section -->
+            <div id="section-orders" class="fade-in" style="display: none;">
+                <h2 style="margin-bottom: 24px;">Pedidos</h2>
+                <div id="list-orders" class="card" style="padding: 0; overflow: hidden;"></div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="section-settings" class="fade-in" style="display: none;">
+                <h2 style="margin-bottom: 24px;">Configuración de Tienda</h2>
+                <div class="card" style="max-width: 600px;">
+                    <div class="input-group">
+                        <label>Nombre de la Tienda</label>
+                        <input type="text" id="setting-name" class="input">
+                    </div>
+                    <div class="input-group" style="margin-top: 16px;">
+                        <label>Moneda</label>
+                        <select class="input"><option>USD ($)</option><option>MXN ($)</option><option>EUR (€)</option></select>
+                    </div>
+                    <div style="margin-top: 24px;">
+                        <h4>Tu Enlace de Tienda</h4>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <input class="input" style="font-family: monospace; color: var(--accent);" id="store-link-input" readonly>
+                            <button class="btn btn-secondary" onclick="copyLink()">Copiar</button>
+                        </div>
+                        <div id="qr-container" style="margin-top: 24px; padding: 16px; background: white; width: fit-content; border-radius: 8px;">
+                            <!-- QR se genera aquí -->
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-full mt-6" onclick="updateStoreSettings()">Guardar Cambios</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- VISTA 4: TIENDA PUBLICA (Storefront) -->
+    <!-- ======================================================= -->
+    <div id="view-store" style="display: none;">
+        <nav class="nav-saas" style="background: var(--bg);">
+            <div class="nav-saas-inner">
+                <h2 id="store-title-nav" style="color: var(--accent);">Tienda</h2>
+                <button class="btn btn-secondary" onclick="showView('view-admin')">Volver al Admin</button>
+            </div>
+        </nav>
+
+        <header class="store-header">
+            <h1 id="store-title-main" style="font-size: 3rem; font-weight: 700;">Nombre Tienda</h1>
+            <p style="color: var(--text-sec); margin-top: 8px;">Bienvenido a nuestra tienda</p>
+        </header>
+
+        <div style="max-width: 1000px; margin: 0 auto; padding: 0 24px 100px;">
+            <div id="store-products-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;"></div>
+        </div>
+
+        <!-- Carrito Flotante -->
+        <div style="position: fixed; bottom: 24px; right: 24px; z-index: 50;">
+            <button class="btn btn-primary" style="padding: 16px 24px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);" onclick="openCart()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                Ver Pedido (<span id="cart-count">0</span>)
+            </button>
+        </div>
+        
+        <!-- Modal Carrito -->
+        <div id="modal-cart" class="modal">
+            <div class="modal-content" style="max-width: 400px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                    <h3>Tu Pedido</h3>
+                    <button class="btn btn-ghost" onclick="closeModal('modal-cart')">X</button>
+                </div>
+                <div id="cart-items" style="max-height: 300px; overflow-y: auto;"></div>
+                <div style="border-top: 1px solid var(--border); margin-top: 16px; padding-top: 16px;">
+                    <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 18px;">
+                        <span>Total</span>
+                        <span id="cart-total">$0</span>
+                    </div>
+                    <form id="checkout-form" style="margin-top: 16px;">
+                        <input type="text" class="input" placeholder="Tu Nombre" required style="margin-bottom: 8px;">
+                        <input type="tel" class="input" placeholder="WhatsApp" required style="margin-bottom: 8px;">
+                        <textarea class="input" placeholder="Direccion o Nota" rows="2"></textarea>
+                        <button type="submit" class="btn btn-primary w-full" style="margin-top: 16px;">Enviar Pedido por WhatsApp</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA ERROR -->
+    <div id="view-error" style="display: none; height: 100vh; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
+        <h1 style="font-size: 4rem; color: var(--danger);">404</h1>
+        <h2 style="margin-bottom: 16px;">Tienda no encontrada</h2>
+        <p style="color: var(--text-sec); margin-bottom: 32px;">El enlace que sigues no parece ser válido o la tienda ya no existe.</p>
+        <button class="btn btn-primary" onclick="showView('view-landing')">Ir al Inicio</button>
+    </div>
+
+    <!-- Modal Agregar Producto -->
+    <div id="modal-product" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 16px;">Agregar Producto</h3>
+            <form onsubmit="saveProduct(event)">
+                <input type="text" id="p-name" class="input" placeholder="Nombre del producto" required>
+                <input type="number" id="p-price" class="input" placeholder="Precio" required style="margin-top: 12px;">
+                <input type="url" id="p-image" class="input" placeholder="URL de imagen" style="margin-top: 12px;">
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary w-full" onclick="closeModal('modal-product')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary w-full">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPTS MODULARES -->
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/storefront.js"></script>
+</body>
+</html>
