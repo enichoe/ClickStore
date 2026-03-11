@@ -9,7 +9,7 @@ async function loadPublicStore(identifier) {
             
         if (sErr || !store) throw new Error("Tienda no encontrada");
 
-        const { data: prods, error: pErr } = await supabase.from('products').select('*').eq('store_id', storeId);
+        const { data: prods, error: pErr } = await supabase.from('products').select('*').eq('store_id', store.id);
         
         appState.tenant = store;
         appState.products = prods || [];
@@ -138,6 +138,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const { error } = await supabase.from('orders').insert([order]);
                 if (error) throw error;
                 
+                // Redirigir a WhatsApp
+                const businessName = appState.tenant.name;
+                const itemsText = appState.cart.map(i => `- ${i.name} x${i.qty} ($${(i.price * i.qty).toFixed(2)})`).join('%0A');
+                const message = `*Nuevo Pedido - ${businessName}*%0A%0A*Cliente:* ${order.customer_name}%0A*WhatsApp:* ${order.whatsapp}%0A%0A*Productos:*%0A${itemsText}%0A%0A*Total:* $${order.total.toFixed(2)}`;
+                
+                // Si la tienda tiene un WhatsApp configurado usalo, sino usa uno por defecto o solo avisa
+                window.open(`https://wa.me/${order.whatsapp.replace(/\D/g,'')}?text=${message}`, '_blank');
+
                 alert('¡Pedido enviado con éxito!');
                 appState.cart = [];
                 updateCartBadge();

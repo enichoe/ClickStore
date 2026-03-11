@@ -38,10 +38,25 @@ function renderProducts() {
             <div style="padding: 12px;">
                 <h4 style="font-weight: 600;">${p.name}</h4>
                 <p style="color: var(--accent); font-weight: 700;">$${parseFloat(p.price).toFixed(2)}</p>
-                <button class="btn btn-danger btn-sm" style="margin-top: 8px;" onclick="deleteProduct(${p.id})">Eliminar</button>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                    <button class="btn btn-secondary btn-sm" onclick="editProduct(${p.id})">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">Eliminar</button>
+                </div>
             </div>
         </div>
     `).join('');
+}
+
+let editingProductId = null;
+
+function editProduct(id) {
+    const p = appState.products.find(prod => prod.id === id);
+    if (!p) return;
+    editingProductId = id;
+    document.getElementById('p-name').value = p.name;
+    document.getElementById('p-price').value = p.price;
+    document.getElementById('modal-product-title').innerText = "Editar Producto";
+    openModal('modal-product');
 }
 
 async function fetchOrders() {
@@ -130,12 +145,19 @@ async function saveProduct(e) {
             image: imageUrl
         };
 
-        const { error } = await supabase.from('products').insert([product]);
-        if (error) throw error;
+        if (editingProductId) {
+            const { error } = await supabase.from('products').update(product).eq('id', editingProductId);
+            if (error) throw error;
+            editingProductId = null;
+        } else {
+            const { error } = await supabase.from('products').insert([product]);
+            if (error) throw error;
+        }
         
         await fetchProducts();
         if (typeof closeModal === 'function') closeModal('modal-product');
         e.target.reset();
+        document.getElementById('modal-product-title').innerText = "Agregar Producto";
     } catch (err) {
         alert("Error: " + err.message);
     } finally {
