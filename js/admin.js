@@ -221,14 +221,15 @@ async function fetchGlobalStores() {
             <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <p style="font-weight: 600;">${s.name}</p>
-                    <p style="font-size: 12px; color: var(--text-sec);">${s.type} | ID: ${s.id}</p>
+                    <p style="font-size: 12px; color: var(--text-sec);">${s.type} | Slug: ${s.slug || 'N/A'}</p>
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <button class="btn btn-secondary btn-sm" onclick="window.open('?store=${s.id}', '_blank')">Ver</button>
+                    <button class="btn btn-primary btn-sm" onclick="editStoreByAdmin('${s.id}')">Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteStoreByAdmin('${s.id}')">Borrar</button>
                 </div>
             </div>
-        `).join('');
+        `).join('') || '<div style="padding: 20px; text-align: center; color: var(--text-sec);">No hay tiendas registradas.</div>';
 
     } catch (err) {
         console.error("SuperAdmin Error:", err);
@@ -244,5 +245,72 @@ async function deleteStoreByAdmin(id) {
         fetchGlobalStores();
     } catch (err) {
         alert("Error: " + err.message);
+    }
+}
+
+let editingStoreId = null;
+
+function openStoreModal() {
+    editingStoreId = null;
+    document.getElementById('modal-store-title').innerText = "Crear Nueva Tienda";
+    document.getElementById('s-name').value = '';
+    document.getElementById('s-slug').value = '';
+    document.getElementById('s-type').value = 'Otros';
+    openModal('modal-store');
+}
+
+function editStoreByAdmin(id) {
+    const list = document.getElementById('super-stores-list');
+    // Como no guardamos las tiendas globales en appState (mala práctica, pero sigamos el patrón actual)
+    // Vamos a buscarla en el DOM o mejor, volver a pedirla o pedirla de Supabase
+    editingStoreId = id;
+    loadStoreToEdit(id);
+}
+
+async function loadStoreToEdit(id) {
+    try {
+        const { data, error } = await supabase.from('stores').select('*').eq('id', id).single();
+        if (error) throw error;
+        
+        document.getElementById('modal-store-title').innerText = "Editar Tienda";
+        document.getElementById('s-name').value = data.name;
+        document.getElementById('s-slug').value = data.slug || '';
+        document.getElementById('s-type').value = data.type;
+        openModal('modal-store');
+    } catch (err) {
+        alert("Error cargando datos: " + err.message);
+    }
+}
+
+async function saveStoreByAdmin(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type="submit"]');
+    const store = {
+        name: document.getElementById('s-name').value,
+        slug: document.getElementById('s-slug').value || null,
+        type: document.getElementById('s-type').value
+    };
+
+    setLoading(btn, true);
+    try {
+        if (editingStoreId) {
+            const { error } = await supabase.from('stores').update(store).eq('id', editingStoreId);
+            if (error) throw error;
+            alert("Tienda actualizada");
+        } else {
+            // Nota: Al crear por admin no asociamos owner_id real a menos que lo pidas
+            // Por ahora, usaremos el mismo session user o null
+            store.owner_id = appState.session.user.id;
+            const { error } = await supabase.from('stores').insert([store]);
+            if (error) throw error;
+            alert("Tienda creada con éxito");
+        }
+        
+        closeModal('modal-store');
+        fetchGlobalStores();
+    } catch (err) {
+        alert("Error: " + err.message);
+    } finally {
+        setLoading(btn, false);
     }
 }

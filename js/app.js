@@ -49,6 +49,19 @@ function showAdminSection(section) {
     localStorage.setItem('clickSaaS_lastSection', section);
 }
 
+function showSuperAdminSection(section) {
+    document.querySelectorAll('#view-superadmin [id^="section-super-"]').forEach(el => el.style.display = 'none');
+    const targetSection = document.getElementById('section-super-' + section);
+    if (targetSection) targetSection.style.display = 'block';
+    
+    document.querySelectorAll('#view-superadmin .nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('#view-superadmin .nav-item').forEach(item => {
+        if (item.getAttribute('onclick')?.includes(`'${section}'`)) {
+            item.classList.add('active');
+        }
+    });
+}
+
 // ======================= UTILS = [loading helper] =======================
 function setLoading(btnOrId, isLoading) {
     const btn = (typeof btnOrId === 'string') ? document.getElementById(btnOrId) : btnOrId;
