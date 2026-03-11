@@ -88,6 +88,7 @@ async function handleRegister() {
     const btn = window.event ? window.event.target : null;
 
     if (!storeName || !email || !pass) return alert("Completa todos los campos");
+    if (pass.length < 6) return alert("La contraseña debe tener al menos 6 caracteres.");
     
     // Generar Slug simple
     const slug = storeName.toLowerCase().trim()
@@ -97,11 +98,20 @@ async function handleRegister() {
 
     if (btn) setLoading(btn, true);
     try {
+        console.log("Intentando registro para:", email);
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email, password: pass,
             options: { data: { full_name: ownerName } }
         });
-        if (authError) throw authError;
+        
+        if (authError) {
+            console.error("Detalle error Auth:", authError);
+            throw authError;
+        }
+
+        if (!authData.user) {
+            throw new Error("No se pudo crear el usuario. ¿Quizás ya existe?");
+        }
 
         const { data: storeData, error: storeError } = await supabase
             .from('stores')
@@ -114,7 +124,10 @@ async function handleRegister() {
             .select()
             .single();
         
-        if (storeError) throw storeError;
+        if (storeError) {
+            console.error("Detalle error Store:", storeError);
+            throw storeError;
+        }
 
         appState.session = authData.session;
         appState.tenant = storeData;
@@ -122,7 +135,8 @@ async function handleRegister() {
         if (typeof initializeAdminUI === 'function') initializeAdminUI();
         showView('view-admin', 'dash');
     } catch (err) {
-        alert("Error: " + err.message);
+        console.error("Excepción en handleRegister:", err);
+        alert("Error en el registro: " + (err.description || err.message));
     } finally {
         setLoading(btn, false);
     }

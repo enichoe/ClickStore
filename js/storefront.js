@@ -25,7 +25,8 @@ async function loadPublicStore(identifier) {
 
 function openStorefront() {
     if (!appState.tenant) return;
-    window.open(window.location.origin + window.location.pathname + '?store=' + appState.tenant.id, '_blank');
+    const identifier = appState.tenant.slug || appState.tenant.id;
+    window.open(window.location.origin + window.location.pathname + '?store=' + identifier, '_blank');
 }
 
 function renderStorefront() {
