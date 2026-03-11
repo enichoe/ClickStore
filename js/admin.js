@@ -96,15 +96,34 @@ function renderOrders() {
 async function saveProduct(e) {
     e.preventDefault();
     const btn = e.target.querySelector('button[type="submit"]');
-    const product = {
-        store_id: appState.tenant.id,
-        name: document.getElementById('p-name').value,
-        price: parseFloat(document.getElementById('p-price').value),
-        image: document.getElementById('p-image').value
-    };
+    const fileInput = document.getElementById('p-image-file');
+    const file = fileInput.files?.[0];
+    let imageUrl = 'https://via.placeholder.com/300';
 
     setLoading(btn, true);
     try {
+        if (file) {
+            const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('product-images')
+                .upload(fileName, file);
+            
+            if (uploadError) throw uploadError;
+            
+            const { data: { publicUrl } } = supabase.storage
+                .from('product-images')
+                .getPublicUrl(fileName);
+            
+            imageUrl = publicUrl;
+        }
+
+        const product = {
+            store_id: appState.tenant.id,
+            name: document.getElementById('p-name').value,
+            price: parseFloat(document.getElementById('p-price').value),
+            image: imageUrl
+        };
+
         const { error } = await supabase.from('products').insert([product]);
         if (error) throw error;
         

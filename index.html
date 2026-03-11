@@ -297,7 +297,10 @@
             <form onsubmit="saveProduct(event)">
                 <input type="text" id="p-name" class="input" placeholder="Nombre del producto" required>
                 <input type="number" id="p-price" class="input" placeholder="Precio" required style="margin-top: 12px;">
-                <input type="url" id="p-image" class="input" placeholder="URL de imagen" style="margin-top: 12px;">
+                <div class="input-group" style="margin-top: 12px;">
+                    <label>Imagen del Producto</label>
+                    <input type="file" id="p-image-file" class="input" accept="image/*">
+                </div>
                 <div style="display: flex; gap: 12px; margin-top: 24px;">
                     <button type="button" class="btn btn-secondary w-full" onclick="closeModal('modal-product')">Cancelar</button>
                     <button type="submit" class="btn btn-primary w-full">Guardar</button>
