@@ -1,7 +1,12 @@
 // ======================= STOREFRONT =======================
-async function loadPublicStore(storeId) {
+async function loadPublicStore(identifier) {
     try {
-        const { data: store, error: sErr } = await supabase.from('stores').select('*').eq('id', storeId).single();
+        const { data: store, error: sErr } = await supabase
+            .from('stores')
+            .select('*')
+            .or(`id.eq.${identifier},slug.eq.${identifier}`)
+            .single();
+            
         if (sErr || !store) throw new Error("Tienda no encontrada");
 
         const { data: prods, error: pErr } = await supabase.from('products').select('*').eq('store_id', storeId);

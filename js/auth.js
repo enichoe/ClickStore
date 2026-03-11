@@ -30,12 +30,12 @@ async function checkSession() {
     }
 }
 
-async function loadStoreData(userId) {
+async function loadStoreData(identifier) {
     try {
         const { data, error } = await supabase
             .from('stores')
             .select('*')
-            .eq('owner_id', userId)
+            .or(`owner_id.eq.${identifier},slug.eq.${identifier}`)
             .single();
 
         if (error) throw error;
@@ -52,11 +52,6 @@ async function handleLogin() {
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-pass').value;
     const btn = window.event ? window.event.target : null;
-
-    if (!supabase || !supabase.auth) {
-        console.error("Supabase client not found:", supabase);
-        return alert("Error: El cliente de Supabase no está listo.");
-    }
 
     if (btn) setLoading(btn, true);
     try {
@@ -88,10 +83,11 @@ async function handleRegister() {
 
     if (!storeName || !email || !pass) return alert("Completa todos los campos");
     
-    if (!supabase || !supabase.auth) {
-        console.error("Supabase client not found at register:", supabase);
-        return alert("Error: El cliente de Supabase no está listo.");
-    }
+    // Generar Slug simple
+    const slug = storeName.toLowerCase().trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
 
     if (btn) setLoading(btn, true);
     try {
@@ -106,6 +102,7 @@ async function handleRegister() {
             .insert([{ 
                 owner_id: authData.user.id, 
                 name: storeName,
+                slug: slug + '-' + Math.floor(Math.random() * 1000), // Evitar duplicados iniciales
                 type: document.querySelector('#view-register select')?.value || 'Tienda'
             }])
             .select()
@@ -115,15 +112,11 @@ async function handleRegister() {
 
         appState.session = authData.session;
         appState.tenant = storeData;
-        alert("¡Tienda creada con éxito! Revisa tu email para confirmar.");
+        alert("¡Tienda creada con éxito!");
         if (typeof initializeAdminUI === 'function') initializeAdminUI();
         showView('view-admin', 'dash');
     } catch (err) {
-        if (err.message.includes("rate limit")) {
-            alert("Has intentado registrarte demasiadas veces. Espera unos minutos o desactiva el límite en Supabase (Auth > Settings).");
-        } else {
-            alert("Error en el registro: " + err.message);
-        }
+        alert("Error: " + err.message);
     } finally {
         setLoading(btn, false);
     }

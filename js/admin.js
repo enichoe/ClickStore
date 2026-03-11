@@ -4,7 +4,13 @@ async function initializeAdminUI() {
     
     document.getElementById('admin-store-name').innerText = appState.tenant.name;
     document.getElementById('setting-name').value = appState.tenant.name;
-    document.getElementById('store-link-input').value = window.location.origin + window.location.pathname + '?store=' + appState.tenant.id;
+    if (document.getElementById('setting-slug')) {
+        document.getElementById('setting-slug').value = appState.tenant.slug || '';
+    }
+    
+    // Usar slug para el enlace si existe
+    const storeIdentifier = appState.tenant.slug || appState.tenant.id;
+    document.getElementById('store-link-input').value = window.location.origin + window.location.pathname + '?store=' + storeIdentifier;
     
     await fetchProducts();
     await fetchOrders();
@@ -150,16 +156,21 @@ async function deleteProduct(id) {
 
 async function updateStoreSettings() {
     const newName = document.getElementById('setting-name').value;
+    const newSlug = document.getElementById('setting-slug')?.value || appState.tenant.slug;
+    
     try {
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('stores')
-            .update({ name: newName })
-            .eq('id', appState.tenant.id);
+            .update({ name: newName, slug: newSlug })
+            .eq('id', appState.tenant.id)
+            .select()
+            .single();
         
         if (error) throw error;
-        appState.tenant.name = newName;
-        document.getElementById('admin-store-name').innerText = newName;
+        appState.tenant = data;
+        document.getElementById('admin-store-name').innerText = data.name;
         alert("Configuración actualizada");
+        initializeAdminUI();
     } catch (err) {
         alert("Error: " + err.message);
     }
