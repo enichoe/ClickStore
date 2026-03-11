@@ -1,11 +1,16 @@
 // ======================= STOREFRONT =======================
 async function loadPublicStore(identifier) {
     try {
-        const { data: store, error: sErr } = await supabase
-            .from('stores')
-            .select('*')
-            .or(`id.eq.${identifier},slug.eq.${identifier}`)
-            .single();
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
+        let query = supabase.from('stores').select('*');
+        
+        if (isUUID) {
+            query = query.eq('id', identifier);
+        } else {
+            query = query.eq('slug', identifier);
+        }
+
+        const { data: store, error: sErr } = await query.maybeSingle();
             
         if (sErr || !store) throw new Error("Tienda no encontrada");
 

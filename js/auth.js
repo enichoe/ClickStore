@@ -38,11 +38,16 @@ async function checkSession() {
 
 async function loadStoreData(identifier) {
     try {
-        const { data, error } = await supabase
-            .from('stores')
-            .select('*')
-            .or(`owner_id.eq.${identifier},slug.eq.${identifier}`)
-            .single();
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identifier);
+        let query = supabase.from('stores').select('*');
+        
+        if (isUUID) {
+            query = query.eq('owner_id', identifier);
+        } else {
+            query = query.eq('slug', identifier);
+        }
+
+        const { data, error } = await query.maybeSingle();
 
         if (error) throw error;
         if (data) {
