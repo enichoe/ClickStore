@@ -42,7 +42,7 @@ function renderStorefront() {
             <div style="padding: 16px;">
                 <h4 style="font-weight: 600; margin-bottom: 4px;">${p.name}</h4>
                 <p style="color: var(--accent); font-weight: 700; font-size: 18px;">$${parseFloat(p.price).toFixed(2)}</p>
-                <button class="btn btn-primary w-full" style="margin-top: 12px;" onclick="addToCart(${p.id})">Agregar</button>
+                <button class="btn btn-primary w-full" style="margin-top: 12px;" onclick="addToCart('${p.id}')">Agregar</button>
             </div>
         </div>
     `).join('');

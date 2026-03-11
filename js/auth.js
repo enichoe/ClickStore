@@ -1,5 +1,16 @@
 // ======================= AUTH (SUPABASE) =======================
 async function checkSession() {
+    // 1. Priorizar ver tienda pública si hay parámetro ?store=
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('store')) {
+        const storeId = urlParams.get('store');
+        console.log("Cargando tienda pública:", storeId);
+        if (typeof loadPublicStore === 'function') {
+            await loadPublicStore(storeId);
+            return; // Detener aquí para que no salte al admin si está logueado
+        }
+    }
+
     if (typeof DEV_MODE !== 'undefined' && DEV_MODE) {
         console.warn("MODO DESARROLLADOR ACTIVO: Saltando autenticación real.");
         appState.session = { user: { id: 'mock-user-id', email: SUPER_ADMIN_EMAIL } };
@@ -21,12 +32,7 @@ async function checkSession() {
 
         await loadStoreData(session.user.id);
     } else {
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('store')) {
-            if (typeof loadPublicStore === 'function') await loadPublicStore(urlParams.get('store'));
-        } else {
-            showView('view-landing');
-        }
+        showView('view-landing');
     }
 }
 

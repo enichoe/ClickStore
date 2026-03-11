@@ -39,8 +39,8 @@ function renderProducts() {
                 <h4 style="font-weight: 600;">${p.name}</h4>
                 <p style="color: var(--accent); font-weight: 700;">$${parseFloat(p.price).toFixed(2)}</p>
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <button class="btn btn-secondary btn-sm" onclick="editProduct(${p.id})">Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">Eliminar</button>
+                    <button class="btn btn-secondary btn-sm" onclick="editProduct('${p.id}')">Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Eliminar</button>
                 </div>
             </div>
         </div>
