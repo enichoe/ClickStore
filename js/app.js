@@ -78,6 +78,20 @@ function setLoading(btnOrId, isLoading) {
 }
 
 // ======================= INIT =======================
+// = [currency helper] =
+function getCurrencySymbol(currency) {
+    if (!currency) return '$';
+    const symbols = {
+        'USD': '$',
+        'PEN': 'S/',
+        'MXN': '$',
+        'COP': '$',
+        'EUR': '€',
+        'ARS': '$'
+    };
+    return symbols[currency] || '$';
+}
+
 window.addEventListener('load', () => {
     if (typeof checkSession === 'function') {
         checkSession();

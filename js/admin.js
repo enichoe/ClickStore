@@ -10,6 +10,9 @@ async function initializeAdminUI() {
     if (document.getElementById('setting-whatsapp')) {
         document.getElementById('setting-whatsapp').value = appState.tenant.whatsapp_phone || '';
     }
+    if (document.getElementById('setting-currency')) {
+        document.getElementById('setting-currency').value = appState.tenant.currency || 'USD';
+    }
     
     // Usar slug para el enlace si existe
     const storeIdentifier = appState.tenant.slug || appState.tenant.id;
@@ -46,12 +49,13 @@ async function fetchProducts() {
 function renderProducts() {
     const grid = document.getElementById('grid-products');
     if (!grid) return;
+    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
     grid.innerHTML = appState.products.map(p => `
         <div class="card" style="padding: 0; overflow: hidden;">
             <img src="${p.image || 'https://via.placeholder.com/300'}" style="width: 100%; height: 150px; object-fit: cover;">
             <div style="padding: 12px;">
                 <h4 style="font-weight: 600;">${p.name}</h4>
-                <p style="color: var(--accent); font-weight: 700;">$${parseFloat(p.price).toFixed(2)}</p>
+                <p style="color: var(--accent); font-weight: 700;">${currencySymbol}${parseFloat(p.price).toFixed(2)}</p>
                 <div style="display: flex; gap: 8px; margin-top: 8px;">
                     <button class="btn btn-secondary btn-sm" onclick="editProduct('${p.id}')">Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Eliminar</button>
@@ -117,11 +121,12 @@ function renderOrders() {
         return;
     }
 
+    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
     const html = appState.orders.map(o => `
         <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
             <div>
                 <p style="font-weight: 600;">${o.customer_name}</p>
-                <p style="font-size: 12px; color: var(--text-sec);">${(JSON.parse(o.items || '[]')).length} items - $${parseFloat(o.total).toFixed(2)}</p>
+                <p style="font-size: 12px; color: var(--text-sec);">${(JSON.parse(o.items || '[]')).length} items - ${currencySymbol}${parseFloat(o.total).toFixed(2)}</p>
             </div>
             <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: ${o.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; color: ${o.status === 'pending' ? 'var(--accent)' : 'var(--success)'};">
                 ${o.status}
@@ -135,7 +140,7 @@ function renderOrders() {
     const pending = appState.orders.filter(o => o.status === 'pending').length;
     const sales = appState.orders.reduce((sum, o) => sum + parseFloat(o.total), 0);
     document.getElementById('stat-orders').innerText = pending;
-    document.getElementById('stat-sales').innerText = '$' + sales.toFixed(2);
+    document.getElementById('stat-sales').innerText = currencySymbol + sales.toFixed(2);
     
     const badge = document.getElementById('order-badge');
     if (badge) {
@@ -224,13 +229,19 @@ async function updateStoreSettings() {
     const newName    = document.getElementById('setting-name').value.trim();
     const newSlug    = document.getElementById('setting-slug')?.value.trim() || appState.tenant.slug;
     const newPhone   = document.getElementById('setting-whatsapp')?.value.trim() || '';
+    const newCurrency = document.getElementById('setting-currency')?.value || 'USD';
     
     if (!newName) return alert('El nombre de la tienda no puede estar vacío.');
 
     try {
         const { data, error } = await supabase
             .from('stores')
-            .update({ name: newName, slug: newSlug, whatsapp_phone: newPhone })
+            .update({ 
+                name: newName, 
+                slug: newSlug, 
+                whatsapp_phone: newPhone,
+                currency: newCurrency
+            })
             .eq('id', appState.tenant.id)
             .select()
             .single();

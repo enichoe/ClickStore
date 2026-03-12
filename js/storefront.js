@@ -42,12 +42,16 @@ function renderStorefront() {
     
     const grid = document.getElementById('store-products-grid');
     if (!grid) return;
+
+    // Símbolo de moneda según configuración de la tienda
+    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
+
     grid.innerHTML = appState.products.map(p => `
         <div class="card" style="padding: 0; overflow: hidden; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
             <img src="${p.image || 'https://via.placeholder.com/300'}" style="width: 100%; height: 180px; object-fit: cover;">
             <div style="padding: 16px;">
                 <h4 style="font-weight: 600; margin-bottom: 4px;">${p.name}</h4>
-                <p style="color: var(--accent); font-weight: 700; font-size: 18px;">$${parseFloat(p.price).toFixed(2)}</p>
+                <p style="color: var(--accent); font-weight: 700; font-size: 18px;">${currencySymbol}${parseFloat(p.price).toFixed(2)}</p>
                 <button class="btn btn-primary w-full" style="margin-top: 12px;" onclick="addToCart('${p.id}')">Agregar</button>
             </div>
         </div>
@@ -82,6 +86,7 @@ function openCart() {
     if (!itemsDiv) return;
     let total = 0;
     
+    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
     itemsDiv.innerHTML = appState.cart.map(i => {
         total += i.price * i.qty;
         return `
@@ -90,13 +95,13 @@ function openCart() {
                     <p style="font-weight: 500;">${i.name}</p>
                     <p style="font-size: 12px; color: var(--text-sec);">Cantidad: ${i.qty}</p>
                 </div>
-                <p style="font-weight: 700;">$${(i.price * i.qty).toFixed(2)}</p>
+                <p style="font-weight: 700;">${currencySymbol}${(i.price * i.qty).toFixed(2)}</p>
             </div>
         `;
     }).join('');
     
     const cartTotal = document.getElementById('cart-total');
-    if (cartTotal) cartTotal.innerText = '$' + total.toFixed(2);
+    if (cartTotal) cartTotal.innerText = currencySymbol + total.toFixed(2);
 }
 
 // ======================= QR & UTILS =======================
