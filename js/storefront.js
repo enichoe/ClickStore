@@ -175,12 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Preparar items para la función RPC (solo id y qty — el precio lo calcula el servidor)
                 const itemsForRpc = appState.cart.map(i => ({ id: i.id, qty: i.qty }));
 
-                // Llamar a la función RPC server-side (el total se calcula en Supabase, no en el cliente)
+                // Llamar a la función RPC server-side con los nuevos nombres de parámetros
                 const { data: orderId, error } = await supabase.rpc('create_order', {
-                    _store_id:      appState.tenant.id,
-                    _customer_name: customerName,
-                    _whatsapp:      customerWhatsapp,
-                    _items:         itemsForRpc
+                    p_store_id:      appState.tenant.id,
+                    p_customer_name: customerName,
+                    p_whatsapp:      customerWhatsapp,
+                    p_items:         itemsForRpc
                 });
 
                 if (error) throw error;
