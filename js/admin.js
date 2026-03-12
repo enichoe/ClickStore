@@ -7,6 +7,9 @@ async function initializeAdminUI() {
     if (document.getElementById('setting-slug')) {
         document.getElementById('setting-slug').value = appState.tenant.slug || '';
     }
+    if (document.getElementById('setting-whatsapp')) {
+        document.getElementById('setting-whatsapp').value = appState.tenant.whatsapp_phone || '';
+    }
     
     // Usar slug para el enlace si existe
     const storeIdentifier = appState.tenant.slug || appState.tenant.id;
@@ -17,14 +20,25 @@ async function initializeAdminUI() {
 }
 
 async function fetchProducts() {
-    const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('store_id', appState.tenant.id)
-        .order('created_at', { ascending: false });
-    
-    if (data) {
-        appState.products = data;
+    try {
+        const { data, error } = await supabase
+            .from('products')
+            .select('*')
+            .eq('store_id', appState.tenant.id)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('fetchProducts error:', error);
+            appState.products = [];
+            renderProducts();
+            return;
+        }
+
+        appState.products = data || [];
+        renderProducts();
+    } catch (err) {
+        console.error('Unexpected fetchProducts error:', err);
+        appState.products = [];
         renderProducts();
     }
 }
@@ -47,7 +61,16 @@ function renderProducts() {
     `).join('');
 }
 
-let editingProductId = null;
+// Abre el modal para CREAR un producto nuevo (limpia el estado anterior)
+function openNewProductModal() {
+    editingProductId = null;
+    document.getElementById('modal-product-title').innerText = 'Agregar Producto';
+    document.getElementById('p-name').value = '';
+    document.getElementById('p-price').value = '';
+    const fileInput = document.getElementById('p-image-file');
+    if (fileInput) fileInput.value = '';
+    openModal('modal-product');
+}
 
 function editProduct(id) {
     const p = appState.products.find(prod => prod.id === id);
@@ -60,14 +83,25 @@ function editProduct(id) {
 }
 
 async function fetchOrders() {
-    const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .eq('store_id', appState.tenant.id)
-        .order('created_at', { ascending: false });
-    
-    if (data) {
-        appState.orders = data;
+    try {
+        const { data, error } = await supabase
+            .from('orders')
+            .select('*')
+            .eq('store_id', appState.tenant.id)
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            console.error('fetchOrders error:', error);
+            appState.orders = [];
+            renderOrders();
+            return;
+        }
+
+        appState.orders = data || [];
+        renderOrders();
+    } catch (err) {
+        console.error('Unexpected fetchOrders error:', err);
+        appState.orders = [];
         renderOrders();
     }
 }
@@ -123,27 +157,36 @@ async function saveProduct(e) {
 
     setLoading(btn, true);
     try {
+        if (!appState.tenant || !appState.tenant.id) {
+            throw new Error('No hay tienda definida. Refresca e intenta de nuevo.');
+        }
         if (file) {
             const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
             const { data: uploadData, error: uploadError } = await supabase.storage
                 .from('product-images')
                 .upload(fileName, file);
-            
-            if (uploadError) throw uploadError;
-            
+            if (uploadError) {
+                console.warn('Upload error:', uploadError);
+                throw uploadError;
+            }
+
             const { data: { publicUrl } } = supabase.storage
                 .from('product-images')
                 .getPublicUrl(fileName);
-            
+
             imageUrl = publicUrl;
         }
 
         const product = {
             store_id: appState.tenant.id,
             name: document.getElementById('p-name').value,
-            price: parseFloat(document.getElementById('p-price').value),
+            price: Number(parseFloat(document.getElementById('p-price').value) || 0),
             image: imageUrl
         };
+
+        // Validaciones básicas
+        if (!product.name) throw new Error('El producto requiere un nombre.');
+        if (isNaN(product.price) || product.price < 0) throw new Error('Precio inválido.');
 
         if (editingProductId) {
             const { error } = await supabase.from('products').update(product).eq('id', editingProductId);
@@ -168,6 +211,7 @@ async function saveProduct(e) {
 async function deleteProduct(id) {
     if (!confirm("¿Eliminar este producto?")) return;
     try {
+        if (!appState.tenant || !appState.tenant.id) throw new Error('No hay tienda definida.');
         const { error } = await supabase.from('products').delete().eq('id', id);
         if (error) throw error;
         await fetchProducts();
@@ -177,13 +221,16 @@ async function deleteProduct(id) {
 }
 
 async function updateStoreSettings() {
-    const newName = document.getElementById('setting-name').value;
-    const newSlug = document.getElementById('setting-slug')?.value || appState.tenant.slug;
+    const newName    = document.getElementById('setting-name').value.trim();
+    const newSlug    = document.getElementById('setting-slug')?.value.trim() || appState.tenant.slug;
+    const newPhone   = document.getElementById('setting-whatsapp')?.value.trim() || '';
     
+    if (!newName) return alert('El nombre de la tienda no puede estar vacío.');
+
     try {
         const { data, error } = await supabase
             .from('stores')
-            .update({ name: newName, slug: newSlug })
+            .update({ name: newName, slug: newSlug, whatsapp_phone: newPhone })
             .eq('id', appState.tenant.id)
             .select()
             .single();
@@ -191,10 +238,10 @@ async function updateStoreSettings() {
         if (error) throw error;
         appState.tenant = data;
         document.getElementById('admin-store-name').innerText = data.name;
-        alert("Configuración actualizada");
+        alert('Configuración actualizada correctamente.');
         initializeAdminUI();
     } catch (err) {
-        alert("Error: " + err.message);
+        alert('Error: ' + err.message);
     }
 }
 
@@ -211,10 +258,12 @@ async function fetchGlobalStores() {
         const { data: stores, error: sErr } = await supabase.from('stores').select('*');
         if (sErr) throw sErr;
 
-        const { data: totalOrders, error: oErr } = await supabase.from('orders').select('id', { count: 'exact' });
-        
-        document.getElementById('super-total-stores').innerText = stores.length;
-        document.getElementById('super-total-orders').innerText = totalOrders ? totalOrders.length : 0;
+        const { count: ordersCount } = await supabase
+            .from('orders')
+            .select('*', { count: 'exact', head: true });
+
+        document.getElementById('super-total-stores').innerText = (stores && stores.length) || 0;
+        document.getElementById('super-total-orders').innerText = ordersCount || 0;
 
         const list = document.getElementById('super-stores-list');
         list.innerHTML = stores.map(s => `
@@ -293,14 +342,22 @@ async function saveStoreByAdmin(e) {
 
     setLoading(btn, true);
     try {
+        // Validaciones mínimas
+        if (!store.name) throw new Error('Nombre de tienda requerido.');
+        if (store.slug) {
+            // comprobar colisión de slug
+            const { data: existing, error: exErr } = await supabase.from('stores').select('id').eq('slug', store.slug).maybeSingle();
+            if (exErr) console.warn('Error comprobando slug:', exErr);
+            if (existing && (!editingStoreId || existing.id !== editingStoreId)) throw new Error('El slug ya está en uso.');
+        }
+
         if (editingStoreId) {
             const { error } = await supabase.from('stores').update(store).eq('id', editingStoreId);
             if (error) throw error;
             alert("Tienda actualizada");
         } else {
             // Nota: Al crear por admin no asociamos owner_id real a menos que lo pidas
-            // Por ahora, usaremos el mismo session user o null
-            store.owner_id = appState.session.user.id;
+            store.owner_id = appState.session?.user?.id || null;
             const { error } = await supabase.from('stores').insert([store]);
             if (error) throw error;
             alert("Tienda creada con éxito");

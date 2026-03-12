@@ -1,0 +1,14 @@
+{
+  "name": "clicksaas",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "env:generate": "node scripts/generate-env.js",
+    "serve": "npx serve . -l 3000",
+    "test:e2e": "npx playwright test --project=chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@supabase/supabase-js": "^2.30.0"
+  }
+}

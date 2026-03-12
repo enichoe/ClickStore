@@ -58,11 +58,14 @@ function renderStorefront() {
 function addToCart(id) {
     const product = appState.products.find(p => p.id === id);
     const item = appState.cart.find(c => c.id === id);
-    
+    if (!product) return console.warn('Producto no encontrado en addToCart:', id);
+
+    // Asegurar que el precio sea number
+    const price = Number(parseFloat(product.price) || 0);
     if (item) {
         item.qty++;
     } else {
-        appState.cart.push({ ...product, qty: 1 });
+        appState.cart.push({ id: product.id, name: product.name, price: price, image: product.image, qty: 1 });
     }
     updateCartBadge();
 }
@@ -116,9 +119,26 @@ function generateQR() {
 function copyLink() {
     const input = document.getElementById('store-link-input');
     if (!input) return;
-    input.select();
-    document.execCommand('copy');
-    alert('Enlace copiado!');
+    const text = input.value;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => alert('Enlace copiado!')).catch(err => {
+            console.error('Clipboard write failed:', err);
+            fallbackCopy(text);
+        });
+    } else {
+        fallbackCopy(text);
+    }
+
+    function fallbackCopy(t) {
+        try {
+            input.select();
+            document.execCommand('copy');
+            alert('Enlace copiado!');
+        } catch (err) {
+            console.error('Fallback copy failed:', err);
+            alert('No se pudo copiar el enlace automáticamente. Selecciónalo y copia manualmente.');
+        }
+    }
 }
 
 // Initializer
@@ -128,37 +148,68 @@ document.addEventListener('DOMContentLoaded', () => {
         checkoutForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
-            const total = appState.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            
-            const order = {
-                store_id: appState.tenant.id,
-                customer_name: e.target[0].value,
-                whatsapp: e.target[1].value,
-                total: total,
-                items: JSON.stringify(appState.cart),
-                status: 'pending'
-            };
+
+            const customerName = e.target[0].value.trim();
+            const customerWhatsapp = e.target[1].value.trim();
 
             setLoading(btn, true);
             try {
-                const { error } = await supabase.from('orders').insert([order]);
-                if (error) throw error;
-                
-                // Redirigir a WhatsApp
-                const businessName = appState.tenant.name;
-                const itemsText = appState.cart.map(i => `- ${i.name} x${i.qty} ($${(i.price * i.qty).toFixed(2)})`).join('%0A');
-                const message = `*Nuevo Pedido - ${businessName}*%0A%0A*Cliente:* ${order.customer_name}%0A*WhatsApp:* ${order.whatsapp}%0A%0A*Productos:*%0A${itemsText}%0A%0A*Total:* $${order.total.toFixed(2)}`;
-                
-                // Si la tienda tiene un WhatsApp configurado usalo, sino usa uno por defecto o solo avisa
-                window.open(`https://wa.me/${order.whatsapp.replace(/\D/g,'')}?text=${message}`, '_blank');
+                if (!appState.tenant || !appState.tenant.id) throw new Error('Tienda no definida.');
+                if (!appState.cart || appState.cart.length === 0) throw new Error('El carrito está vacío.');
+                if (!customerName) throw new Error('Ingresa tu nombre.');
 
-                alert('¡Pedido enviado con éxito!');
+                const customerWhatsappClean = customerWhatsapp.replace(/\D/g, '');
+                if (!customerWhatsappClean) throw new Error('Ingresa un número de WhatsApp válido.');
+
+                // Verificar que el negocio tiene WhatsApp configurado
+                const businessPhone = (appState.tenant.whatsapp_phone || '').replace(/\D/g, '');
+                if (!businessPhone) {
+                    throw new Error('Esta tienda aún no tiene número de WhatsApp configurado. El dueño debe agregarlo en Configuración.');
+                }
+
+                // Preparar items para la función RPC (solo id y qty — el precio lo calcula el servidor)
+                const itemsForRpc = appState.cart.map(i => ({ id: i.id, qty: i.qty }));
+
+                // Llamar a la función RPC server-side (el total se calcula en Supabase, no en el cliente)
+                const { data: orderId, error } = await supabase.rpc('create_order', {
+                    _store_id:      appState.tenant.id,
+                    _customer_name: customerName,
+                    _whatsapp:      customerWhatsapp,
+                    _items:         itemsForRpc
+                });
+
+                if (error) throw error;
+
+                // Calcular total local solo para mostrar en el mensaje de WhatsApp
+                const displayTotal = appState.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+                // Construir mensaje de WhatsApp para el negocio
+                const businessName = appState.tenant.name;
+                const itemsText = appState.cart
+                    .map(i => `- ${i.name} x${i.qty} ($${(i.price * i.qty).toFixed(2)})`)
+                    .join('%0A');
+                const message = [
+                    `*🛍️ Nuevo Pedido - ${businessName}*`,
+                    ``,
+                    `*Cliente:* ${customerName}`,
+                    `*WhatsApp cliente:* ${customerWhatsapp}`,
+                    ``,
+                    `*Productos:*`,
+                    appState.cart.map(i => `- ${i.name} x${i.qty} ($${(i.price * i.qty).toFixed(2)})`).join('\n'),
+                    ``,
+                    `*Total estimado:* $${displayTotal.toFixed(2)}`
+                ].join('%0A');
+
+                // Abrir WhatsApp del NEGOCIO (no del cliente)
+                window.open(`https://wa.me/${businessPhone}?text=${message}`, '_blank');
+
+                alert('¡Pedido enviado con éxito! Se abrirá WhatsApp para confirmar.');
                 appState.cart = [];
                 updateCartBadge();
                 if (typeof closeModal === 'function') closeModal('modal-cart');
                 e.target.reset();
             } catch (err) {
-                alert("Error enviando pedido: " + err.message);
+                alert('Error enviando pedido: ' + err.message);
             } finally {
                 setLoading(btn, false);
             }

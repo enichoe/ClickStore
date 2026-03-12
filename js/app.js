@@ -34,12 +34,13 @@ async function showView(viewId, sectionId = null) {
 }
 
 function showAdminSection(section) {
-    document.querySelectorAll('[id^="section-"]').forEach(el => el.style.display = 'none');
+    // Restringido a #view-admin para no afectar secciones del Super Admin
+    document.querySelectorAll('#view-admin [id^="section-"]').forEach(el => el.style.display = 'none');
     const targetSection = document.getElementById('section-' + section);
     if (targetSection) targetSection.style.display = 'block';
     
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(item => {
+    document.querySelectorAll('#view-admin .nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('#view-admin .nav-item').forEach(item => {
         if (item.getAttribute('onclick')?.includes(`'${section}'`)) {
             item.classList.add('active');
         }

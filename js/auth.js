@@ -1,5 +1,6 @@
 // ======================= AUTH (SUPABASE) =======================
 async function checkSession() {
+    if (window.initSupabasePromise) await window.initSupabasePromise;
     // 1. Priorizar ver tienda pública si hay parámetro ?store=
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('store')) {
@@ -59,91 +60,122 @@ async function loadStoreData(identifier) {
     }
 }
 
-async function handleLogin() {
-    const email = document.getElementById('login-email').value;
-    const pass = document.getElementById('login-pass').value;
-    const btn = window.event ? window.event.target : null;
+async function handleLogin(btn) {
+    if (window.initSupabasePromise) await window.initSupabasePromise;
+    const email = document.getElementById('login-email').value.trim();
+    const pass  = document.getElementById('login-pass').value;
+
+    if (!email || !pass) return alert('Completa el email y la contraseña.');
 
     if (btn) setLoading(btn, true);
     try {
         const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
         if (error) throw error;
-        
         appState.session = data.session;
-        
-        if (data.user.email === SUPER_ADMIN_EMAIL) {
-            showView('view-superadmin');
-            fetchGlobalStores();
-            return;
-        }
 
-        await loadStoreData(data.user.id);
+        // Si el usuario es super admin, mostrar panel maestro
+        if (data.user && data.user.email === SUPER_ADMIN_EMAIL) {
+            showView('view-superadmin');
+            showSuperAdminSection('dash');
+            fetchGlobalStores();
+        } else {
+            // Cargar datos de la tienda del usuario y mostrar panel de administración
+            await loadStoreData(data.user.id);
+            showView('view-admin', 'dash');
+        }
     } catch (err) {
-        alert("Error al iniciar sesión: " + err.message);
+        alert('Error al iniciar sesión: ' + err.message);
     } finally {
-        setLoading(btn, false);
+        if (btn) setLoading(btn, false);
     }
 }
 
-async function handleRegister() {
-    const storeName = document.getElementById('reg-store-name').value;
-    const ownerName = document.getElementById('reg-owner').value;
-    const email = document.getElementById('reg-email').value;
-    const pass = document.getElementById('reg-pass').value;
-    const btn = window.event ? window.event.target : null;
+async function handleRegister(btn) {
+    if (window.initSupabasePromise) await window.initSupabasePromise;
+    const storeName = document.getElementById('reg-store-name').value.trim();
+    const ownerName = document.getElementById('reg-owner').value.trim();
+    const email     = document.getElementById('reg-email').value.trim();
+    const pass      = document.getElementById('reg-pass').value;
+    const storeType = document.getElementById('reg-type')?.value || 'Tienda';
 
-    if (!storeName || !email || !pass) return alert("Completa todos los campos");
-    if (pass.length < 6) return alert("La contraseña debe tener al menos 6 caracteres.");
+    if (!storeName || !email || !pass) return alert('Completa todos los campos obligatorios.');
+    if (pass.length < 6) return alert('La contraseña debe tener al menos 6 caracteres.');
     
-    // Generar Slug simple
-    const slug = storeName.toLowerCase().trim()
+    // Generar slug base (limpio, sin número al final)
+    const slugBase = storeName.toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quitar acentos
         .replace(/[^\w\s-]/g, '')
         .replace(/[\s_-]+/g, '-')
         .replace(/^-+|-+$/g, '');
 
     if (btn) setLoading(btn, true);
     try {
-        console.log("Intentando registro para:", email);
+        console.log('Intentando registro para:', email);
         const { data: authData, error: authError } = await supabase.auth.signUp({
             email, password: pass,
             options: { data: { full_name: ownerName } }
         });
-        
         if (authError) {
-            console.error("Detalle error Auth:", authError);
+            console.error('Detalle error Auth:', authError);
             throw authError;
         }
 
-        if (!authData.user) {
-            throw new Error("No se pudo crear el usuario. ¿Quizás ya existe?");
+        // A veces signUp no devuelve session (confirmación por email activa).
+        let session = authData?.session || null;
+        let user    = authData?.user || null;
+        if (!session) {
+            try {
+                const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({ email, password: pass });
+                if (signInErr) {
+                    alert('Registro realizado. Confirma tu email antes de iniciar sesión.');
+                    showView('view-login');
+                    return;
+                }
+                session = signInData?.session || null;
+                user    = signInData?.user || user;
+            } catch (e) {
+                console.error('Error durante signInAfterSignUp:', e);
+                alert('Registro completado, pero no fue posible iniciar sesión automáticamente. Revisa tu email.');
+                return;
+            }
+        }
+
+        if (!user || !session) throw new Error('No se pudo obtener sesión de usuario tras registro.');
+
+        // Garantizar slug único: intentar sin sufijo primero
+        let finalSlug = slugBase;
+        const { data: existing } = await supabase.from('stores').select('id').eq('slug', slugBase).maybeSingle();
+        if (existing) {
+            // Solo agregar sufijo si hay colisión
+            finalSlug = slugBase + '-' + Date.now().toString().slice(-4);
         }
 
         const { data: storeData, error: storeError } = await supabase
             .from('stores')
             .insert([{ 
-                owner_id: authData.user.id, 
-                name: storeName,
-                slug: slug + '-' + Math.floor(Math.random() * 1000), // Evitar duplicados iniciales
-                type: document.querySelector('#view-register select')?.value || 'Tienda'
+                owner_id: user.id, 
+                name:     storeName,
+                slug:     finalSlug,
+                type:     storeType
             }])
             .select()
             .single();
-        
+
         if (storeError) {
-            console.error("Detalle error Store:", storeError);
+            console.error('Detalle error Store:', storeError);
             throw storeError;
         }
 
-        appState.session = authData.session;
-        appState.tenant = storeData;
-        alert("¡Tienda creada con éxito!");
+        appState.session = session;
+        appState.tenant  = storeData;
+        alert('¡Tienda creada con éxito! Tu enlace es: ' + window.location.origin + '?store=' + finalSlug);
         if (typeof initializeAdminUI === 'function') initializeAdminUI();
         showView('view-admin', 'dash');
     } catch (err) {
-        console.error("Excepción en handleRegister:", err);
-        alert("Error en el registro: " + (err.description || err.message));
+        console.error('Excepción en handleRegister:', err);
+        alert('Error en el registro: ' + (err.description || err.message));
     } finally {
-        setLoading(btn, false);
+        if (btn) setLoading(btn, false);
     }
 }
 

@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Librería QR Code para SaaS -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -24,8 +24,6 @@
                     ClickSaaS
                 </div>
                 <div style="display: flex; gap: 12px;">
-                    <!-- Botón temporal para depuración -->
-                    <button class="btn btn-secondary" style="border-color: var(--danger); color: var(--danger);" onclick="showView('view-superadmin'); fetchGlobalStores();">Debug: Super Admin</button>
                     <button class="btn btn-secondary" onclick="showView('view-login')">Iniciar Sesión</button>
                     <button class="btn btn-primary" onclick="showView('view-register')">Crear Tienda Gratis</button>
                 </div>
@@ -74,8 +72,7 @@
                 <label>Contraseña</label>
                 <input type="password" id="login-pass" class="input">
             </div>
-            <button class="btn btn-primary w-full" onclick="handleLogin()">Entrar</button>
-            <button class="btn btn-secondary w-full" style="margin-top: 8px; border-color: var(--danger); color: var(--danger);" onclick="showView('view-superadmin'); fetchGlobalStores();">Debug: Entrar como Super Admin</button>
+            <button class="btn btn-primary w-full" onclick="handleLogin(this)">Entrar</button>
             <p style="margin-top: 16px; text-align: center; color: var(--text-sec); font-size: 14px;">
                 ¿No tienes tienda? <a style="color: var(--accent); cursor: pointer;" onclick="switchAuth('view-register')">Registrate</a>
             </p>
@@ -95,7 +92,7 @@
                 </div>
                 <div class="input-group">
                     <label>Tipo de Negocio</label>
-                    <select class="input">
+                    <select id="reg-type" class="input">
                         <option>Tienda de Ropa</option>
                         <option>Restaurant</option>
                         <option>Tecnología</option>
@@ -117,10 +114,9 @@
                 <input type="password" id="reg-pass" class="input">
             </div>
             
-            <button class="btn btn-primary w-full" style="margin-top: 24px;" onclick="handleRegister()">
+            <button class="btn btn-primary w-full" style="margin-top: 24px;" onclick="handleRegister(this)">
                 Crear mi Tienda
             </button>
-            <button class="btn btn-secondary w-full" style="margin-top: 8px; border-color: var(--danger); color: var(--danger);" onclick="showView('view-superadmin'); fetchGlobalStores();">Debug: Saltar Registro (Ir al Panel Maestro)</button>
         </div>
     </div>
 
@@ -191,7 +187,7 @@
             <div id="section-products" class="fade-in" style="display: none;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 24px;">
                     <h2>Productos</h2>
-                    <button class="btn btn-primary" onclick="openModal('modal-product')">Agregar Producto</button>
+                    <button class="btn btn-primary" onclick="openNewProductModal()">Agregar Producto</button>
                 </div>
                 <div id="grid-products" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;"></div>
             </div>
@@ -213,6 +209,11 @@
                     <div class="input-group" style="margin-top: 16px;">
                         <label>URL de la Tienda (Slug)</label>
                         <input type="text" id="setting-slug" class="input" placeholder="ej: mi-tienda">
+                    </div>
+                    <div class="input-group" style="margin-top: 16px;">
+                        <label>Número WhatsApp del Negocio</label>
+                        <input type="tel" id="setting-whatsapp" class="input" placeholder="Ej: 5215512345678 (con código de país, sin + ni guiones)">
+                        <p style="font-size: 12px; color: var(--text-sec); margin-top: 4px;">Los clientes enviarán sus pedidos a este número. Incluye el código de país.</p>
                     </div>
                     <div class="input-group" style="margin-top: 16px;">
                         <label>Moneda</label>
@@ -395,6 +396,7 @@
     </div>
 
     <!-- SCRIPTS MODULARES -->
+    <script src="js/env.js"></script>
     <script src="js/config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/auth.js"></script>
