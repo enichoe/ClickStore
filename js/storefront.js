@@ -14,10 +14,12 @@ async function loadPublicStore(identifier) {
             
         if (sErr || !store) throw new Error("Tienda no encontrada");
 
-        const { data: prods, error: pErr } = await supabase.from('products').select('*').eq('store_id', store.id);
+        const { data: prods } = await supabase.from('products').select('*').eq('store_id', store.id);
+        const { data: cats }  = await supabase.from('categories').select('*').eq('store_id', store.id).order('name', { ascending: true });
         
         appState.tenant = store;
         appState.products = prods || [];
+        appState.categories = cats || [];
         
         renderStorefront();
         showView('view-store');
@@ -40,13 +42,41 @@ function renderStorefront() {
     if (navTitle) navTitle.innerText = appState.tenant.name;
     if (mainTitle) mainTitle.innerText = appState.tenant.name;
     
-    const grid = document.getElementById('store-products-grid');
-    if (!grid) return;
-
     // Símbolo de moneda según configuración de la tienda
     const currencySymbol = getCurrencySymbol(appState.tenant.currency);
 
-    grid.innerHTML = appState.products.map(p => `
+    if (appState.categories.length > 0) {
+        // Renderizar por categorías
+        grid.innerHTML = appState.categories.map(cat => {
+            const catProds = appState.products.filter(p => p.category_id === cat.id);
+            if (catProds.length === 0) return '';
+
+            return `
+                <div style="grid-column: 1 / -1; margin-top: 32px; border-bottom: 2px solid var(--accent); padding-bottom: 8px;">
+                    <h2 style="font-size: 24px;">${cat.name}</h2>
+                </div>
+                ${catProds.map(p => renderProductCard(p, currencySymbol)).join('')}
+            `;
+        }).join('');
+
+        // Productos sin categoría
+        const noCatProds = appState.products.filter(p => !p.category_id);
+        if (noCatProds.length > 0) {
+            grid.innerHTML += `
+                <div style="grid-column: 1 / -1; margin-top: 32px; border-bottom: 2px solid var(--border); padding-bottom: 8px;">
+                    <h2 style="font-size: 24px; color: var(--text-sec);">Otros</h2>
+                </div>
+                ${noCatProds.map(p => renderProductCard(p, currencySymbol)).join('')}
+            `;
+        }
+    } else {
+        // Renderizado simple original
+        grid.innerHTML = appState.products.map(p => renderProductCard(p, currencySymbol)).join('');
+    }
+}
+
+function renderProductCard(p, currencySymbol) {
+    return `
         <div class="card" style="padding: 0; overflow: hidden; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
             <img src="${p.image || 'https://via.placeholder.com/300'}" style="width: 100%; height: 180px; object-fit: cover;">
             <div style="padding: 16px;">
@@ -55,7 +85,7 @@ function renderStorefront() {
                 <button class="btn btn-primary w-full" style="margin-top: 12px;" onclick="addToCart('${p.id}')">Agregar</button>
             </div>
         </div>
-    `).join('');
+    `;
 }
 
 // ======================= CART & ORDERS =======================
@@ -72,6 +102,7 @@ function addToCart(id) {
         appState.cart.push({ id: product.id, name: product.name, price: price, image: product.image, qty: 1 });
     }
     updateCartBadge();
+    showToast(`¡${product.name} añadido al carrito!`);
 }
 
 function updateCartBadge() {

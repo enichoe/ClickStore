@@ -139,6 +139,10 @@
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                     Productos
                 </div>
+                <div class="nav-item" onclick="showAdminSection('categories')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+                    Categorías
+                </div>
                 <div class="nav-item" onclick="showAdminSection('orders')">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                     Pedidos
@@ -190,6 +194,15 @@
                     <button class="btn btn-primary" onclick="openNewProductModal()">Agregar Producto</button>
                 </div>
                 <div id="grid-products" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;"></div>
+            </div>
+
+            <!-- Categories Section -->
+            <div id="section-categories" class="fade-in" style="display: none;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 24px;">
+                    <h2>Categorías</h2>
+                    <button class="btn btn-primary" onclick="openModal('modal-category')">Nueva Categoría</button>
+                </div>
+                <div id="list-categories" style="display: grid; gap: 12px;"></div>
             </div>
 
             <!-- Orders Section -->
@@ -310,6 +323,12 @@
                 <input type="text" id="p-name" class="input" placeholder="Nombre del producto" required>
                 <input type="number" id="p-price" class="input" placeholder="Precio (ej: 3.50)" required style="margin-top: 12px;" step="0.01">
                 <div class="input-group" style="margin-top: 12px;">
+                    <label>Categoría</label>
+                    <select id="p-category" class="input">
+                        <option value="">Sin Categoría</option>
+                    </select>
+                </div>
+                <div class="input-group" style="margin-top: 12px;">
                     <label>Imagen del Producto</label>
                     <input type="file" id="p-image-file" class="input" accept="image/*">
                 </div>
@@ -409,5 +428,19 @@
     <script src="js/auth.js"></script>
     <script src="js/admin.js"></script>
     <script src="js/storefront.js"></script>
+    <!-- Modal Categoría -->
+    <div id="modal-category" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 16px;">Gestionar Categoría</h3>
+            <form onsubmit="saveCategory(event)">
+                <input type="text" id="cat-name" class="input" placeholder="Ej: Bebidas, Pizzas, Postres" required>
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary w-full" onclick="closeModal('modal-category')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary w-full">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 10000; display: flex; flex-direction: column; gap: 8px;"></div>
 </body>
 </html>

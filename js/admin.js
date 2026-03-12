@@ -19,6 +19,7 @@ async function initializeAdminUI() {
     document.getElementById('store-link-input').value = window.location.origin + window.location.pathname + '?store=' + storeIdentifier;
     
     await fetchProducts();
+    await fetchCategories();
     await fetchOrders();
 }
 
@@ -39,10 +40,84 @@ async function fetchProducts() {
 
         appState.products = data || [];
         renderProducts();
+        
+        // Actualizar select de categorías en el modal
+        const catSelect = document.getElementById('p-category');
+        if (catSelect) {
+            catSelect.innerHTML = '<option value="">Sin Categoría</option>' + (appState.categories || []).map(c => `
+                <option value="${c.id}">${c.name}</option>
+            `).join('');
+        }
     } catch (err) {
         console.error('Unexpected fetchProducts error:', err);
         appState.products = [];
         renderProducts();
+    }
+}
+
+async function fetchCategories() {
+    try {
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('store_id', appState.tenant.id)
+            .order('name', { ascending: true });
+
+        if (error) throw error;
+        appState.categories = data || [];
+        renderCategories();
+    } catch (err) {
+        console.error('fetchCategories error:', err);
+    }
+}
+
+function renderCategories() {
+    const list = document.getElementById('list-categories');
+    if (!list) return;
+    
+    if (appState.categories.length === 0) {
+        list.innerHTML = '<div class="card">No hay categorías.</div>';
+        return;
+    }
+
+    list.innerHTML = appState.categories.map(c => `
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; margin-bottom: 8px;">
+            <span style="font-weight: 600;">${c.name}</span>
+            <button class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')">Eliminar</button>
+        </div>
+    `).join('');
+}
+
+async function saveCategory(e) {
+    if (e) e.preventDefault();
+    const nameInput = document.getElementById('cat-name');
+    const name = nameInput.value.trim();
+    if (!name) return;
+
+    try {
+        const { error } = await supabase
+            .from('categories')
+            .insert([{ name, store_id: appState.tenant.id }]);
+
+        if (error) throw error;
+        nameInput.value = '';
+        closeModal('modal-category');
+        showToast('Categoría creada');
+        fetchCategories();
+    } catch (err) {
+        alert('Error: ' + err.message);
+    }
+}
+
+async function deleteCategory(id) {
+    if (!confirm('¿Eliminar esta categoría? Los productos ya no estarán vinculados a ella.')) return;
+    try {
+        const { error } = await supabase.from('categories').delete().eq('id', id);
+        if (error) throw error;
+        showToast('Categoría eliminada');
+        fetchCategories();
+    } catch (err) {
+        alert('Error: ' + err.message);
     }
 }
 
@@ -82,6 +157,7 @@ function editProduct(id) {
     editingProductId = id;
     document.getElementById('p-name').value = p.name;
     document.getElementById('p-price').value = p.price;
+    document.getElementById('p-category').value = p.category_id || '';
     document.getElementById('modal-product-title').innerText = "Editar Producto";
     openModal('modal-product');
 }
@@ -197,6 +273,7 @@ async function saveProduct(e) {
             store_id: appState.tenant.id,
             name: document.getElementById('p-name').value,
             price: Number(parseFloat(document.getElementById('p-price').value) || 0),
+            category_id: document.getElementById('p-category').value || null,
             image: imageUrl
         };
 
