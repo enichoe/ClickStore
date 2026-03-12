@@ -122,17 +122,28 @@ function renderOrders() {
     }
 
     const currencySymbol = getCurrencySymbol(appState.tenant.currency);
-    const html = appState.orders.map(o => `
-        <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <p style="font-weight: 600;">${o.customer_name}</p>
-                <p style="font-size: 12px; color: var(--text-sec);">${(JSON.parse(o.items || '[]')).length} items - ${currencySymbol}${parseFloat(o.total).toFixed(2)}</p>
+    const html = appState.orders.map(o => {
+        let itemsCount = 0;
+        try {
+            // Si es string (legacy o error), parseamos. Si ya es objeto/array, usamos length.
+            const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
+            itemsCount = Array.isArray(items) ? items.length : 0;
+        } catch (e) {
+            console.error("Error parsing items for order:", o.id, e);
+        }
+
+        return `
+            <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <p style="font-weight: 600;">${o.customer_name}</p>
+                    <p style="font-size: 12px; color: var(--text-sec);">${itemsCount} productos - ${currencySymbol}${parseFloat(o.total).toFixed(2)}</p>
+                </div>
+                <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: ${o.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; color: ${o.status === 'pending' ? 'var(--accent)' : 'var(--success)'};">
+                    ${o.status}
+                </span>
             </div>
-            <span style="padding: 4px 8px; border-radius: 4px; font-size: 12px; background: ${o.status === 'pending' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; color: ${o.status === 'pending' ? 'var(--accent)' : 'var(--success)'};">
-                ${o.status}
-            </span>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     list.innerHTML = html;
     dashList.innerHTML = html;
