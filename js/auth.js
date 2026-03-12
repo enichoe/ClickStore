@@ -1,6 +1,8 @@
 // ======================= AUTH (SUPABASE) =======================
 async function checkSession() {
     if (window.initSupabasePromise) await window.initSupabasePromise;
+    try { requireSupabase(); } catch(e) { console.error(e.message); showView('view-landing'); return; }
+
     // 1. Priorizar ver tienda pública si hay parámetro ?store=
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('store')) {
@@ -62,6 +64,8 @@ async function loadStoreData(identifier) {
 
 async function handleLogin(btn) {
     if (window.initSupabasePromise) await window.initSupabasePromise;
+    try { requireSupabase(); } catch(e) { return alert(e.message); }
+
     const email = document.getElementById('login-email').value.trim();
     const pass  = document.getElementById('login-pass').value;
 
@@ -92,6 +96,8 @@ async function handleLogin(btn) {
 
 async function handleRegister(btn) {
     if (window.initSupabasePromise) await window.initSupabasePromise;
+    try { requireSupabase(); } catch(e) { return alert(e.message); }
+
     const storeName = document.getElementById('reg-store-name').value.trim();
     const ownerName = document.getElementById('reg-owner').value.trim();
     const email     = document.getElementById('reg-email').value.trim();

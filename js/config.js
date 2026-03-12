@@ -70,3 +70,22 @@ var SUPER_ADMIN_EMAIL = (window.__env && window.__env.SUPER_ADMIN_EMAIL) || (win
 
 // MODO DESARROLLADOR: activar mediante variable de entorno en desarrollo
 var DEV_MODE = (window.__env && window.__env.DEV_MODE) || (window.DEV_MODE) || false;
+
+// Helper: verificar que supabase esté listo antes de cualquier operación
+// Lanza un error claro si no está configurado (en lugar del críptico "null")
+function requireSupabase() {
+    if (!supabase) {
+        const keyOk  = SUPABASE_KEY  && SUPABASE_KEY  !== 'REPLACE_WITH_ANON_KEY';
+        const urlOk  = SUPABASE_URL  && SUPABASE_URL  !== '';
+        if (!urlOk || !keyOk) {
+            throw new Error(
+                'Supabase no está configurado. ' +
+                'Ve a Vercel → Settings → Environment Variables y define:\n' +
+                '· SUPABASE_URL\n· SUPABASE_KEY\n· SUPER_ADMIN_EMAIL\n' +
+                'Luego redespliega el proyecto.'
+            );
+        }
+        throw new Error('Supabase no pudo inicializarse. Recarga la página o revisa la consola.');
+    }
+    return supabase;
+}
