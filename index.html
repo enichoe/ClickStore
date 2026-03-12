@@ -187,6 +187,28 @@
                 </div>
             </div>
 
+            <!-- Super Admin Section -->
+            <div id="section-super" class="fade-in" style="display: none;">
+                <h2 style="margin-bottom: 24px;">Panel de Control Global</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
+                    <div class="card" style="border-left: 4px solid var(--accent);">
+                        <p style="color: var(--text-sec); font-size: 14px;">Total Tiendas</p>
+                        <p style="font-size: 28px; font-weight: 800;" id="super-total-stores">0</p>
+                    </div>
+                    <div class="card" style="border-left: 4px solid #10b981;">
+                        <p style="color: var(--text-sec); font-size: 14px;">Pedidos Totales</p>
+                        <p style="font-size: 28px; font-weight: 800;" id="super-total-orders">0</p>
+                    </div>
+                </div>
+                <div class="card" style="padding: 0; overflow: hidden;">
+                    <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-sec);">
+                        <h3 style="margin: 0;">Gestión de Tiendas</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openStoreModal()">+ Crear Tienda</button>
+                    </div>
+                    <div id="super-stores-list"></div>
+                </div>
+            </div>
+
             <!-- Products Section -->
             <div id="section-products" class="fade-in" style="display: none;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 24px;">
@@ -457,5 +479,42 @@
         </div>
     </div>
     <div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 10000; display: flex; flex-direction: column; gap: 8px;"></div>
-</body>
-</html>
+    <!-- Modal Gestion Tienda (Super Admin) -->
+    <div id="modal-store" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-store-title" style="margin-bottom: 20px;">Gestionar Tienda</h3>
+            <form onsubmit="saveStoreByAdmin(event)">
+                <div class="input-group">
+                    <label>Nombre de la Tienda</label>
+                    <input type="text" id="s-name" class="input" required>
+                </div>
+                <div class="input-group" style="margin-top: 12px;">
+                    <label>Slug (URL personalizada)</label>
+                    <input type="text" id="s-slug" class="input" placeholder="pizzeria-roma">
+                </div>
+                <div class="input-group" style="margin-top: 12px;">
+                    <label>Tipo de Negocio</label>
+                    <select id="s-type" class="input">
+                        <option value="Restaurante">Restaurante</option>
+                        <option value="Tienda">Tienda de Ropa</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary w-full" onclick="closeModal('modal-store')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary w-full">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openStoreModal() {
+            editingStoreId = null;
+            document.getElementById('modal-store-title').innerText = "Crear Nueva Tienda";
+            document.getElementById('s-name').value = '';
+            document.getElementById('s-slug').value = '';
+            document.getElementById('s-type').value = 'Otros';
+            openModal('modal-store');
+        }
+    </script>

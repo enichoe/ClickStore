@@ -35,6 +35,36 @@ async function initializeAdminUI() {
     await fetchProducts();
     await fetchCategories();
     await fetchOrders();
+
+    // Comprobar si es Super Admin
+    checkSuperAdmin();
+}
+
+async function checkSuperAdmin() {
+    try {
+        const { data, error } = await supabase
+            .from('platform_admins')
+            .select('*')
+            .eq('user_id', appState.session.user.id)
+            .maybeSingle();
+        
+        if (data) {
+            const sidebar = document.querySelector('.nav-admin');
+            if (sidebar && !document.getElementById('nav-super')) {
+                const superItem = document.createElement('div');
+                superItem.id = 'nav-super';
+                superItem.className = 'nav-item';
+                superItem.style.background = 'rgba(37,99,235,0.1)';
+                superItem.style.color = 'var(--accent)';
+                superItem.style.fontWeight = '800';
+                superItem.innerHTML = '🛡️ SUPER ADMIN';
+                superItem.onclick = () => showAdminSection('super');
+                sidebar.prepend(superItem);
+            }
+        }
+    } catch (err) {
+        console.warn("Error checking super admin:", err);
+    }
 }
 
 async function fetchProducts() {
@@ -373,33 +403,50 @@ function closeModal(id) {
 // ======================= SUPER ADMIN ACTIONS =======================
 async function fetchGlobalStores() {
     try {
-        const { data: stores, error: sErr } = await supabase.from('stores').select('*');
+        const { data: stores, error: sErr } = await supabase.from('stores').select('*').order('created_at', { ascending: false });
         if (sErr) throw sErr;
 
-        const { count: ordersCount } = await supabase
-            .from('orders')
-            .select('*', { count: 'exact', head: true });
+        const { count: totalOrders } = await supabase.from('orders').select('*', { count: 'exact', head: true });
 
-        document.getElementById('super-total-stores').innerText = (stores && stores.length) || 0;
-        document.getElementById('super-total-orders').innerText = ordersCount || 0;
+        document.getElementById('super-total-stores').innerText = stores.length;
+        document.getElementById('super-total-orders').innerText = totalOrders || 0;
 
         const list = document.getElementById('super-stores-list');
         list.innerHTML = stores.map(s => `
-            <div style="padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+            <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: ${s.active ? 'white' : '#f8fafc'};">
                 <div>
-                    <p style="font-weight: 600;">${s.name}</p>
-                    <p style="font-size: 12px; color: var(--text-sec);">${s.type} | Slug: ${s.slug || 'N/A'}</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h4 style="margin: 0; font-weight: 700;">${s.name}</h4>
+                        <span style="font-size: 10px; padding: 2px 8px; border-radius: 20px; background: ${s.active ? '#dcfce7' : '#fee2e2'}; color: ${s.active ? '#166534' : '#991b1b'}; font-weight: 800; text-transform: uppercase;">
+                            ${s.active ? 'Activa' : 'Desactivada'}
+                        </span>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">
+                        Slug: <strong>${s.slug || 'N/A'}</strong> | WhatsApp: ${s.whatsapp_phone || 'N/A'}
+                    </p>
+                    <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">ID: ${s.id}</p>
                 </div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn btn-secondary btn-sm" onclick="window.open('?store=${s.id}', '_blank')">Ver</button>
-                    <button class="btn btn-primary btn-sm" onclick="editStoreByAdmin('${s.id}')">Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteStoreByAdmin('${s.id}')">Borrar</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-secondary btn-sm" onclick="toggleStoreActive('${s.id}', ${s.active})">
+                        ${s.active ? 'Desactivar' : 'Activar'}
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteStoreByAdmin('${s.id}')">Eliminar</button>
                 </div>
             </div>
-        `).join('') || '<div style="padding: 20px; text-align: center; color: var(--text-sec);">No hay tiendas registradas.</div>';
-
+        `).join('');
     } catch (err) {
-        console.error("SuperAdmin Error:", err);
+        showToast("Error cargando dashboard global", "error");
+    }
+}
+
+async function toggleStoreActive(id, currentStatus) {
+    try {
+        const { error } = await supabase.from('stores').update({ active: !currentStatus }).eq('id', id);
+        if (error) throw error;
+        showToast("Estado de tienda actualizado");
+        fetchGlobalStores();
+    } catch (err) {
+        showToast("Error al actualizar estado", "error");
     }
 }
 

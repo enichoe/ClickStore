@@ -77,12 +77,20 @@ function renderStorefront() {
 
 function renderProductCard(p, currencySymbol) {
     return `
-        <div class="card" style="padding: 0; overflow: hidden; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
-            <img src="${p.image || 'https://via.placeholder.com/300'}" style="width: 100%; height: 180px; object-fit: cover;">
-            <div style="padding: 16px;">
-                <h4 style="font-weight: 600; margin-bottom: 4px;">${p.name}</h4>
-                <p style="color: var(--accent); font-weight: 700; font-size: 18px;">${currencySymbol}${parseFloat(p.price).toFixed(2)}</p>
-                <button class="btn btn-primary w-full" style="margin-top: 12px;" onclick="addToCart('${p.id}')">Agregar</button>
+        <div class="store-card animate-slide">
+            <div style="position: relative; height: 220px; overflow: hidden;">
+                <img src="${p.image || 'https://via.placeholder.com/300'}" style="width: 100%; height: 100%; object-fit: cover;">
+                ${p.active === false ? '<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #ef4444;">Agotado</div>' : ''}
+            </div>
+            <div style="padding: 20px;">
+                <h4 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 4px;">${p.name}</h4>
+                <p style="font-size: 0.85rem; color: #64748b; line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.description || 'Sin descripción disponible'}</p>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 1.25rem; font-weight: 800; color: var(--accent);">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
+                    <button class="btn btn-primary" style="padding: 10px 16px; border-radius: 12px; font-weight: 600;" onclick="addToCart('${p.id}')">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                    </button>
+                </div>
             </div>
         </div>
     `;

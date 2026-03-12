@@ -47,6 +47,8 @@ function showAdminSection(section) {
     });
     
     if (section === 'settings' && typeof generateQR === 'function') generateQR();
+    if (section === 'super' && typeof fetchGlobalStores === 'function') fetchGlobalStores();
+    
     localStorage.setItem('clickSaaS_lastSection', section);
 }
 
@@ -90,6 +92,38 @@ function getCurrencySymbol(currency) {
         'ARS': '$'
     };
     return symbols[currency] || '$';
+}
+
+// = [UI Helpers] =
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `fade-in`;
+    toast.style.cssText = `
+        background: ${type === 'success' ? '#10B981' : '#EF4444'};
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        font-weight: 500;
+        min-width: 200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        animation: slideIn 0.3s ease-out;
+    `;
+    
+    toast.innerHTML = `<span>${message}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 window.addEventListener('load', () => {
