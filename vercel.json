@@ -2,14 +2,10 @@
   "version": 2,
   "buildCommand": "node scripts/generate-env.js",
   "outputDirectory": ".",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/js/env.js",
-      "dest": "/js/env.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
