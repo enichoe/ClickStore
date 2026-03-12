@@ -130,9 +130,32 @@ function openCart() {
             </div>
         `;
     }).join('');
+
+    // Lógica de Delivery
+    let deliveryHtml = '';
+    let finalTotal = total;
+    if (appState.tenant.active_delivery) {
+        const dPrice = parseFloat(appState.tenant.delivery_price || 0);
+        finalTotal += dPrice;
+        deliveryHtml = `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-sec);">
+                <span>Subtotal</span>
+                <span>${currencySymbol}${total.toFixed(2)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); color: var(--accent);">
+                <span>Envío (Delivery)</span>
+                <span>${currencySymbol}${dPrice.toFixed(2)}</span>
+            </div>
+        `;
+    }
     
     const cartTotal = document.getElementById('cart-total');
-    if (cartTotal) cartTotal.innerText = currencySymbol + total.toFixed(2);
+    if (itemsDiv && appState.tenant.active_delivery) {
+        // Insertar desglose antes del precio final si hay delivery
+        itemsDiv.innerHTML += deliveryHtml;
+    }
+    
+    if (cartTotal) cartTotal.innerText = currencySymbol + finalTotal.toFixed(2);
 }
 
 // ======================= QR & UTILS =======================

@@ -13,6 +13,20 @@ async function initializeAdminUI() {
     if (document.getElementById('setting-currency')) {
         document.getElementById('setting-currency').value = appState.tenant.currency || 'USD';
     }
+
+    // Delivery settings
+    const deliveryCheck = document.getElementById('setting-delivery-active');
+    const deliveryPrice = document.getElementById('setting-delivery-price');
+    const deliveryContainer = document.getElementById('delivery-price-container');
+
+    if (deliveryCheck) {
+        deliveryCheck.checked = appState.tenant.active_delivery || false;
+        deliveryContainer.style.display = deliveryCheck.checked ? 'block' : 'none';
+        deliveryCheck.onchange = (e) => deliveryContainer.style.display = e.target.checked ? 'block' : 'none';
+    }
+    if (deliveryPrice) {
+        deliveryPrice.value = appState.tenant.delivery_price || 0;
+    }
     
     // Usar slug para el enlace si existe
     const storeIdentifier = appState.tenant.slug || appState.tenant.id;
@@ -319,6 +333,9 @@ async function updateStoreSettings() {
     const newPhone   = document.getElementById('setting-whatsapp')?.value.trim() || '';
     const newCurrency = document.getElementById('setting-currency')?.value || 'USD';
     
+    const deliveryActive = document.getElementById('setting-delivery-active')?.checked || false;
+    const deliveryPrice = parseFloat(document.getElementById('setting-delivery-price')?.value || 0);
+    
     if (!newName) return alert('El nombre de la tienda no puede estar vacío.');
 
     try {
@@ -328,7 +345,9 @@ async function updateStoreSettings() {
                 name: newName, 
                 slug: newSlug, 
                 whatsapp_phone: newPhone,
-                currency: newCurrency
+                currency: newCurrency,
+                active_delivery: deliveryActive,
+                delivery_price: deliveryPrice
             })
             .eq('id', appState.tenant.id)
             .select()
