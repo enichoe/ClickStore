@@ -10,12 +10,22 @@ async function loadPublicStore(identifier) {
             query = query.eq('slug', identifier);
         }
 
+        console.log("Cargando tienda con identificador:", identifier);
         const { data: store, error: sErr } = await query.maybeSingle();
             
-        if (sErr || !store) throw new Error("Tienda no encontrada");
+        if (sErr) {
+            console.error("Error de Supabase cargando tienda (400?):", sErr);
+            throw sErr;
+        }
 
-        const { data: prods } = await supabase.from('products').select('*').eq('store_id', store.id);
-        const { data: cats }  = await supabase.from('categories').select('*').eq('store_id', store.id).order('name', { ascending: true });
+        if (!store) throw new Error("Tienda no encontrada");
+
+        console.log("Tienda encontrada:", store.name);
+        const { data: prods, error: pErr } = await supabase.from('products').select('*').eq('store_id', store.id);
+        if (pErr) console.error("Error cargando productos:", pErr);
+
+        const { data: cats, error: cErr }  = await supabase.from('categories').select('*').eq('store_id', store.id).order('name', { ascending: true });
+        if (cErr) console.error("Error cargando categorías (posible causa del 400):", cErr);
         
         appState.tenant = store;
         appState.products = prods || [];
@@ -24,8 +34,22 @@ async function loadPublicStore(identifier) {
         renderStorefront();
         showView('view-store');
     } catch (err) {
+        console.error("DEBUG - Error detallado:", err);
         const errorView = document.getElementById('view-error');
-        if (errorView) errorView.style.display = 'flex';
+        if (errorView) {
+            errorView.style.display = 'flex';
+            errorView.innerHTML = `
+                <div style="text-align: center; padding: 40px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 400px;">
+                    <h2 style="color: #ef4444; margin-bottom: 16px;">Error de Conexión</h2>
+                    <p style="color: #64748b; margin-bottom: 24px;">${err.message || 'Error desconocido'}</p>
+                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 11px; color: #94a3b8; text-align: left; overflow-wrap: break-word;">
+                        Código: ${err.code || 'N/A'}<br>
+                        Detalle: ${err.details || 'Ver consola para más info'}
+                    </div>
+                    <button onclick="location.reload()" style="margin-top: 24px; background: var(--accent); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">Reintentar</button>
+                </div>
+            `;
+        }
         showView('view-error');
     }
 }
