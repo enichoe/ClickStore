@@ -68,6 +68,8 @@ function renderStorefront() {
     
     // Símbolo de moneda según configuración de la tienda
     const currencySymbol = getCurrencySymbol(appState.tenant.currency);
+    const grid = document.getElementById('store-products-grid');
+    if (!grid) return;
 
     if (appState.categories.length > 0) {
         // Renderizar por categorías
