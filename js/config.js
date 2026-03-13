@@ -35,8 +35,6 @@ function _tryInitSupabase() {
     ) {
         try {
             supabase = _supabaseSDK.createClient(SUPABASE_URL, SUPABASE_KEY);
-            // Restaurar window.supabase al cliente ya que var supabase lo sobreescribió
-            // (queremos que otros scripts que lean window.supabase también lo vean)
             console.log('[ClickSaaS] Supabase cliente inicializado correctamente.');
             return true;
         } catch (e) {
@@ -81,24 +79,17 @@ var DEV_MODE = (window.__env && window.__env.DEV_MODE) === true || false;
 // -----------------------------------------------------------------------
 function requireSupabase() {
     if (!supabase) {
-        const keyOk = SUPABASE_KEY && SUPABASE_KEY !== 'REPLACE_WITH_ANON_KEY';
+        const keyOk = SUPABASE_KEY && SUPABASE_KEY !== 'REPLACE_WITH_ANON_KEY' && SUPABASE_KEY !== '';
         const urlOk = SUPABASE_URL && SUPABASE_URL !== '';
         if (!urlOk || !keyOk) {
-            throw new Error(
-                '⚠️ Supabase no está configurado.\n\n' +
-                'Ve a Vercel → Tu proyecto → Settings → Environment Variables\n' +
-                'y agrega:\n' +
-                '  SUPABASE_URL = https://tu-proyecto.supabase.co\n' +
-                '  SUPABASE_KEY = tu-anon-key\n' +
-                '  SUPER_ADMIN_EMAIL = tu@email.com\n\n' +
-                'Luego haz Redeploy.'
-            );
+            const msg = '⚠️ Configuración de Supabase incompleta. ' + 
+                       (!urlOk ? 'Falta URL. ' : '') + 
+                       (!keyOk ? 'Falta Key. ' : '') + 
+                       '\n\nSi estás en Vercel, agrega SUPABASE_URL y SUPABASE_KEY en Settings > Environment Variables.';
+            console.error(msg);
+            throw new Error(msg);
         }
-        throw new Error(
-            '⚠️ Supabase no pudo inicializarse.\n' +
-            'Verifica que SUPABASE_URL y SUPABASE_KEY sean correctas en Vercel, ' +
-            'y que el dominio esté permitido en Supabase → Authentication → URL Configuration.'
-        );
+        throw new Error('⚠️ Supabase no pudo inicializarse. Revisa la consola para más detalles.');
     }
     return supabase;
 }

@@ -22,19 +22,24 @@ async function checkSession() {
         return;
     }
 
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    if (sessionError) console.error("Error obteniendo sesión:", sessionError);
+
     if (session) {
         appState.session = session;
-        console.log("Logged in as:", session.user.email);
+        console.log("Sesión activa detectada para:", session.user.email);
         
-        if (session.user.email === SUPER_ADMIN_EMAIL) {
+        if (session.user.id === 'eb72d1f1-2856-4299-8588-34865de01391' || session.user.email === SUPER_ADMIN_EMAIL) {
+            console.log("Entrando como Super Admin");
             showView('view-superadmin');
             fetchGlobalStores();
             return;
         }
 
+        console.log("Cargando datos de tienda para user:", session.user.id);
         await loadStoreData(session.user.id);
     } else {
+        console.log("No hay sesión activa, mostrando landing.");
         showView('view-landing');
     }
 }
