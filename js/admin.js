@@ -33,7 +33,10 @@ async function initializeAdminUI() {
     
     // Usar slug para el enlace si existe
     const storeIdentifier = appState.tenant.slug || appState.tenant.id;
-    document.getElementById('store-link-input').value = window.location.origin + window.location.pathname + '?store=' + storeIdentifier;
+    const linkInput = document.getElementById('store-link-input');
+    if (linkInput) {
+        linkInput.value = window.location.origin + window.location.pathname + '?store=' + storeIdentifier;
+    }
     
     await updateUsageStats();
     await fetchProducts();
@@ -42,6 +45,14 @@ async function initializeAdminUI() {
 
     // Comprobar si es Super Admin
     checkSuperAdmin();
+}
+
+function copyStoreLink() {
+    const input = document.getElementById('store-link-input');
+    if (!input) return;
+    input.select();
+    document.execCommand('copy');
+    showToast('¡Enlace copiado al portapapeles!');
 }
 
 async function updateUsageStats() {
@@ -571,13 +582,18 @@ async function updateStoreSettings(event) {
             const fileExt = logoFile.name.split('.').pop();
             const fileName = `${appState.tenant.id}/logo_${Date.now()}.${fileExt}`;
             const { error: uploadError } = await supabase.storage
-                .from('products')
+                .from('product-images')
                 .upload(fileName, logoFile, { upsert: true });
 
-            if (uploadError) throw uploadError;
+            if (uploadError) {
+                if (uploadError.message === 'Bucket not found') {
+                    throw new Error('El contenedor de almacenamiento "product-images" no existe en Supabase. Por favor, créalo en tu dashboard o ejecuta el script SQL de storage.');
+                }
+                throw uploadError;
+            }
 
             const { data: publicData } = supabase.storage
-                .from('products')
+                .from('product-images')
                 .getPublicUrl(fileName);
             logoUrl = publicData.publicUrl;
         }
