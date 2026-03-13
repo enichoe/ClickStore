@@ -345,13 +345,31 @@ function renderOrders() {
     const dashList = document.getElementById('dash-recent-orders');
     if (!list || !dashList) return;
     
+    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
+    const pending = appState.orders.filter(o => o.status === 'pending').length;
+    const sales = appState.orders.reduce((sum, o) => sum + parseFloat(o.total || 0), 0);
+    
+    // Sincronizar estadísticas SIEMPRE, incluso si no hay pedidos
+    const statOrders = document.getElementById('stat-orders');
+    const statSales = document.getElementById('stat-sales');
+    if (statOrders) statOrders.innerText = appState.orders.length;
+    if (statSales) statSales.innerText = currencySymbol + sales.toFixed(2);
+    
+    const badge = document.getElementById('order-badge');
+    if (badge) {
+        if (pending > 0) {
+            badge.style.display = 'block';
+            badge.innerText = pending;
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
     if (appState.orders.length === 0) {
         list.innerHTML = '<div class="card text-center py-10 text-slate-500">No hay pedidos aún.</div>';
         dashList.innerHTML = '<p class="text-slate-500 italic text-center py-6">No hay pedidos recientes.</p>';
         return;
     }
-
-    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
     const html = appState.orders.map(o => {
         let itemsCount = 0;
         try {
@@ -387,24 +405,7 @@ function renderOrders() {
     list.innerHTML = `<div class="space-y-4 p-4">${html}</div>`;
     dashList.innerHTML = html;
 
-    const pending = appState.orders.filter(o => o.status === 'pending').length;
-    const sales = appState.orders.reduce((sum, o) => sum + parseFloat(o.total), 0);
-    
-    const statOrders = document.getElementById('stat-orders');
-    const statSales = document.getElementById('stat-sales');
-    
-    if (statOrders) statOrders.innerText = appState.orders.length;
-    if (statSales) statSales.innerText = currencySymbol + sales.toFixed(2);
-    
-    const badge = document.getElementById('order-badge');
-    if (badge) {
-        if (pending > 0) {
-            badge.style.display = 'block';
-            badge.innerText = pending;
-        } else {
-            badge.style.display = 'none';
-        }
-    }
+    // Estadísticas ya actualizadas arriba
 }
 
 async function saveProduct(e) {

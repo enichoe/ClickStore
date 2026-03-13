@@ -61,6 +61,11 @@ async function loadStoreData(identifier) {
         if (data) {
             appState.tenant = data;
             if (typeof initializeAdminUI === 'function') initializeAdminUI();
+            return true;
+        } else {
+            console.warn("No se encontró tienda para el usuario.");
+            appState.tenant = null;
+            return false;
         }
     } catch (err) {
         console.error("Error cargando tienda:", err);
@@ -88,9 +93,17 @@ async function handleLogin(btn) {
             showSuperAdminSection('dash');
             fetchGlobalStores();
         } else {
+            // Limpiar estado previo antes de cargar nueva tienda
+            resetAppState();
+            
             // Cargar datos de la tienda del usuario y mostrar panel de administración
-            await loadStoreData(data.user.id);
-            showView('view-admin', 'dash');
+            const hasStore = await loadStoreData(data.user.id);
+            if (hasStore) {
+                showView('view-admin', 'dash');
+            } else {
+                alert('No tienes una tienda configurada. Crea una desde el menú principal.');
+                showView('view-landing');
+            }
         }
     } catch (err) {
         alert('Error al iniciar sesión: ' + err.message);
@@ -177,9 +190,12 @@ async function handleRegister(btn) {
             throw storeError;
         }
 
+        resetAppState();
         appState.session = session;
         appState.tenant  = storeData;
+        
         alert('¡Tienda creada con éxito! Tu enlace es: ' + window.location.origin + '?store=' + finalSlug);
+        
         if (typeof initializeAdminUI === 'function') initializeAdminUI();
         showView('view-admin', 'dash');
     } catch (err) {
@@ -190,11 +206,21 @@ async function handleRegister(btn) {
     }
 }
 
+function resetAppState() {
+    console.log("Reiniciando estado de la aplicación...");
+    appState.tenant = null;
+    appState.products = [];
+    appState.categories = [];
+    appState.orders = [];
+    appState.cart = [];
+}
+
 async function logout() {
     if (supabase && supabase.auth) {
         await supabase.auth.signOut();
     }
-    appState = { session: null, tenant: null, products: [], orders: [], cart: [] };
+    resetAppState();
+    appState.session = null;
     localStorage.clear();
     showView('view-landing');
 }

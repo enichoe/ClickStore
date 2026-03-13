@@ -415,7 +415,7 @@ message += `📱 *WhatsApp:* ${customerWhatsapp}%0A`;
 message += `🚚 *Tipo de entrega:* ${deliveryType}%0A`;
 if (customerAddress) message += `📍 *Dirección:* ${customerAddress}%0A`;
 message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `🍔 *PRODUCTOS DEL PEDIDO:* %0A`;
+message += `🛍️ *PRODUCTOS DEL PEDIDO:* %0A`;
 
 appState.cart.forEach(i => {
     message += `🧾 ${i.name}%0A`;
