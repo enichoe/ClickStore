@@ -41,8 +41,15 @@ function showAdminSection(section) {
     const targetSection = document.getElementById('section-' + section);
     if (targetSection) targetSection.style.display = 'block';
     
-    document.querySelectorAll('#view-admin .nav-item').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('#view-admin .nav-item').forEach(item => {
+        if (item.getAttribute('onclick')?.includes(`'${section}'`)) {
+            item.classList.add('active');
+        }
+    });
+
+    // Sincronizar Bottom Nav
+    document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.bottom-nav-item').forEach(item => {
         if (item.getAttribute('onclick')?.includes(`'${section}'`)) {
             item.classList.add('active');
         }

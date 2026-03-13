@@ -52,7 +52,7 @@ async function checkSuperAdmin() {
             .maybeSingle();
         
         if (data) {
-            const sidebar = document.querySelector('.nav-admin');
+            const sidebar = document.querySelector('#admin-sidebar nav');
             if (sidebar && !document.getElementById('nav-super')) {
                 const superItem = document.createElement('div');
                 superItem.id = 'nav-super';
@@ -405,13 +405,22 @@ function closeModal(id) {
 
 function toggleSidebar(force) {
     const sidebar = document.getElementById('admin-sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
     if (!sidebar) return;
     
+    let shouldOpen;
     if (typeof force === 'boolean') {
-        if (force) sidebar.classList.add('open');
-        else sidebar.classList.remove('open');
+        shouldOpen = force;
     } else {
-        sidebar.classList.toggle('open');
+        shouldOpen = !sidebar.classList.contains('open');
+    }
+
+    if (shouldOpen) {
+        sidebar.classList.add('open');
+        if (overlay) overlay.classList.add('active');
+    } else {
+        sidebar.classList.remove('open');
+        if (overlay) overlay.classList.remove('active');
     }
 }
 
