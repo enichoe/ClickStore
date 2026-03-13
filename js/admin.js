@@ -38,10 +38,13 @@ async function initializeAdminUI() {
         linkInput.value = window.location.origin + window.location.pathname + '?store=' + storeIdentifier;
     }
     
-    await updateUsageStats();
-    await fetchProducts();
-    await fetchCategories();
-    await fetchOrders();
+    // Carga de datos en paralelo para mejorar performance
+    await Promise.all([
+        updateUsageStats(),
+        fetchProducts(),
+        fetchCategories(),
+        fetchOrders()
+    ]);
 
     // Comprobar si es Super Admin
     checkSuperAdmin();
@@ -207,7 +210,7 @@ async function saveCategory(e) {
         showToast('Categoría creada');
         fetchCategories();
     } catch (err) {
-        alert('Error: ' + err.message);
+        showToast('❌ Error: ' + err.message, 'error');
     }
 }
 
@@ -219,7 +222,7 @@ async function deleteCategory(id) {
         showToast('Categoría eliminada');
         fetchCategories();
     } catch (err) {
-        alert('Error: ' + err.message);
+        showToast('❌ Error: ' + err.message, 'error');
     }
 }
 
@@ -518,7 +521,7 @@ async function saveProduct(e) {
     // Check plan limits
     if (!editingProductId && appState.usage) {
         if (appState.usage.product_count >= appState.usage.max_products) {
-            alert(`Has alcanzado el límite de tu plan (${appState.usage.max_products} productos). Por favor, actualiza tu plan para agregar más.`);
+            showToast(`⚠️ Límite alcanzado (${appState.usage.max_products} productos). Actualiza tu plan.`, 'error');
             return;
         }
     }
@@ -581,7 +584,7 @@ async function saveProduct(e) {
         e.target.reset();
         document.getElementById('modal-product-title').innerText = "Agregar Producto";
     } catch (err) {
-        alert("Error: " + err.message);
+        showToast("❌ Error: " + err.message, 'error');
     } finally {
         setLoading(btn, false);
     }
@@ -595,7 +598,7 @@ async function deleteProduct(id) {
         if (error) throw error;
         await fetchProducts();
     } catch (err) {
-        alert("Error: " + err.message);
+        showToast("❌ Error: " + err.message, 'error');
     }
 }
 
@@ -838,10 +841,10 @@ async function deleteStoreByAdmin(id) {
     try {
         const { error } = await supabase.from('stores').delete().eq('id', id);
         if (error) throw error;
-        alert("Tienda eliminada");
+        showToast("✅ Tienda eliminada");
         fetchGlobalStores();
     } catch (err) {
-        alert("Error: " + err.message);
+        showToast("❌ Error: " + err.message, 'error');
     }
 }
 
@@ -875,7 +878,7 @@ async function loadStoreToEdit(id) {
         document.getElementById('s-type').value = data.type;
         openModal('modal-store');
     } catch (err) {
-        alert("Error cargando datos: " + err.message);
+        showToast("❌ Error cargando datos: " + err.message, 'error');
     }
 }
 
@@ -902,19 +905,19 @@ async function saveStoreByAdmin(e) {
         if (editingStoreId) {
             const { error } = await supabase.from('stores').update(store).eq('id', editingStoreId);
             if (error) throw error;
-            alert("Tienda actualizada");
+            showToast("✅ Tienda actualizada");
         } else {
             // Nota: Al crear por admin no asociamos owner_id real a menos que lo pidas
             store.owner_id = appState.session?.user?.id || null;
             const { error } = await supabase.from('stores').insert([store]);
             if (error) throw error;
-            alert("Tienda creada con éxito");
+            showToast("✅ Tienda creada con éxito");
         }
         
         closeModal('modal-store');
         fetchGlobalStores();
     } catch (err) {
-        alert("Error: " + err.message);
+        showToast("❌ Error: " + err.message, 'error');
     } finally {
         setLoading(btn, false);
     }

@@ -360,11 +360,12 @@ function removeFromCart(id) {
 
 function clearCart() {
     if (appState.cart.length === 0) return;
+    // Usar modal de confirmación personalizado en el futuro, por ahora confirm es aceptable pero alert no.
     if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
         appState.cart = [];
         updateCartBadge();
         renderCartContent();
-        showToast('🗑️ Carrito vaciado');
+        showToast('🗑️ Carrito vaciado', 'success');
     }
 }
 
@@ -443,7 +444,7 @@ message += `🛒 _Tu plataforma para vender online_`;
         closeDrawer('drawer-cart');
         e.target.reset();
     } catch (err) {
-        alert('Error: ' + err.message);
+        showToast('❌ Error: ' + err.message, 'error');
     } finally {
         setLoading(btn, false);
     }

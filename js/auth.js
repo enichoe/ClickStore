@@ -29,7 +29,7 @@ async function checkSession() {
         appState.session = session;
         console.log("Sesión activa detectada para:", session.user.email);
         
-        if (session.user.id === 'eb72d1f1-2856-4299-8588-34865de01391' || session.user.email === SUPER_ADMIN_EMAIL) {
+        if (session.user.email === SUPER_ADMIN_EMAIL) {
             console.log("Entrando como Super Admin");
             showView('view-superadmin');
             fetchGlobalStores();
@@ -74,12 +74,12 @@ async function loadStoreData(identifier) {
 
 async function handleLogin(btn) {
     if (window.initSupabasePromise) await window.initSupabasePromise;
-    try { requireSupabase(); } catch(e) { return alert(e.message); }
+    try { requireSupabase(); } catch(e) { console.error(e.message); showView('view-landing'); return; }
 
     const email = document.getElementById('login-email').value.trim();
     const pass  = document.getElementById('login-pass').value;
 
-    if (!email || !pass) return alert('Completa el email y la contraseña.');
+    if (!email || !pass) return showToast('⚠️ Completa el email y la contraseña.', 'error');
 
     if (btn) setLoading(btn, true);
     try {
@@ -101,12 +101,12 @@ async function handleLogin(btn) {
             if (hasStore) {
                 showView('view-admin', 'dash');
             } else {
-                alert('No tienes una tienda configurada. Crea una desde el menú principal.');
+                showToast('⚠️ No tienes una tienda configurada.', 'error');
                 showView('view-landing');
             }
         }
     } catch (err) {
-        alert('Error al iniciar sesión: ' + err.message);
+        showToast('❌ Error al iniciar sesión: ' + err.message, 'error');
     } finally {
         if (btn) setLoading(btn, false);
     }
@@ -114,7 +114,7 @@ async function handleLogin(btn) {
 
 async function handleRegister(btn) {
     if (window.initSupabasePromise) await window.initSupabasePromise;
-    try { requireSupabase(); } catch(e) { return alert(e.message); }
+    try { requireSupabase(); } catch(e) { showToast('❌ Supabase no configurado.', 'error'); return; }
 
     const storeName = document.getElementById('reg-store-name').value.trim();
     const ownerName = document.getElementById('reg-owner').value.trim();
@@ -122,8 +122,8 @@ async function handleRegister(btn) {
     const pass      = document.getElementById('reg-pass').value;
     const storeType = document.getElementById('reg-type')?.value || 'Tienda';
 
-    if (!storeName || !email || !pass) return alert('Completa todos los campos obligatorios.');
-    if (pass.length < 6) return alert('La contraseña debe tener al menos 6 caracteres.');
+    if (!storeName || !email || !pass) return showToast('⚠️ Completa todos los campos obligatorios.', 'error');
+    if (pass.length < 6) return showToast('⚠️ La contraseña debe tener al menos 6 caracteres.', 'error');
     
     // Generar slug base (limpio, sin número al final)
     const slugBase = storeName.toLowerCase().trim()
@@ -151,7 +151,7 @@ async function handleRegister(btn) {
             try {
                 const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({ email, password: pass });
                 if (signInErr) {
-                    alert('Registro realizado. Confirma tu email antes de iniciar sesión.');
+                    showToast('📧 Registro realizado. Confirma tu email.', 'success');
                     showView('view-login');
                     return;
                 }
@@ -200,7 +200,7 @@ async function handleRegister(btn) {
         showView('view-admin', 'dash');
     } catch (err) {
         console.error('Excepción en handleRegister:', err);
-        alert('Error en el registro: ' + (err.description || err.message));
+        showToast('❌ Error en el registro: ' + (err.description || err.message), 'error');
     } finally {
         if (btn) setLoading(btn, false);
     }

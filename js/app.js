@@ -126,18 +126,28 @@ function showToast(message, type = 'success') {
 
     const toast = document.createElement('div');
     toast.className = `fade-in`;
+    
+    const colors = {
+        'success': '#10B981',
+        'error': '#EF4444',
+        'warning': '#F59E0B',
+        'info': '#3B82F6'
+    };
+    
     toast.style.cssText = `
-        background: ${type === 'success' ? '#10B981' : '#EF4444'};
+        background: ${colors[type] || colors.success};
         color: white;
         padding: 12px 24px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        font-weight: 500;
-        min-width: 200px;
+        border-radius: 12px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        font-weight: 600;
+        min-width: 250px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        animation: slideIn 0.3s ease-out;
+        animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(255,255,255,0.1);
+        z-index: 9999;
     `;
     
     toast.innerHTML = `<span>${message}</span>`;
@@ -150,6 +160,18 @@ function showToast(message, type = 'success') {
         setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
+
+// ======================= GLOBAL ERROR HANDLING =======================
+window.addEventListener('unhandledrejection', (event) => {
+    console.error('Unhandled Promise Rejection:', event.reason);
+    showToast('❌ Algo salió mal. Por favor intenta de nuevo.', 'error');
+});
+
+window.addEventListener('error', (event) => {
+    console.error('Global Error:', event.error);
+    // Solo mostrar toast para errores críticos que no sean de red/extensiones
+    if (event.error) showToast('⚠️ Error inesperado en la aplicación.', 'error');
+});
 
 window.addEventListener('load', () => {
     if (typeof checkSession === 'function') {
