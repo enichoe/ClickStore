@@ -518,6 +518,29 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
 .stagger-in > *:nth-child(3) { animation-delay: 0.2s; }
 .stagger-in > *:nth-child(4) { animation-delay: 0.25s; }
 .stagger-in > *:nth-child(n+5) { animation-delay: 0.3s; }
+/* Social Media Icons */
+#store-social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    color: #64748b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#store-social-links a:hover {
+    color: #6366f1;
+    background: #ffffff;
+    border-color: #e2e8f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+/* Spinner SM */
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinner-sm {
     display: inline-block;

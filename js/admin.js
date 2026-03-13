@@ -516,6 +516,17 @@ function loadStoreSettingsForm() {
         deliveryPriceInput.value = s.delivery_price || 0;
     }
 
+    // Social media links
+    const fbInput = document.getElementById('setting-fb');
+    const igInput = document.getElementById('setting-ig');
+    const tkInput = document.getElementById('setting-tk');
+    const waInput = document.getElementById('setting-wa-url');
+    
+    if (fbInput) fbInput.value = s.facebook_url || '';
+    if (igInput) igInput.value = s.instagram_url || '';
+    if (tkInput) tkInput.value = s.tiktok_url || '';
+    if (waInput) waInput.value = s.whatsapp_url || '';
+
     // Logo preview
     const logoPreview = document.getElementById('setting-logo-preview');
     const logoPlaceholder = document.getElementById('setting-logo-placeholder');
@@ -598,6 +609,11 @@ async function updateStoreSettings(event) {
             logoUrl = publicData.publicUrl;
         }
 
+        const fbInput = document.getElementById('setting-fb');
+        const igInput = document.getElementById('setting-ig');
+        const tkInput = document.getElementById('setting-tk');
+        const waUrlInput = document.getElementById('setting-wa-url');
+
         const { data, error } = await supabase
             .from('stores')
             .update({
@@ -607,7 +623,11 @@ async function updateStoreSettings(event) {
                 currency: currencyInput.value,
                 active_delivery: deliveryCheck.checked,
                 delivery_price: parseFloat(deliveryPriceInput.value) || 0,
-                logo_url: logoUrl
+                logo_url: logoUrl,
+                facebook_url: fbInput?.value.trim() || null,
+                instagram_url: igInput?.value.trim() || null,
+                tiktok_url: tkInput?.value.trim() || null,
+                whatsapp_url: waUrlInput?.value.trim() || null
             })
             .eq('id', appState.tenant.id)
             .select()

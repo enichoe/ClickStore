@@ -82,7 +82,31 @@ function renderStorefront() {
     document.getElementById('store-title-main').innerText = appState.tenant.name;
     document.getElementById('store-tagline').innerText = appState.tenant.description || 'Bienvenido a nuestra tienda virtual.';
 
-    // 2. Filtro de Categorías
+    // 2. Redes Sociales
+    const socialDiv = document.getElementById('store-social-links');
+    if (socialDiv) {
+        socialDiv.innerHTML = '';
+        const links = [
+            { id: 'facebook_url', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>' },
+            { id: 'instagram_url', icon: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="4"/><circle cx="12" cy="12" r="3"/><path d="M16.5 7.5v.01"/></svg>' },
+            { id: 'tiktok_url', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.1-3.44-3.37-3.5-5.75-.12-2.13.86-4.23 2.49-5.59 1.49-1.28 3.4-1.91 5.35-1.65v4.26c-.99-.25-2.09.08-2.81.84-.54.53-.83 1.29-.81 2.04.01.76.35 1.51.94 2.01.61.48 1.41.67 2.17.51.98-.16 1.83-.93 2.03-1.91.07-.36.07-.74.07-1.11V0z"/></svg>' },
+            { id: 'whatsapp_url', icon: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 21l1.65-3.8a9 9 0 113.4 2.9L3 21z"/><path d="M9 10a.5.5 0 001 0V9a.5.5 0 00-1 0v1zm0 0l1 1m3.5-.5a.5.5 0 00-1 0v1a.5.5 0 001 0v-1zm0 0l-1 1"/></svg>' }
+        ];
+
+        links.forEach(link => {
+            const url = appState.tenant[link.id];
+            if (url) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.className = 'text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 p-2 rounded-xl border border-slate-100';
+                a.innerHTML = link.icon;
+                socialDiv.appendChild(a);
+            }
+        });
+    }
+
+    // 3. Categorías
     renderCategoryFilter();
     
     // 3. Grid de Productos
@@ -236,22 +260,27 @@ function renderCartContent() {
     } else {
         const currency = getCurrencySymbol(appState.tenant.currency);
         itemsDiv.innerHTML = appState.cart.map(i => `
-            <div class="flex gap-4 group">
-                <div class="w-20 h-20 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100 shadow-sm">
+            <div class="flex gap-4 group p-4 bg-white rounded-3xl border border-slate-50 shadow-sm mb-4">
+                <div class="w-20 h-20 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100 shadow-inner">
                     <img src="${i.image || 'https://via.placeholder.com/100'}" class="w-full h-full object-cover">
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="font-bold text-slate-800 truncate mb-1">${i.name}</p>
-                    <p class="text-sm font-black text-indigo-600 mb-2">${currency}${i.price.toFixed(2)}</p>
-                    <div class="qty-control">
+                    <div class="flex justify-between items-start mb-1">
+                        <p class="font-bold text-slate-800 truncate">${i.name}</p>
+                        <button class="text-slate-300 hover:text-red-500 transition-colors p-1" onclick="removeFromCart('${i.id}')">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs font-bold text-slate-400">${i.qty} x ${currency}${i.price.toFixed(2)}</span>
+                        <span class="text-sm font-black text-indigo-600">Total: ${currency}${(i.price * i.qty).toFixed(2)}</span>
+                    </div>
+                    <div class="qty-control !bg-slate-50">
                         <button class="qty-btn" onclick="changeQty('${i.id}', -1)">-</button>
-                        <span class="text-xs font-bold w-4 text-center">${i.qty}</span>
+                        <span class="text-xs font-bold w-6 text-center text-slate-800">${i.qty}</span>
                         <button class="qty-btn" onclick="changeQty('${i.id}', 1)">+</button>
                     </div>
                 </div>
-                <button class="text-slate-300 hover:text-red-500 self-start p-1" onclick="removeFromCart('${i.id}')">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                </button>
             </div>
         `).join('');
     }
@@ -324,9 +353,19 @@ function changeQty(id, delta) {
 }
 
 function removeFromCart(id) {
-    appState.cart = appState.cart.filter(c => c.id !== id);
+    appState.cart = appState.cart.filter(i => i.id !== id);
     updateCartBadge();
     renderCartContent();
+}
+
+function clearCart() {
+    if (appState.cart.length === 0) return;
+    if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+        appState.cart = [];
+        updateCartBadge();
+        renderCartContent();
+        showToast('🗑️ Carrito vaciado');
+    }
 }
 
 function setDeliveryOption(opt) {
@@ -367,21 +406,27 @@ async function handleCheckout(e) {
         const total = subtotal + deliveryFee;
 
         const deliveryType = deliverySelected ? `🛵 Envío a Domicilio` : `🥡 Recojo en Local`;
-        const message = [
-            `*🛍️ NUEVO PEDIDO - ${appState.tenant.name}*`,
-            `--------------------------------`,
-            `*Cliente:* ${customerName}`,
-            `*WhatsApp:* ${customerWhatsapp}`,
-            `*Tipo:* ${deliveryType}`,
-            customerAddress ? `*Nota/Dir:* ${customerAddress}` : '',
-            `--------------------------------`,
-            `*PRODUCTOS:*`,
-            appState.cart.map(i => `- ${i.name} x${i.qty}`).join('%0A'),
-            `--------------------------------`,
-            `*Total:* ${getCurrencySymbol(appState.tenant.currency)}${total.toFixed(2)}`,
-            `--------------------------------`,
-            `_Enviado desde ClickStore_`
-        ].filter(Boolean).join('%0A');
+        const currency = getCurrencySymbol(appState.tenant.currency);
+        
+        let message = `*🛍️ NUEVO PEDIDO - ${appState.tenant.name}*%0A`;
+        message += `--------------------------------%0A`;
+        message += `*Cliente:* ${customerName}%0A`;
+        message += `*WhatsApp:* ${customerWhatsapp}%0A`;
+        message += `*Entrega:* ${deliveryType}%0A`;
+        if (customerAddress) message += `*Dirección:* ${customerAddress}%0A`;
+        message += `--------------------------------%0A`;
+        message += `*PRODUCTOS:*%0A`;
+        
+        appState.cart.forEach(i => {
+            message += `- ${i.name} (${i.qty} x ${currency}${i.price.toFixed(2)}) = *${currency}${(i.price * i.qty).toFixed(2)}*%0A`;
+        });
+        
+        message += `--------------------------------%0A`;
+        message += `*Subtotal:* ${currency}${subtotal.toFixed(2)}%0A`;
+        if (deliveryFee > 0) message += `*Envío:* ${currency}${deliveryFee.toFixed(2)}%0A`;
+        message += `*TOTAL:* ${currency}${total.toFixed(2)}%0A`;
+        message += `--------------------------------%0A`;
+        message += `_Enviado desde ClickStore_`;
 
         window.open(`https://wa.me/${businessPhone}?text=${message}`, '_blank');
 
