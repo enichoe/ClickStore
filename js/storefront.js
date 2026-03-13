@@ -31,6 +31,13 @@ async function loadPublicStore(identifier) {
         appState.products = prods || [];
         appState.categories = cats || [];
         
+        // Inicializar opción de delivery si está activo
+        if (appState.tenant.active_delivery) {
+            appState.deliveryOption = 'delivery';
+        } else {
+            appState.deliveryOption = 'pickup';
+        }
+        
         renderStorefront();
         showView('view-store');
     } catch (err) {
@@ -66,17 +73,25 @@ function renderStorefront() {
     if (navTitle) navTitle.innerText = appState.tenant.name;
     if (mainTitle) mainTitle.innerText = appState.tenant.name;
     
+    // Renderizar filtro de categorías
+    renderCategoryFilter();
+    
     // Símbolo de moneda según configuración de la tienda
     const currencySymbol = getCurrencySymbol(appState.tenant.currency);
     const grid = document.getElementById('store-products-grid');
     if (!grid) return;
 
-    if (appState.categories.length > 0) {
-        // Renderizar por categorías
-        grid.innerHTML = appState.categories.map(cat => {
-            const catProds = appState.products.filter(p => p.category_id === cat.id);
-            if (catProds.length === 0) return '';
+    // Filtrar productos
+    let filteredProducts = appState.products;
+    if (appState.selectedCategory !== 'all') {
+        filteredProducts = appState.products.filter(p => p.category_id === appState.selectedCategory);
+    }
 
+    if (appState.categories.length > 0 && appState.selectedCategory === 'all') {
+        // Renderizar agrupado por categorías (Vista inicial)
+        grid.innerHTML = appState.categories.map(cat => {
+            const catProds = filteredProducts.filter(p => p.category_id === cat.id);
+            if (catProds.length === 0) return '';
             return `
                 <div style="grid-column: 1 / -1; margin-top: 32px; border-bottom: 2px solid var(--accent); padding-bottom: 8px;">
                     <h2 style="font-size: 24px;">${cat.name}</h2>
@@ -85,8 +100,7 @@ function renderStorefront() {
             `;
         }).join('');
 
-        // Productos sin categoría
-        const noCatProds = appState.products.filter(p => !p.category_id);
+        const noCatProds = filteredProducts.filter(p => !p.category_id);
         if (noCatProds.length > 0) {
             grid.innerHTML += `
                 <div style="grid-column: 1 / -1; margin-top: 32px; border-bottom: 2px solid var(--border); padding-bottom: 8px;">
@@ -96,9 +110,26 @@ function renderStorefront() {
             `;
         }
     } else {
-        // Renderizado simple original
-        grid.innerHTML = appState.products.map(p => renderProductCard(p, currencySymbol)).join('');
+        // Renderizado simple para filtro activo o si no hay categorías
+        grid.innerHTML = filteredProducts.map(p => renderProductCard(p, currencySymbol)).join('');
     }
+}
+
+function renderCategoryFilter() {
+    const bar = document.getElementById('category-filter-bar');
+    if (!bar || appState.categories.length === 0) return;
+
+    const allBtn = `<button class="cat-btn ${appState.selectedCategory === 'all' ? 'active' : ''}" onclick="filterByCategory('all')">Todos</button>`;
+    const catBtns = appState.categories.map(c => `
+        <button class="cat-btn ${appState.selectedCategory === c.id ? 'active' : ''}" onclick="filterByCategory('${c.id}')">${c.name}</button>
+    `).join('');
+
+    bar.innerHTML = allBtn + catBtns;
+}
+
+function filterByCategory(id) {
+    appState.selectedCategory = id;
+    renderStorefront();
 }
 
 function renderProductCard(p, currencySymbol) {
@@ -157,39 +188,74 @@ function openCart() {
         return `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
                 <div>
-                    <p style="font-weight: 500;">${i.name}</p>
-                    <p style="font-size: 12px; color: var(--text-sec);">Cantidad: ${i.qty}</p>
+                    <p style="font-weight: 500; font-size: 15px;">${i.name}</p>
+                    <div style="display: flex; gap: 8px; margin-top: 4px;">
+                         <button onclick="changeQty('${i.id}', -1)" style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff;">-</button>
+                         <span style="font-size: 14px; font-weight: 600;">${i.qty}</span>
+                         <button onclick="changeQty('${i.id}', 1)" style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff;">+</button>
+                    </div>
                 </div>
-                <p style="font-weight: 700;">${currencySymbol}${(i.price * i.qty).toFixed(2)}</p>
+                <p style="font-weight: 700; color: #1e293b;">${currencySymbol}${(i.price * i.qty).toFixed(2)}</p>
             </div>
         `;
     }).join('');
 
-    // Lógica de Delivery
-    let deliveryHtml = '';
+    // UI de Delivery Opcional
+    const deliveryUI = document.getElementById('delivery-option-ui');
+    const summaryLines = document.getElementById('cart-summary-lines');
     let finalTotal = total;
+
     if (appState.tenant.active_delivery) {
+        deliveryUI.style.display = 'block';
         const dPrice = parseFloat(appState.tenant.delivery_price || 0);
-        finalTotal += dPrice;
-        deliveryHtml = `
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-sec);">
-                <span>Subtotal</span>
-                <span>${currencySymbol}${total.toFixed(2)}</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); color: var(--accent);">
-                <span>Envío (Delivery)</span>
-                <span>${currencySymbol}${dPrice.toFixed(2)}</span>
-            </div>
-        `;
+        
+        // Actualizar estados visuales de los botones
+        document.getElementById('btn-opt-delivery').className = `btn btn-sm w-full ${appState.deliveryOption === 'delivery' ? 'btn-primary' : 'btn-secondary'}`;
+        document.getElementById('btn-opt-pickup').className = `btn btn-sm w-full ${appState.deliveryOption === 'pickup' ? 'btn-primary' : 'btn-secondary'}`;
+
+        if (appState.deliveryOption === 'delivery') {
+            finalTotal += dPrice;
+            summaryLines.innerHTML = `
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px; color: #64748b;">
+                    <span>Subtotal</span>
+                    <span>${currencySymbol}${total.toFixed(2)}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--accent); font-weight: 600;">
+                    <span>Envío</span>
+                    <span>+ ${currencySymbol}${dPrice.toFixed(2)}</span>
+                </div>
+            `;
+        } else {
+            summaryLines.innerHTML = `
+                <div style="display: flex; justify-content: space-between; font-size: 14px; color: #64748b;">
+                    <span>Recojo en Local</span>
+                    <span>${currencySymbol}${(0).toFixed(2)}</span>
+                </div>
+            `;
+        }
+    } else {
+        deliveryUI.style.display = 'none';
+        summaryLines.innerHTML = '';
     }
     
     const cartTotal = document.getElementById('cart-total');
-    if (itemsDiv && appState.tenant.active_delivery) {
-        // Insertar desglose antes del precio final si hay delivery
-        itemsDiv.innerHTML += deliveryHtml;
-    }
-    
     if (cartTotal) cartTotal.innerText = currencySymbol + finalTotal.toFixed(2);
+}
+
+function setDeliveryOption(opt) {
+    appState.deliveryOption = opt;
+    openCart();
+}
+
+function changeQty(id, delta) {
+    const item = appState.cart.find(c => c.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) {
+        appState.cart = appState.cart.filter(c => c.id !== id);
+    }
+    updateCartBadge();
+    openCart();
 }
 
 // ======================= QR & UTILS =======================
@@ -242,67 +308,65 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
 
-            const customerName = e.target[0].value.trim();
-            const customerWhatsapp = e.target[1].value.trim();
+            const customerName = document.getElementById('cust-name').value.trim();
+            const customerWhatsapp = document.getElementById('cust-whatsapp').value.trim();
+            const customerAddress = document.getElementById('cust-address').value.trim();
 
             setLoading(btn, true);
             try {
                 if (!appState.tenant || !appState.tenant.id) throw new Error('Tienda no definida.');
-                if (!appState.cart || appState.cart.length === 0) throw new Error('El carrito está vacío.');
-                if (!customerName) throw new Error('Ingresa tu nombre.');
+                if (appState.cart.length === 0) throw new Error('El carrito está vacío.');
 
-                const customerWhatsappClean = customerWhatsapp.replace(/\D/g, '');
-                if (!customerWhatsappClean) throw new Error('Ingresa un número de WhatsApp válido.');
-
-                // Verificar que el negocio tiene WhatsApp configurado
+                // Validar teléfono del negocio
                 const businessPhone = (appState.tenant.whatsapp_phone || '').replace(/\D/g, '');
-                if (!businessPhone) {
-                    throw new Error('Esta tienda aún no tiene número de WhatsApp configurado. El dueño debe agregarlo en Configuración.');
-                }
+                if (!businessPhone) throw new Error('Esta tienda no tiene WhatsApp configurado.');
 
-                // Preparar items para la función RPC (solo id y qty — el precio lo calcula el servidor)
+                // Enviar a Supabase RPC
+                const deliverySelected = appState.deliveryOption === 'delivery';
                 const itemsForRpc = appState.cart.map(i => ({ id: i.id, qty: i.qty }));
 
-                // Llamar a la función RPC server-side con los nuevos nombres de parámetros
                 const { data: orderId, error } = await supabase.rpc('create_order', {
                     p_store_id:      appState.tenant.id,
                     p_customer_name: customerName,
                     p_whatsapp:      customerWhatsapp,
-                    p_items:         itemsForRpc
+                    p_items:         itemsForRpc,
+                    p_delivery_selected: deliverySelected
                 });
 
                 if (error) throw error;
 
-                // Calcular total local solo para mostrar en el mensaje de WhatsApp
-                const displayTotal = appState.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+                // Calcular totales para el mensaje
+                const subtotal = appState.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+                const deliveryFee = deliverySelected ? parseFloat(appState.tenant.delivery_price || 0) : 0;
+                const total = subtotal + deliveryFee;
 
-                // Construir mensaje de WhatsApp para el negocio
-                const businessName = appState.tenant.name;
-                const itemsText = appState.cart
-                    .map(i => `- ${i.name} x${i.qty} ($${(i.price * i.qty).toFixed(2)})`)
-                    .join('%0A');
+                // Construir mensaje de WhatsApp
+                const deliveryType = deliverySelected ? `🛵 Envío a Domicilio` : `🥡 Recojo en Local`;
                 const message = [
-                    `*🛍️ Nuevo Pedido - ${businessName}*`,
-                    ``,
+                    `*🛍️ NUEVO PEDIDO - ${appState.tenant.name}*`,
+                    `--------------------------------`,
                     `*Cliente:* ${customerName}`,
-                    `*WhatsApp cliente:* ${customerWhatsapp}`,
-                    ``,
-                    `*Productos:*`,
-                    appState.cart.map(i => `- ${i.name} x${i.qty} ($${(i.price * i.qty).toFixed(2)})`).join('\n'),
-                    ``,
-                    `*Total estimado:* $${displayTotal.toFixed(2)}`
-                ].join('%0A');
+                    `*WhatsApp:* ${customerWhatsapp}`,
+                    `*Tipo:* ${deliveryType}`,
+                    customerAddress ? `*Nota/Dir:* ${customerAddress}` : '',
+                    `--------------------------------`,
+                    `*PRODUCTOS:*`,
+                    appState.cart.map(i => `- ${i.name} x${i.qty}`).join('%0A'),
+                    `--------------------------------`,
+                    `*Total:* $${total.toFixed(2)}`,
+                    `--------------------------------`,
+                    `_Enviado desde ClickSaaS_`
+                ].filter(Boolean).join('%0A');
 
-                // Abrir WhatsApp del NEGOCIO (no del cliente)
                 window.open(`https://wa.me/${businessPhone}?text=${message}`, '_blank');
 
-                alert('¡Pedido enviado con éxito! Se abrirá WhatsApp para confirmar.');
+                showToast('¡Pedido enviado!');
                 appState.cart = [];
                 updateCartBadge();
                 if (typeof closeModal === 'function') closeModal('modal-cart');
                 e.target.reset();
             } catch (err) {
-                alert('Error enviando pedido: ' + err.message);
+                alert('Error: ' + err.message);
             } finally {
                 setLoading(btn, false);
             }

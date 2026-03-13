@@ -15,7 +15,8 @@ CREATE OR REPLACE FUNCTION public.create_order(
   p_store_id uuid,
   p_customer_name text,
   p_whatsapp text,
-  p_items jsonb
+  p_items jsonb,
+  p_delivery_selected boolean DEFAULT false
 ) RETURNS uuid
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -47,8 +48,8 @@ BEGIN
     v_total := v_total + (v_price * (v_item->>'qty')::int);
   END LOOP;
 
-  -- 3. Sumar delivery si está activo
-  IF v_delivery_active = true THEN
+  -- 3. Sumar delivery si está activo Y el cliente lo seleccionó
+  IF v_delivery_active = true AND p_delivery_selected = true THEN
     v_total := v_total + v_delivery_price;
   END IF;
 

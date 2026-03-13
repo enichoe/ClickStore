@@ -303,10 +303,17 @@
             </div>
         </nav>
 
-        <header class="store-header">
-            <h1 id="store-title-main" style="font-size: 3rem; font-weight: 700;">Nombre Tienda</h1>
-            <p style="color: var(--text-sec); margin-top: 8px;">Bienvenido a nuestra tienda</p>
+        <header class="store-header" style="padding: 60px 24px 30px;">
+            <h1 id="store-title-main" style="font-size: 2.5rem; font-weight: 800;">Nombre Tienda</h1>
+            <p id="store-tagline" style="color: var(--text-sec); margin-top: 8px;">Bienvenido a nuestra tienda</p>
         </header>
+
+        <div style="max-width: 1000px; margin: 0 auto; padding: 0 24px;">
+            <!-- Filtro de Categorías -->
+            <div id="category-filter-bar" style="display: flex; gap: 10px; overflow-x: auto; padding: 10px 0 20px; scrollbar-width: none; -ms-overflow-style: none;">
+                <!-- Botones inyectados por JS -->
+            </div>
+        </div>
 
         <div style="max-width: 1000px; margin: 0 auto; padding: 0 24px 100px;">
             <div id="store-products-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;"></div>
@@ -327,17 +334,28 @@
                     <h3>Tu Pedido</h3>
                     <button class="btn btn-ghost" onclick="closeModal('modal-cart')">X</button>
                 </div>
-                <div id="cart-items" style="max-height: 300px; overflow-y: auto;"></div>
+                <div id="cart-items" style="max-height: 250px; overflow-y: auto;"></div>
+                
+                <!-- Selector Delivery/Recojo -->
+                <div id="delivery-option-ui" style="margin-top: 16px; padding: 12px; background: #f8fafc; border-radius: 12px; display: none;">
+                    <p style="font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #1e293b;">Tipo de Entrega</p>
+                    <div style="display: flex; gap: 8px;">
+                        <button type="button" id="btn-opt-delivery" class="btn btn-secondary btn-sm w-full" onclick="setDeliveryOption('delivery')">🛵 Delivery</button>
+                        <button type="button" id="btn-opt-pickup" class="btn btn-secondary btn-sm w-full" onclick="setDeliveryOption('pickup')">🥡 Recojo</button>
+                    </div>
+                </div>
+
                 <div style="border-top: 1px solid var(--border); margin-top: 16px; padding-top: 16px;">
-                    <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 18px;">
+                    <div id="cart-summary-lines" style="margin-bottom: 12px;"></div>
+                    <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 20px; color: #0f172a;">
                         <span>Total</span>
                         <span id="cart-total">$0</span>
                     </div>
-                    <form id="checkout-form" style="margin-top: 16px;">
-                        <input type="text" class="input" placeholder="Tu Nombre" required style="margin-bottom: 8px;">
-                        <input type="tel" class="input" placeholder="WhatsApp" required style="margin-bottom: 8px;">
-                        <textarea class="input" placeholder="Direccion o Nota" rows="2"></textarea>
-                        <button type="submit" class="btn btn-primary w-full" style="margin-top: 16px;">Enviar Pedido por WhatsApp</button>
+                    <form id="checkout-form" style="margin-top: 16px;" onsubmit="handleCheckout(event)">
+                        <input type="text" id="cust-name" class="input" placeholder="Tu Nombre" required style="margin-bottom: 8px;">
+                        <input type="tel" id="cust-whatsapp" class="input" placeholder="WhatsApp (ej: 51900...)" required style="margin-bottom: 8px;">
+                        <textarea id="cust-address" class="input" placeholder="Dirección de entrega o mesa..." rows="2"></textarea>
+                        <button type="submit" class="btn btn-primary w-full" style="margin-top: 16px; padding: 16px; font-size: 16px;">Enviar Pedido por WhatsApp</button>
                     </form>
                 </div>
             </div>

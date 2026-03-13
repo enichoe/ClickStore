@@ -3,8 +3,10 @@ let appState = {
     session: null,
     tenant: null, // Info de la tienda
     products: [],
-    orders: [],
-    cart: []
+    categories: [],
+    cart: [],
+    selectedCategory: 'all',
+    deliveryOption: 'pickup'
 };
 
 // ======================= VIEW CONTROLLER =======================
