@@ -351,6 +351,10 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
 /* === Storefront Optimized === */
+#view-store {
+    background: #f1f5f9; /* Slate-100: Better contrast than gray-50 */
+}
+
 .store-nav {
     height: 80px;
 }
@@ -487,6 +491,17 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
     background: #f8fafc;
 }
 
+/* Storefront Specific Inputs Fix */
+#view-store .input {
+    color: #0f172a !important; /* Force dark text in storefront */
+    background: #f1f5f9;
+}
+
+#view-store .input:focus {
+    background: #ffffff;
+    border-color: #6366f1;
+}
+
 /* Animations */
 .stagger-in > * {
     opacity: 0;
@@ -503,3 +518,13 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
 .stagger-in > *:nth-child(3) { animation-delay: 0.2s; }
 .stagger-in > *:nth-child(4) { animation-delay: 0.25s; }
 .stagger-in > *:nth-child(n+5) { animation-delay: 0.3s; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner-sm {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(0,0,0,0.1);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}

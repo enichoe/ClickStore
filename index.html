@@ -693,8 +693,9 @@
                     <h3 class="text-2xl font-black text-slate-900 leading-tight">Tu Pedido</h3>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">ClickStore Checkout</p>
                 </div>
-                <button class="w-10 h-10 rounded-full bg-slate-100 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors" onclick="closeDrawer('drawer-cart')">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                <button class="px-4 py-2 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-bold text-sm" onclick="closeDrawer('drawer-cart')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cerrar
                 </button>
             </div>
             
@@ -737,17 +738,33 @@
                     </div>
 
                     <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-4 pt-4">
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Datos Personales</label>
-                            <input type="text" id="cust-name" class="input !bg-slate-100 !border-transparent focus:!bg-white focus:!border-indigo-500" placeholder="Nombre completo" required>
-                            <input type="tel" id="cust-whatsapp" class="input !bg-slate-100 !border-transparent focus:!bg-white focus:!border-indigo-500" placeholder="WhatsApp (Ej: 519...)" required>
-                            <textarea id="cust-address" class="input !bg-slate-100 !border-transparent focus:!bg-white focus:!border-indigo-500 h-24 resize-none" placeholder="Dirección o instrucciones especiales..."></textarea>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2 mb-2 block">Datos de Contacto</label>
+                                <input type="text" id="cust-name" class="input !bg-slate-100 !text-slate-900" placeholder="Nombre completo" required>
+                            </div>
+                            <div>
+                                <input type="tel" id="cust-whatsapp" class="input !bg-slate-100 !text-slate-900" placeholder="WhatsApp (Ej: 519...)" required>
+                            </div>
+                            <div>
+                                <div class="flex justify-between items-center mb-2 px-2">
+                                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Dirección de Entrega</label>
+                                    <button type="button" onclick="getCurrentLocation()" class="text-[10px] font-black text-indigo-600 hover:text-indigo-800 flex items-center gap-1 uppercase tracking-wider bg-indigo-50 px-2 py-1 rounded-md">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                        Usar mi ubicación
+                                    </button>
+                                </div>
+                                <textarea id="cust-address" class="input !bg-slate-100 !text-slate-900 h-24 resize-none leading-relaxed" placeholder="Calle, número, urbanización o instrucciones para el repartidor..."></textarea>
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-full py-5 text-lg font-black shadow-2xl shadow-indigo-500/30 uppercase tracking-wider">
-                            Realizar Pedido
-                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h14"/></svg>
-                        </button>
-                        <p class="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest">Serás redirigido a WhatsApp</p>
+                        
+                        <div class="pt-4">
+                            <button type="submit" id="btn-submit-order" class="btn btn-primary w-full py-5 text-lg font-black shadow-2xl shadow-indigo-500/30 uppercase tracking-widest flex items-center justify-center gap-3 active:scale-[0.98] transition-all bg-indigo-600 text-white hover:bg-indigo-700">
+                                <span>Realizar Compra</span>
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h14"/></svg>
+                            </button>
+                        </div>
+                        <p class="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest mt-2">Se abrirá WhatsApp para enviar tu pedido</p>
                     </form>
                 </div>
             </div>

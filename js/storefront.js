@@ -397,6 +397,46 @@ async function handleCheckout(e) {
     }
 }
 
+// ======================= GEOLOCATION =======================
+function getCurrentLocation() {
+    if (!navigator.geolocation) {
+        showToast('❌ Geolocalización no soportada', 'error');
+        return;
+    }
+
+    const btn = document.querySelector('button[onclick="getCurrentLocation()"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<span class="spinner-sm"></span> Obteniendo...`;
+    btn.disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const { latitude, longitude } = position.coords;
+            const addressInput = document.getElementById('cust-address');
+            const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            
+            // Append or set location
+            const locText = `📍 Ubicación: ${mapUrl}`;
+            if (addressInput.value.includes('📍 Ubicación:')) {
+                addressInput.value = addressInput.value.replace(/📍 Ubicación: https:\/\/www\.google\.com\/maps\?q=[-0-9.,]+/g, locText);
+            } else {
+                addressInput.value += (addressInput.value ? '\n' : '') + locText;
+            }
+            
+            showToast('✅ Ubicación obtenida');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        },
+        (error) => {
+            console.error("Geo error:", error);
+            showToast('❌ No se pudo obtener la ubicación', 'error');
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+    );
+}
+
 // Initializer context check for storefront
 document.addEventListener('DOMContentLoaded', () => {
     // Add any necessary event listeners for search if needed outside rendering
