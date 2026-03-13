@@ -594,97 +594,165 @@
     <!-- ======================================================= -->
     <!-- VISTA 4: TIENDA PUBLICA (Storefront) -->
     <!-- ======================================================= -->
-    <div id="view-store" style="display: none;" class="bg-white text-slate-900 min-h-screen">
-        <nav class="nav-saas border-b border-slate-100" style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px);">
-            <div class="nav-saas-inner">
-                <div class="flex items-center gap-3">
-                    <div id="store-logo-placeholder" class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
-                        T
+    <div id="view-store" style="display: none;" class="bg-gray-50 text-slate-900 min-h-screen">
+        <!-- Premium Store Nav -->
+        <nav class="fixed top-0 w-full z-[100] bg-white/80 backdrop-blur-xl border-b border-slate-100 flex flex-col">
+            <div class="max-w-7xl mx-auto w-full px-6 flex justify-between items-center h-[80px]">
+                <div class="flex items-center gap-4">
+                    <img id="store-logo-img" src="" class="w-12 h-12 rounded-full object-cover hidden shadow-sm border border-slate-100">
+                    <div id="store-logo-placeholder" class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 font-bold text-xl uppercase shadow-sm">
+                        
                     </div>
-                    <h2 id="store-title-nav" class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600">Tienda</h2>
+                    <div class="hidden sm:block">
+                        <h2 id="store-title-nav" class="text-xl font-bold text-slate-800 tracking-tight"></h2>
+                    </div>
                 </div>
-                <button class="btn btn-secondary btn-sm" onclick="showView('view-admin')">Mi Panel</button>
+
+                <div class="flex-1 max-w-lg mx-8 hidden md:block">
+                    <div class="search-input-group flex items-center px-6">
+                        <svg class="text-slate-400" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" id="store-search" class="w-full bg-transparent border-none py-3 px-4 outline-none text-slate-700 text-sm" placeholder="¿Qué estás buscando?" oninput="filterStoreProducts()">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button class="relative p-3 rounded-full hover:bg-slate-100 transition-colors" onclick="openDrawer('drawer-cart')">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        <span id="cart-count" class="absolute top-1 right-1 bg-indigo-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
+                    </button>
+                    <!-- Mi Panel solo visible si es el dueño (simulado en app logic) -->
+                    <button id="btn-back-to-admin" class="btn btn-secondary btn-sm hidden" onclick="showView('view-admin')">Mi Panel</button>
+                </div>
+            </div>
+            <!-- Mobile Search Bar -->
+            <div class="md:hidden px-6 pb-4">
+                <div class="search-input-group flex items-center px-4">
+                    <svg class="text-slate-400" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" id="store-search-mobile" class="w-full bg-transparent border-none py-2 px-3 outline-none text-slate-700 text-sm" placeholder="Buscar productos..." oninput="filterStoreProducts()">
+                </div>
             </div>
         </nav>
 
-        <header class="store-header bg-slate-50 border-b border-slate-100 py-24 px-6 text-center">
-            <h1 id="store-title-main" class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Nombre Tienda</h1>
-            <p id="store-tagline" class="text-slate-500 text-lg max-w-xl mx-auto">Bienvenido a nuestra tienda virtual. Elige tus productos favoritos y recíbelos por WhatsApp.</p>
+        <!-- Store Hero -->
+        <header class="store-hero-bg pt-40 pb-20 px-6 text-center border-b border-slate-100 bg-white">
+            <div class="stagger-in flex flex-col items-center">
+                <img id="store-logo-hero" src="" class="w-24 h-24 rounded-3xl object-cover mb-8 shadow-2xl border-4 border-white rotate-2 hover:rotate-0 transition-transform hidden">
+                <div id="store-logo-hero-placeholder" class="w-24 h-24 rounded-3xl bg-indigo-500 text-white flex items-center justify-center text-4xl font-black mb-8 shadow-xl shadow-indigo-200 uppercase rotate-2">
+                    
+                </div>
+                <h1 id="store-title-main" class="text-4xl md:text-6xl font-black text-slate-900 mb-4 tracking-tight">Cargando...</h1>
+                <p id="store-tagline" class="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Personaliza esta descripción en tu panel de control.</p>
+            </div>
         </header>
 
-        <div class="max-w-6xl mx-auto px-6 py-12">
-            <!-- Selector de Categorías -->
-            <div class="mb-10">
-                <h3 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-6">Categorías</h3>
-                <div id="category-filter-bar" class="flex gap-3 overflow-x-auto pb-4 hide-scrollbar">
-                    <!-- Botones inyectados por JS -->
-                    <button class="cat-btn active">Todos</button>
+        <div class="max-w-7xl mx-auto px-6 py-12">
+            <!-- Categorías Scroll Horizontal -->
+            <div class="mb-12">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-sm uppercase tracking-widest text-slate-400 font-extrabold flex items-center gap-2">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+                        Categorías
+                    </h3>
+                </div>
+                <div id="category-filter-bar" class="flex gap-3 overflow-x-auto pb-6 hide-scrollbar">
+                    <!-- Injected by JS -->
                 </div>
             </div>
 
-            <div id="store-products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
-                <!-- Productos inyectados por JS -->
+            <!-- Grid de Productos -->
+            <div id="store-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Injected by JS -->
             </div>
         </div>
 
-        <!-- Carrito Flotante Premium -->
-        <div class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-50">
-            <button class="w-full bg-slate-900 text-white rounded-2xl p-5 shadow-2xl flex items-center justify-between hover:scale-[1.02] active:scale-95 transition-all" onclick="openCart()">
+        <!-- Floating Cart (Mobile Only or Minimalist) -->
+        <div id="cart-float-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-[100] scale-in hidden">
+            <button class="w-full bg-slate-900 text-white rounded-full p-4 pr-6 shadow-2xl flex items-center justify-between hover:scale-[1.02] active:scale-95 transition-all" onclick="openDrawer('drawer-cart')">
                 <div class="flex items-center gap-4">
-                    <div class="relative">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                        <span id="cart-count" class="absolute -top-2 -right-2 bg-indigo-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-slate-900">0</span>
+                    <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center shadow-lg">
+                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                     </div>
-                    <span class="font-bold text-lg">Ver mi pedido</span>
+                    <div>
+                        <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest">Tu Pedido</p>
+                        <p class="font-bold">Ver Carrito</p>
+                    </div>
                 </div>
-                <span id="cart-total-float" class="font-bold text-xl">$0.00</span>
+                <div class="text-right">
+                    <p id="cart-float-total" class="text-xl font-black text-white">$0.00</p>
+                </div>
             </button>
         </div>
         
-        <!-- Modal Carrito Premium -->
-        <div id="modal-cart" class="modal">
-            <div class="modal-content !p-0 !max-w-md overflow-hidden bg-white">
-                <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                    <h3 class="text-xl font-bold text-slate-900">Tu Carrito</h3>
-                    <button class="p-2 text-slate-400 hover:text-slate-900" onclick="closeModal('modal-cart')">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
+        <!-- Carrito Drawer Overlay -->
+        <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer('drawer-cart')"></div>
+
+        <!-- Carrito Drawer Sidebar -->
+        <div id="drawer-cart" class="drawer bg-white">
+            <div class="cart-drawer-header">
+                <div>
+                    <h3 class="text-2xl font-black text-slate-900 leading-tight">Tu Pedido</h3>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">ClickStore Checkout</p>
                 </div>
-                
-                <div class="p-6 max-h-[60vh] overflow-y-auto">
-                    <div id="cart-items" class="space-y-6">
-                        <!-- Items del carrito -->
+                <button class="w-10 h-10 rounded-full bg-slate-100 text-slate-400 hover:text-slate-900 flex items-center justify-center transition-colors" onclick="closeDrawer('drawer-cart')">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="cart-drawer-body">
+                <div id="cart-items" class="space-y-8">
+                    <!-- Items -->
+                    <div class="py-20 text-center space-y-4">
+                        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto text-slate-200">
+                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        </div>
+                        <p class="text-slate-400 font-bold">Tu carrito está vacío</p>
                     </div>
                 </div>
+            </div>
 
-                <div class="p-6 bg-slate-50 border-t border-slate-100 space-y-4">
-                    <!-- Opciones de entrega -->
-                    <div id="delivery-option-ui" class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm hidden">
-                        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Método de entrega</p>
-                        <div class="flex gap-3">
-                            <button id="btn-opt-delivery" class="flex-1 py-3 px-4 rounded-lg text-sm font-bold border-2 border-slate-100 transition-all hover:border-indigo-500" onclick="setDeliveryOption('delivery')">🛵 Delivery</button>
-                            <button id="btn-opt-pickup" class="flex-1 py-3 px-4 rounded-lg text-sm font-bold border-2 border-slate-100 transition-all hover:border-indigo-500" onclick="setDeliveryOption('pickup')">🥡 Recojo</button>
+            <div class="cart-drawer-footer">
+                <div class="space-y-6">
+                    <!-- Delivery Picker -->
+                    <div id="delivery-option-ui" class="hidden">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Método de Entrega</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button id="btn-opt-delivery" class="flex flex-col items-center gap-1 py-4 px-2 rounded-2xl border-2 border-slate-100 transition-all font-bold text-sm" onclick="setDeliveryOption('delivery')">
+                                <span class="text-2xl">🛵</span>
+                                <span>Delivery</span>
+                            </button>
+                            <button id="btn-opt-pickup" class="flex flex-col items-center gap-1 py-4 px-2 rounded-2xl border-2 border-slate-100 transition-all font-bold text-sm" onclick="setDeliveryOption('pickup')">
+                                <span class="text-2xl">🥡</span>
+                                <span>Recojo</span>
+                            </button>
                         </div>
                     </div>
 
-                    <div id="cart-summary-lines" class="space-y-2 text-sm text-slate-500"></div>
+                    <div id="cart-summary-lines" class="space-y-3 pt-2">
+                        <!-- Subtotal / Envío -->
+                    </div>
                     
-                    <div class="flex justify-between items-center pt-2">
-                        <span class="text-slate-900 font-bold text-lg">Total final</span>
-                        <span id="cart-total" class="text-2xl font-black text-indigo-600">$0.00</span>
+                    <div class="flex justify-between items-end">
+                        <p class="text-slate-500 font-bold">Total a pagar</p>
+                        <p id="cart-total" class="text-4xl font-black text-slate-900">$0.00</p>
                     </div>
 
-                    <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-3 mt-4">
-                        <input type="text" id="cust-name" class="input !bg-white !text-slate-900 !border-slate-200" placeholder="Tu nombre completo" required>
-                        <input type="tel" id="cust-whatsapp" class="input !bg-white !text-slate-900 !border-slate-200" placeholder="WhatsApp (Ej: 51900...)" required>
-                        <textarea id="cust-address" class="input !bg-white !text-slate-900 !border-slate-200" placeholder="Dirección de entrega o especificaciones..." rows="2"></textarea>
-                        <button type="submit" class="btn btn-primary w-full py-5 text-lg shadow-xl shadow-indigo-500/20">
-                            Confirmar Pedido vía WhatsApp
+                    <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-4 pt-4">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest pl-2">Datos Personales</label>
+                            <input type="text" id="cust-name" class="input !bg-slate-100 !border-transparent focus:!bg-white focus:!border-indigo-500" placeholder="Nombre completo" required>
+                            <input type="tel" id="cust-whatsapp" class="input !bg-slate-100 !border-transparent focus:!bg-white focus:!border-indigo-500" placeholder="WhatsApp (Ej: 519...)" required>
+                            <textarea id="cust-address" class="input !bg-slate-100 !border-transparent focus:!bg-white focus:!border-indigo-500 h-24 resize-none" placeholder="Dirección o instrucciones especiales..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full py-5 text-lg font-black shadow-2xl shadow-indigo-500/30 uppercase tracking-wider">
+                            Realizar Pedido
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h14"/></svg>
                         </button>
+                        <p class="text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest">Serás redirigido a WhatsApp</p>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- VISTA ERROR -->
