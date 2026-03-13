@@ -267,7 +267,7 @@ function renderCartContent() {
                 <div class="flex-1 min-w-0">
                     <div class="flex justify-between items-start mb-1">
                         <p class="font-bold text-slate-800 truncate">${i.name}</p>
-                        <button class="text-slate-300 hover:text-red-500 transition-colors p-1" onclick="removeFromCart('${i.id}')">
+                        <button type="button" class="text-slate-300 hover:text-red-500 transition-colors p-1" onclick="removeFromCart('${i.id}')">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                     </div>
@@ -276,9 +276,9 @@ function renderCartContent() {
                         <span class="text-sm font-black text-indigo-600">Total: ${currency}${(i.price * i.qty).toFixed(2)}</span>
                     </div>
                     <div class="qty-control !bg-slate-50">
-                        <button class="qty-btn" onclick="changeQty('${i.id}', -1)">-</button>
+                        <button type="button" class="qty-btn" onclick="changeQty('${i.id}', -1)">-</button>
                         <span class="text-xs font-bold w-6 text-center text-slate-800">${i.qty}</span>
-                        <button class="qty-btn" onclick="changeQty('${i.id}', 1)">+</button>
+                        <button type="button" class="qty-btn" onclick="changeQty('${i.id}', 1)">+</button>
                     </div>
                 </div>
             </div>

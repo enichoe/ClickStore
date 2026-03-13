@@ -713,7 +713,7 @@
             </div>
             
             <div class="cart-drawer-body">
-                <div id="cart-items" class="space-y-8">
+                <div id="cart-items" class="space-y-4 mb-4">
                     <!-- Items -->
                     <div class="py-20 text-center space-y-4">
                         <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto text-slate-200">
@@ -722,21 +722,20 @@
                         <p class="text-slate-400 font-bold">Tu carrito está vacío</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="cart-drawer-footer">
-                <div class="space-y-6">
+                <!-- Resumen y Formulario -->
+                <div class="space-y-6 pt-4 border-t border-slate-100">
                     <!-- Delivery Picker -->
                     <div id="delivery-option-ui" class="hidden">
                         <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Método de Entrega</p>
                         <div class="grid grid-cols-2 gap-3">
-                            <button id="btn-opt-delivery" class="flex flex-col items-center gap-1 py-4 px-2 rounded-2xl border-2 border-slate-100 transition-all font-bold text-sm" onclick="setDeliveryOption('delivery')">
+                            <button id="btn-opt-delivery" class="flex flex-col items-center gap-1 py-4 px-2 rounded-2xl border-2 border-slate-100 transition-all font-bold text-sm bg-white" onclick="setDeliveryOption('delivery')">
                                 <span class="text-2xl">🛵</span>
                                 <span>Delivery</span>
                             </button>
-                            <button id="btn-opt-pickup" class="flex flex-col items-center gap-1 py-4 px-2 rounded-2xl border-2 border-slate-100 transition-all font-bold text-sm" onclick="setDeliveryOption('pickup')">
+                            <button id="btn-opt-pickup" class="flex flex-col items-center gap-1 py-4 px-2 rounded-2xl border-2 border-slate-100 transition-all font-bold text-sm bg-white" onclick="setDeliveryOption('pickup')">
                                 <span class="text-2xl">🥡</span>
-                                <span>Recojo</span>
+                                <span>Recojo local</span>
                             </button>
                         </div>
                     </div>
@@ -745,21 +744,13 @@
                         <!-- Subtotal / Envío -->
                     </div>
                     
-                    <div class="flex justify-between items-end">
+                    <div class="flex justify-between items-end border-b border-slate-100 pb-4">
                         <p class="text-slate-500 font-bold">Total a pagar</p>
                         <p id="cart-total" class="text-4xl font-black text-slate-900">$0.00</p>
                     </div>
 
-                    <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-6 pt-6">
-                        <div class="pt-2">
-                            <button type="submit" id="btn-submit-order" class="btn btn-primary w-full py-6 text-xl font-black shadow-2xl shadow-indigo-500/40 uppercase tracking-widest flex items-center justify-center gap-3 active:scale-[0.98] transition-all bg-indigo-600 text-white hover:bg-indigo-700">
-                                <span>Realizar Compra ahora</span>
-                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h14"/></svg>
-                            </button>
-                            <p class="text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest mt-3">Recibirás el resumen en tu WhatsApp</p>
-                        </div>
-
-                        <div class="space-y-5 border-t border-slate-100 pt-6">
+                    <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-6 pt-2">
+                        <div class="space-y-4">
                             <div>
                                 <label class="text-[11px] font-black text-slate-900 uppercase tracking-widest pl-2 mb-2 block">👤 Tu Nombre</label>
                                 <input type="text" id="cust-name" class="input !bg-slate-50 !border-slate-200 !text-slate-900 focus:!bg-white" placeholder="Nombre completo" required>
@@ -776,8 +767,16 @@
                                         GPS
                                     </button>
                                 </div>
-                                <textarea id="cust-address" class="input !bg-slate-50 !border-slate-200 !text-slate-900 h-28 resize-none leading-relaxed focus:!bg-white" placeholder="Calle, número, urbanización o instrucciones para el repartidor..."></textarea>
+                                <textarea id="cust-address" class="input !bg-slate-50 !border-slate-200 !text-slate-900 h-20 resize-none leading-relaxed focus:!bg-white" placeholder="Calle, número..."></textarea>
                             </div>
+                        </div>
+
+                        <div class="pt-4 pb-8">
+                            <button type="submit" id="btn-submit-order" class="btn btn-primary w-full py-5 text-lg font-black shadow-2xl shadow-indigo-500/40 uppercase tracking-widest flex items-center justify-center gap-3 active:scale-[0.98] transition-all bg-indigo-600 text-white hover:bg-indigo-700">
+                                <span>Realizar Pedido</span>
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h14"/></svg>
+                            </button>
+                            <p class="text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest mt-4">Recibirás el resumen en WhatsApp</p>
                         </div>
                     </form>
                 </div>
