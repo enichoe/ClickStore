@@ -168,7 +168,6 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
     transform: translateY(0) scale(1);
 }
 
-/* Drawer (Side) */
 .drawer {
     position: fixed;
     top: 0;
@@ -183,7 +182,6 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* Enable scroll on the main container */
 }
 
 .drawer.active {
@@ -478,10 +476,12 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .cart-drawer-body {
-    flex-shrink: 0; /* Prevent shrinking */
+    flex: 1; /* Allow stretching to fill available drawer space */
+    overflow-y: auto; /* Enable vertical scroll inside body */
     padding: 24px;
 }
 
@@ -489,6 +489,7 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
     padding: 24px;
     border-top: 1px solid #f1f5f9;
     background: #f8fafc;
+    flex-shrink: 0;
 }
 
 /* Storefront Specific Inputs Fix */

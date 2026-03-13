@@ -379,12 +379,12 @@ function renderOrders() {
             console.error("Error parsing items for order:", o.id, e);
         }
 
-        const date = new Date(o.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+        const date = new Date(o.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
         return `
-            <div class="p-4 bg-slate-900/40 border border-slate-800 rounded-xl flex justify-between items-center group hover:border-slate-700 transition-all">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold">
+            <div class="p-4 bg-slate-900/40 border border-slate-800 rounded-xl flex flex-col md:flex-row justify-between md:items-center group hover:border-slate-700 transition-all gap-4">
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold shrink-0">
                         ${o.customer_name[0].toUpperCase()}
                     </div>
                     <div>
@@ -392,11 +392,16 @@ function renderOrders() {
                         <p class="text-[11px] text-slate-500 uppercase tracking-wider">${date} • ${itemsCount} items</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <p class="font-bold text-white mb-1">${currencySymbol}${parseFloat(o.total).toFixed(2)}</p>
-                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter ${o.status === 'pending' ? 'bg-amber-500/10 text-amber-500' : 'bg-emerald-500/10 text-emerald-500'}">
-                        ${o.status === 'pending' ? 'Pendiente' : 'Completado'}
-                    </span>
+                <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t border-slate-800 pt-3 md:border-t-0 md:pt-0">
+                    <div class="text-left md:text-right flex flex-col items-start md:items-end w-full max-w-[120px]">
+                        <p class="font-bold text-white mb-1">${currencySymbol}${parseFloat(o.total).toFixed(2)}</p>
+                        <select class="input !py-1 !px-2 !text-[10px] font-bold uppercase tracking-wider !bg-slate-800 !border-slate-700 !rounded !text-slate-300 w-full" onchange="updateOrderStatus('${o.id}', this.value)">
+                            <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendiente</option>
+                            <option value="attended" ${o.status === 'attended' || o.status === 'processing' ? 'selected' : ''}>Atendido</option>
+                            <option value="delivered" ${o.status === 'delivered' || o.status === 'completed' ? 'selected' : ''}>Entregado</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary btn-sm whitespace-nowrap" onclick="viewOrderDetails('${o.id}')">Ver Detalle</button>
                 </div>
             </div>
         `;
@@ -406,6 +411,91 @@ function renderOrders() {
     dashList.innerHTML = html;
 
     // Estadísticas ya actualizadas arriba
+}
+
+let currentViewOrderId = null;
+
+function viewOrderDetails(id) {
+    const o = appState.orders.find(ord => ord.id === id);
+    if (!o) return;
+    currentViewOrderId = id;
+    
+    document.getElementById('mo-customer').innerText = o.customer_name;
+    document.getElementById('mo-whatsapp').innerText = o.whatsapp || 'No proporcionado';
+    document.getElementById('mo-address').innerText = o.delivery_address || 'No proporcionado'; // address is not in DB originally, keep as fallback
+    
+    // Add date
+    const date = new Date(o.created_at).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' });
+    document.getElementById('mo-date').innerText = date;
+    
+    const statusSelect = document.getElementById('mo-status');
+    if (statusSelect) {
+        statusSelect.value = (o.status === 'processing') ? 'attended' : (o.status === 'completed' ? 'delivered' : o.status);
+    }
+
+    const itemsDiv = document.getElementById('mo-items');
+    try {
+        const items = typeof o.items === 'string' ? JSON.parse(o.items) : o.items;
+        const currencySymbol = getCurrencySymbol(appState.tenant.currency);
+        
+        itemsDiv.innerHTML = items.map(i => {
+            const product = appState.products.find(p => p.id === i.id) || {};
+            const name = product.name || 'Producto Desconocido';
+            const price = product.price || 0;
+            const img = product.image || '';
+            
+            return `
+                <div class="flex justify-between items-center bg-slate-900 border border-slate-700 p-3 rounded-lg">
+                    <div class="flex gap-3 items-center">
+                        <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center overflow-hidden shrink-0">
+                            ${img ? `<img src="${img}" class="w-full h-full object-cover">` : `<span class="text-xs">🛒</span>`}
+                        </div>
+                        <div>
+                            <p class="font-bold text-white text-sm">${name}</p>
+                            <p class="text-xs text-slate-400">${i.qty} x ${currencySymbol}${parseFloat(price).toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <div class="font-bold text-slate-200">
+                        ${currencySymbol}${(i.qty * parseFloat(price)).toFixed(2)}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    } catch(e) {
+        itemsDiv.innerHTML = '<p class="text-slate-500 text-sm">Error cargando productos.</p>';
+    }
+
+    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
+    document.getElementById('mo-total').innerText = currencySymbol + parseFloat(o.total || 0).toFixed(2);
+    
+    openModal('modal-order-details');
+}
+
+async function updateOrderStatus(orderId, newStatus) {
+    try {
+        const { error } = await supabase.from('orders').update({ status: newStatus }).eq('id', orderId);
+        if (error) throw error;
+        
+        const order = appState.orders.find(o => o.id === orderId);
+        if (order) order.status = newStatus;
+        
+        // Sync modal status if open
+        if (currentViewOrderId === orderId) {
+            const ms = document.getElementById('mo-status');
+            if (ms) ms.value = newStatus;
+        }
+        
+        showToast('✅ Estado actualizado');
+        renderOrders();
+    } catch (err) {
+        showToast('❌ Error al actualizar estado: ' + err.message);
+    }
+}
+
+function updateOrderStatusFromModal(newStatus) {
+    if (currentViewOrderId) {
+        updateOrderStatus(currentViewOrderId, newStatus);
+    }
 }
 
 async function saveProduct(e) {

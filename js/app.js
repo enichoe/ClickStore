@@ -69,6 +69,11 @@ function showAdminSection(section) {
     if (section === 'settings' && typeof generateQR === 'function') generateQR();
     if (section === 'super' && typeof fetchGlobalStores === 'function') fetchGlobalStores();
     
+    // Auto-close sidebar on mobile after selection
+    if (window.innerWidth <= 768 && typeof toggleSidebar === 'function') {
+        toggleSidebar(false);
+    }
+    
     localStorage.setItem('clickSaaS_lastSection', section);
 }
 

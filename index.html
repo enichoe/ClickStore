@@ -337,7 +337,7 @@
         </aside>
 
         <header class="admin-mobile-header px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center md:hidden">
-            <button class="p-2 -ml-2 text-slate-400" onclick="toggleSidebar(true)">
+            <button class="p-2 -ml-2 text-slate-400" onclick="toggleSidebar()">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7"/></svg>
             </button>
             <div class="text-lg font-bold" id="mobile-store-name">Dashboard</div>
@@ -592,25 +592,7 @@
             <div style="height: 80px;" class="md:hidden"></div> <!-- Spacer for bottom nav -->
         </main>
 
-        <!-- Bottom Navigation Mobile -->
-        <nav class="admin-bottom-nav">
-            <div class="bottom-nav-item active" onclick="showAdminSection('dash')">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <span>Inicio</span>
-            </div>
-            <div class="bottom-nav-item" onclick="showAdminSection('products')">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                <span>Productos</span>
-            </div>
-            <div class="bottom-nav-item" onclick="showAdminSection('orders')">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                <span>Pedidos</span>
-            </div>
-            <div class="bottom-nav-item" onclick="showAdminSection('settings')">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-                <span>Más</span>
-            </div>
-        </nav>
+
     </div>
 
     <!-- ======================================================= -->
@@ -1001,32 +983,57 @@
         </div>
     </div>
     <div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 10000; display: flex; flex-direction: column; gap: 8px;"></div>
-    <!-- Modal Gestion Tienda (Super Admin) -->
-    <div id="modal-store" class="modal">
-        <div class="modal-content">
-            <h3 id="modal-store-title" style="margin-bottom: 20px;">Gestionar Tienda</h3>
-            <form onsubmit="saveStoreByAdmin(event)">
-                <div class="input-group">
-                    <label>Nombre de la Tienda</label>
-                    <input type="text" id="s-name" class="input" required>
+    <div id="modal-order-details" class="modal">
+        <div class="modal-content dark-modal !max-w-2xl text-slate-200">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-black text-white">Detalles del Pedido</h3>
+                <button class="p-2 text-slate-500 hover:text-white transition-colors" onclick="closeModal('modal-order-details')">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-slate-800/50 p-4 rounded-xl">
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Cliente</p>
+                    <p id="mo-customer" class="font-bold text-lg text-white mb-2">-</p>
+                    
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">WhatsApp</p>
+                    <p id="mo-whatsapp" class="font-medium text-slate-300 mb-2">-</p>
+                    
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Dirección / Notas</p>
+                    <p id="mo-address" class="font-medium text-slate-300">-</p>
                 </div>
-                <div class="input-group" style="margin-top: 12px;">
-                    <label>Slug (URL personalizada)</label>
-                    <input type="text" id="s-slug" class="input" placeholder="pizzeria-roma">
+                
+                <div class="bg-slate-800/50 p-4 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Estado del Pedido</p>
+                        <select id="mo-status" class="input !py-2 font-bold mb-4 w-full" onchange="updateOrderStatusFromModal(this.value)">
+                            <option value="pending">Pendiente</option>
+                            <option value="attended">Atendido</option>
+                            <option value="delivered">Entregado</option>
+                        </select>
+
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Fecha</p>
+                        <p id="mo-date" class="font-medium text-slate-300">-</p>
+                    </div>
                 </div>
-                <div class="input-group" style="margin-top: 12px;">
-                    <label>Tipo de Negocio</label>
-                    <select id="s-type" class="input">
-                        <option value="Restaurante">Restaurante</option>
-                        <option value="Tienda">Tienda de Ropa</option>
-                        <option value="Otros">Otros</option>
-                    </select>
+            </div>
+
+            <div class="bg-slate-800/50 p-4 rounded-xl mb-6">
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4">Productos</p>
+                <div id="mo-items" class="space-y-3">
+                    <!-- Items -->
                 </div>
-                <div style="display: flex; gap: 12px; margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary w-full" onclick="closeModal('modal-store')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary w-full">Guardar</button>
-                </div>
-            </form>
+            </div>
+
+            <div class="flex justify-between items-center text-xl font-black bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <span>Total</span>
+                <span id="mo-total" class="text-indigo-400">$0.00</span>
+            </div>
+            
+            <div class="mt-6 flex gap-4">
+                <button type="button" class="btn btn-secondary flex-1" onclick="closeModal('modal-order-details')">Cerrar</button>
+            </div>
         </div>
     </div>
 

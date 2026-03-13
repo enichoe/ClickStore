@@ -396,7 +396,9 @@ async function handleCheckout(e) {
             _store_id:      appState.tenant.id,
             _customer_name: customerName,
             _whatsapp:      customerWhatsapp,
-            _items:         itemsForRpc
+            _items:         itemsForRpc,
+            _delivery_address: customerAddress || null,
+            _delivery_selected: deliverySelected
         });
 
         if (error) throw error;
