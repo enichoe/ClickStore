@@ -76,15 +76,19 @@ function renderStorefront() {
     // Renderizar filtro de categorías
     renderCategoryFilter();
     
-    // Símbolo de moneda según configuración de la tienda
     const currencySymbol = getCurrencySymbol(appState.tenant.currency);
     const grid = document.getElementById('store-products-grid');
     if (!grid) return;
 
     // Filtrar productos
-    let filteredProducts = appState.products;
+    let filteredProducts = (appState.products || []).filter(p => p.active !== false);
     if (appState.selectedCategory !== 'all') {
-        filteredProducts = appState.products.filter(p => p.category_id === appState.selectedCategory);
+        filteredProducts = filteredProducts.filter(p => p.category_id === appState.selectedCategory);
+    }
+
+    if (filteredProducts.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-20 text-center text-slate-400">No se encontraron productos en esta sección.</div>';
+        return;
     }
 
     if (appState.categories.length > 0 && appState.selectedCategory === 'all') {
@@ -93,8 +97,8 @@ function renderStorefront() {
             const catProds = filteredProducts.filter(p => p.category_id === cat.id);
             if (catProds.length === 0) return '';
             return `
-                <div style="grid-column: 1 / -1; margin-top: 32px; border-bottom: 2px solid var(--accent); padding-bottom: 8px;">
-                    <h2 style="font-size: 24px;">${cat.name}</h2>
+                <div class="col-span-full mt-12 mb-6 border-b border-slate-100 pb-2">
+                    <h2 class="text-2xl font-black text-slate-900">${cat.name}</h2>
                 </div>
                 ${catProds.map(p => renderProductCard(p, currencySymbol)).join('')}
             `;
@@ -103,8 +107,8 @@ function renderStorefront() {
         const noCatProds = filteredProducts.filter(p => !p.category_id);
         if (noCatProds.length > 0) {
             grid.innerHTML += `
-                <div style="grid-column: 1 / -1; margin-top: 32px; border-bottom: 2px solid var(--border); padding-bottom: 8px;">
-                    <h2 style="font-size: 24px; color: var(--text-sec);">Otros</h2>
+                <div class="col-span-full mt-12 mb-6 border-b border-slate-100 pb-2">
+                    <h2 class="text-2xl font-black text-slate-500">Otros</h2>
                 </div>
                 ${noCatProds.map(p => renderProductCard(p, currencySymbol)).join('')}
             `;
@@ -134,20 +138,21 @@ function filterByCategory(id) {
 
 function renderProductCard(p, currencySymbol) {
     return `
-        <div class="store-card animate-slide" style="display: flex; flex-direction: column;">
-            <div style="position: relative; height: 150px; overflow: hidden; background: #f8fafc;">
-                <img src="${p.image || 'https://via.placeholder.com/300'}" style="width: 100%; height: 100%; object-fit: cover;">
-                ${p.active === false ? '<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #ef4444; font-size: 13px;">Agotado</div>' : ''}
+        <div class="store-card animate-slide flex flex-col h-full bg-white group border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500">
+            <div class="relative aspect-square overflow-hidden bg-slate-50">
+                <img src="${p.image || 'https://via.placeholder.com/300'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors"></div>
+                ${p.active === false ? '<div class="absolute inset-0 bg-white/80 backdrop-blur-[2px] flex items-center justify-center font-black text-red-500 text-sm uppercase tracking-widest">Agotado</div>' : ''}
             </div>
-            <div style="padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
-                <div>
-                    <h4 style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; line-height: 1.2;">${p.name}</h4>
-                    <p style="font-size: 0.75rem; color: #64748b; line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.description || 'Sin descripción'}</p>
+            <div class="p-5 flex flex-col flex-1">
+                <div class="flex-1">
+                    <h4 class="text-lg font-bold text-slate-900 mb-1 group-hover:text-indigo-600 transition-colors">${p.name}</h4>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2 leading-relaxed">${p.description || 'Sin descripción'}</p>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                    <span style="font-size: 1.05rem; font-weight: 800; color: var(--accent);">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
-                    <button class="btn btn-primary" style="padding: 6px 10px; border-radius: 8px; font-weight: 600;" onclick="addToCart('${p.id}')">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                <div class="flex justify-between items-center mt-auto">
+                    <span class="text-xl font-black text-slate-900">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
+                    <button class="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-200 hover:bg-slate-900 hover:shadow-indigo-300 transition-all active:scale-90" onclick="addToCart('${p.id}')">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
                     </button>
                 </div>
             </div>
@@ -161,7 +166,6 @@ function addToCart(id) {
     const item = appState.cart.find(c => c.id === id);
     if (!product) return console.warn('Producto no encontrado en addToCart:', id);
 
-    // Asegurar que el precio sea number
     const price = Number(parseFloat(product.price) || 0);
     if (item) {
         item.qty++;
@@ -169,13 +173,19 @@ function addToCart(id) {
         appState.cart.push({ id: product.id, name: product.name, price: price, image: product.image, qty: 1 });
     }
     updateCartBadge();
-    showToast(`¡${product.name} añadido al carrito!`);
+    showToast(`🛍️ ${product.name} añadido`);
 }
 
 function updateCartBadge() {
     const count = appState.cart.reduce((sum, i) => sum + i.qty, 0);
     const cartCount = document.getElementById('cart-count');
+    const cartFloatTotal = document.getElementById('cart-total-float');
+    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
+    
     if (cartCount) cartCount.innerText = count;
+    
+    const subtotal = appState.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+    if (cartFloatTotal) cartFloatTotal.innerText = currencySymbol + subtotal.toFixed(2);
 }
 
 function openCart() {
@@ -188,16 +198,19 @@ function openCart() {
     itemsDiv.innerHTML = appState.cart.map(i => {
         total += i.price * i.qty;
         return `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
-                <div>
-                    <p style="font-weight: 500; font-size: 15px;">${i.name}</p>
-                    <div style="display: flex; gap: 8px; margin-top: 4px;">
-                         <button onclick="changeQty('${i.id}', -1)" style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff;">-</button>
-                         <span style="font-size: 14px; font-weight: 600;">${i.qty}</span>
-                         <button onclick="changeQty('${i.id}', 1)" style="width: 24px; height: 24px; border-radius: 4px; border: 1px solid #cbd5e1; background: #fff;">+</button>
-                    </div>
+            <div class="flex gap-4 items-center">
+                <div class="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
+                    <img src="${i.image || 'https://via.placeholder.com/100'}" class="w-full h-full object-cover">
                 </div>
-                <p style="font-weight: 700; color: #1e293b;">${currencySymbol}${(i.price * i.qty).toFixed(2)}</p>
+                <div class="flex-1">
+                    <p class="font-bold text-slate-900 leading-tight mb-1">${i.name}</p>
+                    <p class="text-sm text-indigo-600 font-bold">${currencySymbol}${i.price.toFixed(2)}</p>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-lg">
+                     <button onclick="changeQty('${i.id}', -1)" class="w-8 h-8 flex items-center justify-center rounded-md bg-white text-slate-900 font-bold shadow-sm active:scale-90">-</button>
+                     <span class="w-4 text-center text-sm font-black">${i.qty}</span>
+                     <button onclick="changeQty('${i.id}', 1)" class="w-8 h-8 flex items-center justify-center rounded-md bg-white text-slate-900 font-bold shadow-sm active:scale-90">+</button>
+                </div>
             </div>
         `;
     }).join('');
@@ -212,26 +225,34 @@ function openCart() {
         const dPrice = parseFloat(appState.tenant.delivery_price || 0);
         
         // Actualizar estados visuales de los botones
-        document.getElementById('btn-opt-delivery').className = `btn btn-sm w-full ${appState.deliveryOption === 'delivery' ? 'btn-primary' : 'btn-secondary'}`;
-        document.getElementById('btn-opt-pickup').className = `btn btn-sm w-full ${appState.deliveryOption === 'pickup' ? 'btn-primary' : 'btn-secondary'}`;
-
+        const btnDelivery = document.getElementById('btn-opt-delivery');
+        const btnPickup = document.getElementById('btn-opt-pickup');
+        
         if (appState.deliveryOption === 'delivery') {
+            btnDelivery.classList.add('!border-indigo-600', '!bg-indigo-50', '!text-indigo-600');
+            btnPickup.classList.remove('!border-indigo-600', '!bg-indigo-50', '!text-indigo-600');
             finalTotal += dPrice;
             summaryLines.innerHTML = `
-                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 4px; color: #64748b;">
+                <div class="flex justify-between items-center text-sm">
                     <span>Subtotal</span>
-                    <span>${currencySymbol}${total.toFixed(2)}</span>
+                    <span class="font-bold">${currencySymbol}${total.toFixed(2)}</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--accent); font-weight: 600;">
-                    <span>Envío</span>
-                    <span>+ ${currencySymbol}${dPrice.toFixed(2)}</span>
+                <div class="flex justify-between items-center text-sm text-indigo-600">
+                    <span>Costo Envío</span>
+                    <span class="font-bold">+ ${currencySymbol}${dPrice.toFixed(2)}</span>
                 </div>
             `;
         } else {
+            btnPickup.classList.add('!border-indigo-600', '!bg-indigo-50', '!text-indigo-600');
+            btnDelivery.classList.remove('!border-indigo-600', '!bg-indigo-50', '!text-indigo-600');
             summaryLines.innerHTML = `
-                <div style="display: flex; justify-content: space-between; font-size: 14px; color: #64748b;">
+                <div class="flex justify-between items-center text-sm">
+                    <span>Subtotal</span>
+                    <span class="font-bold">${currencySymbol}${total.toFixed(2)}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm text-emerald-600">
                     <span>Recojo en Local</span>
-                    <span>${currencySymbol}${(0).toFixed(2)}</span>
+                    <span class="font-bold">Gratis</span>
                 </div>
             `;
         }

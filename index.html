@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClickSaaS - Plataforma de Tiendas</title>
+    <title>ClickStore - Crea tu Tienda Online en Minutos y Vende por WhatsApp</title>
+    <meta name="description" content="La plataforma SaaS más rápida para crear tu catálogo digital. Recibe pedidos directamente en WhatsApp, gestiona tus productos y haz crecer Tu negocio.">
+    <meta name="keywords" content="tienda online, whatsapp marketing, catálogo digital, ecommerce perú, ventas whatsapp, saas retail">
+    <meta property="og:title" content="ClickStore - Tu Negocio en WhatsApp">
+    <meta property="og:description" content="Transforma tu negocio con una tienda virtual profesional.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&q=80&w=1200">
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Librería QR Code para SaaS -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
@@ -17,43 +22,192 @@
     <!-- VISTA 1: LANDING PAGE (SaaS Public Web) -->
     <!-- ======================================================= -->
     <div id="view-landing">
+        <!-- Modern Glassmorphism Nav -->
         <nav class="nav-saas">
             <div class="nav-saas-inner">
-                <div style="font-weight: 700; font-size: 20px; display: flex; align-items: center; gap: 8px;">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    ClickSaaS
+                <div class="flex items-center gap-2 text-2xl font-bold tracking-tight">
+                    <div class="p-2 rounded-lg bg-indigo-500 shadow-lg shadow-indigo-500/20">
+                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    </div>
+                    <span>ClickSaaS</span>
                 </div>
-                <div style="display: flex; gap: 12px;">
-                    <button class="btn btn-secondary" onclick="showView('view-login')">Iniciar Sesión</button>
-                    <button class="btn btn-primary" onclick="showView('view-register')">Crear Tienda Gratis</button>
+                <div class="flex gap-4">
+                    <button class="btn btn-ghost hidden md:block" onclick="showView('view-login')">Iniciar Sesión</button>
+                    <button class="btn btn-primary" onclick="showView('view-register')">Empezar Gratis</button>
                 </div>
             </div>
         </nav>
 
-        <section class="hero">
-            <h1>Tu Tienda Virtual en <br/><span class="hero-accent">Segundos</span></h1>
-            <p style="max-width: 600px; color: var(--text-sec); font-size: 18px; margin-bottom: 32px;">
-                Plataforma profesional para crear tu tienda online, recibir pedidos y gestionar tu negocio. Sin comisiones ocultas.
-            </p>
-            <button class="btn btn-primary" style="padding: 16px 32px; font-size: 16px;" onclick="showView('view-register')">
-                Comenzar Ahora
-            </button>
-            
-            <div style="margin-top: 64px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; width: 100%; max-width: 1000px;">
-                <div class="card" style="text-align: left;">
-                    <h3 style="color: var(--accent); margin-bottom: 8px;">Catalogo Digital</h3>
-                    <p style="color: var(--text-sec); font-size: 14px;">Sube tus productos con fotos y precios.</p>
+        <!-- Hero Section Impactante -->
+        <section class="hero relative overflow-hidden">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none opacity-20">
+                <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-indigo-500 rounded-full blur-[120px] animate-pulse"></div>
+                <div class="absolute bottom-[10%] right-[10%] w-96 h-96 bg-purple-500 rounded-full blur-[150px] animate-pulse" style="animation-delay: 1s;"></div>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center max-w-4xl px-6">
+                <span class="px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-sm font-semibold border border-indigo-500/20 mb-8 fade-in">
+                    🚀 La plataforma #1 para emprendedores
+                </span>
+                <h1 class="text-5xl md:text-7xl mb-8 leading-[1.1] animate-slide-up">
+                    Vende por <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">WhatsApp</span> <br/> de forma profesional
+                </h1>
+                <p class="text-xl text-slate-400 max-w-2xl mb-12 animate-slide-up" style="animation-delay: 0.1s;">
+                    Crea tu tienda virtual en segundos, gestiona tu catálogo y recibe pedidos directamente en tu móvil. Sin complicaciones técnicas.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto animate-slide-up" style="animation-delay: 0.2s;">
+                    <button class="btn btn-primary px-10 py-5 text-lg" onclick="showView('view-register')">
+                        Crear mi Tienda Ahora
+                    </button>
+                    <button class="btn btn-secondary px-10 py-5 text-lg" onclick="document.getElementById('planes').scrollIntoView({behavior: 'smooth'})">
+                        Ver Planes
+                    </button>
                 </div>
-                <div class="card" style="text-align: left;">
-                    <h3 style="color: var(--accent); margin-bottom: 8px;">Pedidos en Vivo</h3>
-                    <p style="color: var(--text-sec); font-size: 14px;">Recibe notificaciones de nuevos pedidos.</p>
-                </div>
-                <div class="card" style="text-align: left;">
-                    <h3 style="color: var(--accent); margin-bottom: 8px;">Tu Marca</h3>
-                    <p style="color: var(--text-sec); font-size: 14px;">Personaliza con tu logo y colores.</p>
+
+                <!-- Product Demo Placeholder -->
+                <div class="mt-24 w-full max-w-5xl rounded-2xl border border-slate-800 bg-slate-900/50 p-4 shadow-2xl animate-slide-up" style="animation-delay: 0.3s;">
+                    <div class="flex items-center gap-2 mb-4 px-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <div class="ml-4 h-6 px-4 rounded bg-slate-800 text-[10px] flex items-center text-slate-500 font-mono">clicksaas.com/mi-tienda</div>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=2070" class="w-full h-auto rounded-lg grayscale-[20%] opacity-80" alt="Dashboard Demo">
                 </div>
             </div>
         </section>
+
+        <!-- Características -->
+        <section class="py-24 px-6 max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl mb-4">Todo lo que necesitas para crecer</h2>
+                <p class="text-slate-400 max-w-xl mx-auto">Potencia tu negocio con herramientas diseñadas para la era digital y móvil.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="card bg-slate-900/40 hover:bg-slate-900/60 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    </div>
+                    <h3 class="text-xl mb-3">Catálogo Digital</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Presenta tus productos con fotos de alta calidad, descripciones detalladas y precios actualizados en tiempo real.</p>
+                </div>
+                <div class="card bg-slate-900/40 hover:bg-slate-900/60 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    </div>
+                    <h3 class="text-xl mb-3">Pedidos por WhatsApp</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Recibe la confirmación exacta del pedido en tu WhatsApp personal. Sin registros complicados para tus clientes.</p>
+                </div>
+                <div class="card bg-slate-900/40 hover:bg-slate-900/60 transition-colors">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 mb-6">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    </div>
+                    <h3 class="text-xl mb-3">Estadísticas Clave</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Mide tus ventas, productos más vendidos y el rendimiento de tu tienda para tomar mejores decisiones de negocio.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Planes de Suscripción -->
+        <section id="planes" class="py-24 bg-slate-950/50 relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl mb-4">Planes para cada etapa</h2>
+                    <p class="text-slate-400">Escala tu negocio con ClickSaaS.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Gratis -->
+                    <div class="card border-slate-800 bg-slate-900/20 flex flex-col">
+                        <h4 class="text-slate-400 font-medium mb-1">Gratis</h4>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-4xl font-bold">$0</span>
+                            <span class="text-slate-500 text-sm">/mes</span>
+                        </div>
+                        <ul class="space-y-4 mb-12 flex-1">
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                1 Tienda online
+                            </li>
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                Hasta 10 productos
+                            </li>
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                Pedidos por WhatsApp
+                            </li>
+                            <li class="flex items-center gap-3 text-sm text-slate-500 italic">
+                                Branding de ClickSaaS
+                            </li>
+                        </ul>
+                        <button class="btn btn-secondary w-full" onclick="showView('view-register')">Comenzar Gratis</button>
+                    </div>
+
+                    <!-- Económico -->
+                    <div class="card border-indigo-500/50 bg-indigo-500/5 flex flex-col relative scale-105 shadow-primary">
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-indigo-500 text-xs font-bold rounded-full uppercase tracking-wider">Más Popular</div>
+                        <h4 class="text-indigo-400 font-medium mb-1">Económico</h4>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-4xl font-bold">$19</span>
+                            <span class="text-slate-500 text-sm">/mes</span>
+                        </div>
+                        <ul class="space-y-4 mb-12 flex-1">
+                            <li class="flex items-center gap-3 text-sm font-semibold">
+                                Todo en Gratis y además:
+                            </li>
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                Hasta 100 productos
+                            </li>
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                Panel de administración full
+                            </li>
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                Estadísticas básicas
+                            </li>
+                        </ul>
+                        <button class="btn btn-primary w-full" onclick="showView('view-register')">Suscribirme Ahora</button>
+                    </div>
+
+                    <!-- Pro -->
+                    <div class="card border-slate-800 bg-slate-900/20 flex flex-col">
+                        <h4 class="text-slate-400 font-medium mb-1">Pro</h4>
+                        <div class="flex items-baseline gap-1 mb-6">
+                            <span class="text-4xl font-bold">$49</span>
+                            <span class="text-slate-500 text-sm">/mes</span>
+                        </div>
+                        <ul class="space-y-4 mb-12 flex-1">
+                            <li class="flex items-center gap-3 text-sm font-semibold">
+                                Todo en Económico y además:
+                            </li>
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                Productos ILIMITADOS
+                            </li>
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                Estadísticas avanzadas
+                            </li>
+                            <li class="flex items-center gap-3 text-sm">
+                                <svg class="text-emerald-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                                Soporte prioritario
+                            </li>
+                        </ul>
+                        <button class="btn btn-secondary w-full" onclick="showView('view-register')">Elegir Plan Pro</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Simulado -->
+        <footer class="py-12 border-t border-slate-900 text-center">
+            <p class="text-slate-500 text-sm">© 2024 ClickSaaS Platform. Todos los derechos reservados.</p>
+        </footer>
     </div>
 
     <!-- ======================================================= -->
@@ -61,37 +215,43 @@
     <!-- ======================================================= -->
     
     <!-- Login -->
-    <div id="view-login" class="modal">
-        <div class="modal-content">
-            <h2 style="margin-bottom: 24px;">Iniciar Sesión</h2>
-            <div class="input-group" style="margin-bottom: 16px;">
-                <label>Email</label>
+    <div id="view-login" class="modal" onclick="if(event.target === this) showView('view-landing')">
+        <div class="modal-content dark-modal">
+            <button class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors" onclick="showView('view-landing')">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-white text-2xl mb-6">Iniciar Sesión</h2>
+            <div class="input-group mb-4">
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Email</label>
                 <input type="email" id="login-email" class="input" placeholder="tu@email.com">
             </div>
-            <div class="input-group" style="margin-bottom: 24px;">
-                <label>Contraseña</label>
+            <div class="input-group mb-6">
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Contraseña</label>
                 <input type="password" id="login-pass" class="input">
             </div>
             <button class="btn btn-primary w-full" onclick="handleLogin(this)">Entrar</button>
-            <p style="margin-top: 16px; text-align: center; color: var(--text-sec); font-size: 14px;">
-                ¿No tienes tienda? <a style="color: var(--accent); cursor: pointer;" onclick="switchAuth('view-register')">Registrate</a>
+            <p class="mt-6 text-center text-slate-400 text-sm">
+                ¿No tienes tienda? <a class="text-indigo-400 font-bold cursor-pointer hover:underline" onclick="switchAuth('view-register')">Regístrate</a>
             </p>
         </div>
     </div>
 
     <!-- Registro (Onboarding) -->
-    <div id="view-register" class="modal">
-        <div class="modal-content" style="max-width: 600px;">
-            <h2 style="margin-bottom: 8px;">Crea tu Tienda</h2>
-            <p style="color: var(--text-sec); margin-bottom: 24px; font-size: 14px;">Configura tu negocio en minutos.</p>
+    <div id="view-register" class="modal" onclick="if(event.target === this) showView('view-landing')">
+        <div class="modal-content dark-modal" style="max-width: 600px;">
+            <button class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors" onclick="showView('view-landing')">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-white text-2xl mb-2">Crea tu Tienda</h2>
+            <p class="text-slate-400 text-sm mb-8">Configura tu negocio en minutos.</p>
             
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="input-group">
-                    <label>Nombre de tu Tienda</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Nombre de tu Tienda</label>
                     <input type="text" id="reg-store-name" class="input" placeholder="Ej: Pizza Don Luis">
                 </div>
                 <div class="input-group">
-                    <label>Tipo de Negocio</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Tipo de Negocio</label>
                     <select id="reg-type" class="input">
                         <option>Tienda de Ropa</option>
                         <option>Restaurant</option>
@@ -99,24 +259,27 @@
                     </select>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-4 mt-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div class="input-group">
-                    <label>Tu Nombre</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Tu Nombre</label>
                     <input type="text" id="reg-owner" class="input" placeholder="Tu nombre">
                 </div>
                 <div class="input-group">
-                    <label>Email</label>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Email</label>
                     <input type="email" id="reg-email" class="input" placeholder="tu@email.com">
                 </div>
             </div>
             <div class="input-group" style="margin-top: 16px;">
-                <label>Contraseña</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Contraseña</label>
                 <input type="password" id="reg-pass" class="input">
             </div>
             
-            <button class="btn btn-primary w-full" style="margin-top: 24px;" onclick="handleRegister(this)">
+            <button class="btn btn-primary w-full mt-8" onclick="handleRegister(this)">
                 Crear mi Tienda
             </button>
+            <p class="mt-6 text-center text-slate-400 text-sm">
+                ¿Ya tienes tienda? <a class="text-indigo-400 font-bold cursor-pointer hover:underline" onclick="switchAuth('view-login')">Inicia Sesión</a>
+            </p>
         </div>
     </div>
 
@@ -125,73 +288,138 @@
     <!-- ======================================================= -->
     <div id="view-admin" style="display: none;">
         <div id="sidebar-overlay" onclick="toggleSidebar(false)"></div>
-        <aside class="sidebar" id="admin-sidebar">
-            <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
-                <h2 id="admin-store-name" style="font-size: 18px; color: var(--accent);">Mi Tienda</h2>
-                <span style="font-size: 12px; color: var(--text-sec);">Panel de Control</span>
+        <aside class="sidebar" id="admin-sidebar" style="background: var(--bg-sec); border-right: 1px solid var(--border);">
+            <div class="p-6 mb-4 border-b border-border/50">
+                <div class="flex items-center gap-2 text-xl font-bold text-indigo-400 mb-1">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <span id="admin-store-name">Mi Tienda</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="store-plan-badge" class="text-[10px] uppercase tracking-wider font-bold text-slate-500">Plan Gratis</span>
+                </div>
             </div>
             
-            <nav>
-                <div class="nav-item active" onclick="showAdminSection('dash'); toggleSidebar(false)">
+            <nav class="flex-1 px-4 space-y-1">
+                <div class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all hover:bg-slate-800" onclick="showAdminSection('dash')">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    Dashboard
+                    <span>Dashboard</span>
                 </div>
-                <div class="nav-item" onclick="showAdminSection('products'); toggleSidebar(false)">
+                <div class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all hover:bg-slate-800" onclick="showAdminSection('products')">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                    Productos
+                    <span>Productos</span>
                 </div>
-                <div class="nav-item" onclick="showAdminSection('categories'); toggleSidebar(false)">
+                <div class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all hover:bg-slate-800" onclick="showAdminSection('categories')">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
-                    Categorías
+                    <span>Categorías</span>
                 </div>
-                <div class="nav-item" onclick="showAdminSection('orders'); toggleSidebar(false)">
+                <div class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all hover:bg-slate-800 relative" onclick="showAdminSection('orders')">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                    Pedidos
-                    <span id="order-badge" class="badge" style="background: var(--danger); color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; display: none;">0</span>
+                    <span>Pedidos</span>
+                    <span id="order-badge" class="absolute right-4 top-1/2 -translate-y-1/2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
                 </div>
-                <div class="nav-item" onclick="showAdminSection('settings'); toggleSidebar(false)">
+                <div class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all hover:bg-slate-800" onclick="showAdminSection('settings')">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
-                    Configuración
+                    <span>Configuración</span>
                 </div>
             </nav>
 
-            <div style="margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);">
-                <button class="btn btn-secondary w-full" onclick="openStorefront()">
-                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    Ver mi Tienda
+            <div class="p-4 space-y-2 mt-auto border-t border-border/50">
+                <button class="btn btn-primary w-full justify-start gap-3 py-3" onclick="openStorefront()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    Ver Tienda
                 </button>
-                <button class="btn btn-ghost w-full" style="margin-top: 8px; color: var(--text-sec);" onclick="logout()">Cerrar Sesion</button>
+                <button class="btn btn-ghost w-full justify-start gap-3 text-slate-400 hover:text-white" onclick="logout()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    Cerrar Sesión
+                </button>
             </div>
         </aside>
 
-        <header class="admin-mobile-header">
-            <button class="menu-toggle" onclick="toggleSidebar()">
+        <header class="admin-mobile-header px-6 py-4 bg-slate-900 border-b border-slate-800 flex justify-between items-center md:hidden">
+            <button class="p-2 -ml-2 text-slate-400" onclick="toggleSidebar(true)">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7"/></svg>
             </button>
-            <h2 style="font-size: 18px; color: var(--accent); margin: 0;" id="mobile-store-name">Mi Tienda</h2>
+            <div class="text-lg font-bold" id="mobile-store-name">Dashboard</div>
+            <div class="w-8"></div> <!-- Spacer -->
         </header>
 
-        <main class="main-admin">
+        <main class="main-admin bg-slate-950/20">
             <!-- Dashboard Section -->
-            <div id="section-dash" class="fade-in">
-                <h2 style="margin-bottom: 24px;">Resumen</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                    <div class="card">
-                        <p style="color: var(--text-sec); font-size: 14px;">Ventas Hoy</p>
-                        <p style="font-size: 24px; font-weight: 700; color: var(--success);" id="stat-sales">$0</p>
+            <div id="section-dash" class="fade-in space-y-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-3xl mb-1">¡Hola de nuevo!</h2>
+                        <p class="text-slate-400">Aquí tienes el resumen de tu negocio hoy.</p>
                     </div>
-                    <div class="card">
-                        <p style="color: var(--text-sec); font-size: 14px;">Pedidos Nuevos</p>
-                        <p style="font-size: 24px; font-weight: 700;" id="stat-orders">0</p>
-                    </div>
-                    <div class="card">
-                        <p style="color: var(--text-sec); font-size: 14px;">Visitas</p>
-                        <p style="font-size: 24px; font-weight: 700;">128</p>
+                    <div id="usage-container" class="px-4 py-2 bg-slate-900/50 rounded-lg border border-slate-800 text-xs text-slate-400">
+                        Uso de productos: <span id="usage-count" class="text-indigo-400 font-bold">0</span> / <span id="usage-max">10</span>
                     </div>
                 </div>
-                <div class="card" style="margin-top: 24px;">
-                    <h3>Pedidos Recientes</h3>
-                    <div id="dash-recent-orders" style="margin-top: 16px;"></div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                    <div class="card bg-gradient-to-br from-indigo-500/10 to-transparent border-indigo-500/20 group hover:border-indigo-500/40 transition-all p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Tu Plan Activo</p>
+                                <h3 id="current-plan-name" class="text-2xl font-black text-indigo-400">Gratis</h3>
+                            </div>
+                            <div class="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.286-6.857L1 12l7.714-2.143L11 3z"/></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between text-xs font-bold">
+                                <span class="text-slate-500">Capacidad Catálogo</span>
+                                <span class="text-white"><span id="usage-count">0</span> / <span id="usage-max">10</span></span>
+                            </div>
+                            <div class="usage-bar-container">
+                                <div id="usage-bar-fill" class="usage-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <button id="plan-upgrade-cta" class="text-[10px] font-black text-indigo-400 hover:text-white flex items-center gap-1 transition-all uppercase tracking-wider" onclick="alert('Próximamente: Pagos con Stripe')">
+                                Mejorar Plan <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card hover:border-slate-700 transition-all p-6 flex flex-col justify-center">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Ventas Totales</p>
+                        <h3 id="stat-sales" class="text-4xl font-black text-white">$0.00</h3>
+                        <p class="text-[10px] text-emerald-500 font-bold mt-2 flex items-center gap-1">
+                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg>
+                            Actualizado al instante
+                        </p>
+                    </div>
+
+                    <div class="card hover:border-slate-700 transition-all p-6 flex flex-col justify-center">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Pedidos Hoy</p>
+                        <h3 id="stat-orders" class="text-4xl font-black text-white">0</h3>
+                        <p class="text-[10px] text-slate-500 font-bold mt-2">Visitas registradas: <span id="stat-visits">24</span></p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-xl">Pedidos Recientes</h3>
+                            <button class="text-indigo-400 text-sm font-semibold hover:underline" onclick="showAdminSection('orders')">Ver todos</button>
+                        </div>
+                        <div id="dash-recent-orders" class="space-y-4">
+                            <!-- Pedidos cargados dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <h3 class="text-xl">Plan actual</h3>
+                        <div class="card bg-slate-900 border-slate-800">
+                            <div id="plan-upgrade-cta">
+                                <p class="text-sm text-slate-400 mb-4">Estás usando el <span class="text-white font-bold" id="current-plan-name">Plan Gratis</span>. Actualiza para obtener productos ilimitados y personalización.</p>
+                                <button class="btn btn-primary btn-sm w-full" onclick="window.scrollTo({top: document.getElementById('planes').offsetTop, behavior: 'smooth'})">Ver Planes Pro</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -243,58 +471,88 @@
 
             <!-- Settings Section -->
             <div id="section-settings" class="fade-in" style="display: none;">
-                <h2 style="margin-bottom: 24px;">Configuración de Tienda</h2>
-                <div class="card" style="max-width: 600px;">
-                    <div class="input-group">
-                        <label>Nombre de la Tienda</label>
-                        <input type="text" id="setting-name" class="input">
-                    </div>
-                    <div class="input-group" style="margin-top: 16px;">
-                        <label>URL de la Tienda (Slug)</label>
-                        <input type="text" id="setting-slug" class="input" placeholder="ej: mi-tienda">
-                    </div>
-                    <div class="input-group" style="margin-top: 16px;">
-                        <label>Número WhatsApp del Negocio</label>
-                        <input type="tel" id="setting-whatsapp" class="input" placeholder="Ej: 5215512345678 (con código de país, sin + ni guiones)">
-                        <p style="font-size: 12px; color: var(--text-sec); margin-top: 4px;">Los clientes enviarán sus pedidos a este número. Incluye el código de país.</p>
-                    </div>
-                    <div class="input-group" style="margin-top: 16px;">
-                        <label>Moneda</label>
-                        <select id="setting-currency" class="input">
-                            <option value="USD">USD ($) - Dólar</option>
-                            <option value="PEN">PEN (S/) - Soles</option>
-                            <option value="MXN">MXN ($) - Peso Mexicano</option>
-                            <option value="COP">COP ($) - Peso Colombiano</option>
-                            <option value="EUR">EUR (€) - Euro</option>
-                            <option value="ARS">ARS ($) - Peso Argentino</option>
-                        </select>
-                    </div>
-                    
-                    <div class="card" style="margin-top: 16px; background: var(--bg-sec); border: 1px dashed var(--border);">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div>
-                                <h4 style="margin: 0;">Servicio de Delivery</h4>
-                                <p style="font-size: 12px; color: var(--text-sec); margin: 0;">Activa o desactiva el cobro de envío.</p>
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-3xl font-black text-white">Configuración</h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Brand Identity Card -->
+                    <div class="card bg-slate-900 border-slate-800 p-8">
+                        <div class="flex flex-col items-center mb-10 text-center">
+                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Logo de tu Negocio</p>
+                            <div class="relative group cursor-pointer" onclick="document.getElementById('setting-logo-file').click()">
+                                <div class="w-28 h-28 rounded-3xl border-2 border-dashed border-slate-700 overflow-hidden flex items-center justify-center group-hover:border-indigo-500 transition-all bg-slate-950 shadow-inner">
+                                    <img id="setting-logo-preview" src="" class="hidden w-full h-full object-cover">
+                                    <svg id="setting-logo-placeholder" class="text-slate-700 group-hover:text-indigo-400 group-hover:scale-110 transition-all" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div class="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-xl border-4 border-slate-900 group-hover:bg-indigo-500 transition-all">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                                </div>
+                                <input type="file" id="setting-logo-file" class="hidden" accept="image/*" onchange="previewLogo(event)">
                             </div>
-                            <input type="checkbox" id="setting-delivery-active" style="width: 20px; height: 20px; cursor: pointer;">
+                            <p class="text-[10px] text-slate-500 mt-4 font-bold">RECOMENDADO: 512x512px (PNG/JPG)</p>
                         </div>
-                        <div id="delivery-price-container" style="margin-top: 12px; display: none;">
-                            <label style="font-size: 14px;">Costo de Envío</label>
-                            <input type="number" id="setting-delivery-price" class="input" placeholder="0.00" step="0.01" style="margin-top: 4px;">
+
+                        <div class="space-y-6">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Nombre de la Tienda</label>
+                                <input type="text" id="setting-name" class="input" placeholder="Ej: Pizzería Roma">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Identificador de URL (Slug)</label>
+                                <div class="relative">
+                                    <input type="text" id="setting-slug" class="input pl-[100px]" placeholder="mi-negocio">
+                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm font-medium">clicks.store/</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div style="margin-top: 24px;">
-                        <h4>Tu Enlace de Tienda</h4>
-                        <div style="display: flex; gap: 8px; margin-top: 8px;">
-                            <input class="input" style="font-family: monospace; color: var(--accent);" id="store-link-input" readonly>
-                            <button class="btn btn-secondary" onclick="copyLink()">Copiar</button>
+                    <!-- Business Info Card -->
+                    <div class="space-y-6">
+                        <div class="card bg-slate-900 border-slate-800 p-8">
+                            <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-6">Información de Pedidos</h4>
+                            <div class="space-y-6">
+                                <div>
+                                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">WhatsApp de Ventas</label>
+                                    <input type="tel" id="setting-whatsapp" class="input" placeholder="Ej: 51900000000">
+                                    <p class="text-[10px] text-slate-500 mt-2">Sin símbolos (+), incluye código de país.</p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Moneda</label>
+                                        <select id="setting-currency" class="input">
+                                            <option value="USD">$ USD</option>
+                                            <option value="PEN">S/ PEN</option>
+                                            <option value="MXN">$ MXN</option>
+                                            <option value="COP">$ COP</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div id="qr-container" style="margin-top: 24px; padding: 16px; background: white; width: fit-content; border-radius: 8px;">
-                            <!-- QR se genera aquí -->
+
+                        <div class="card bg-slate-900 border-slate-800 p-8">
+                            <div class="flex items-center justify-between mb-6">
+                                <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest">Opciones de Entrega</h4>
+                                <input type="checkbox" id="setting-delivery-active" class="w-6 h-6 rounded border-slate-700 bg-slate-950 text-indigo-500" onchange="toggleDeliveryPriceUI()">
+                            </div>
+                            <div id="delivery-price-container" class="space-y-4 hidden">
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Costo de Envío Fijo</label>
+                                <input type="number" id="setting-delivery-price" class="input" placeholder="0.00" step="0.01">
+                            </div>
                         </div>
                     </div>
-                    <button class="btn btn-primary w-full mt-6" onclick="updateStoreSettings()">Guardar Cambios</button>
+                </div>
+
+                <!-- Action Bar -->
+                <div class="sticky bottom-0 bg-slate-950/80 backdrop-blur-xl border-t border-slate-800 p-6 flex items-center justify-between rounded-t-3xl -mx-8 mt-12">
+                    <div class="hidden md:block">
+                        <p class="text-xs text-slate-400 font-medium">Asegúrate de guardar tus cambios antes de salir.</p>
+                    </div>
+                    <button class="btn btn-primary px-12 py-4 text-base font-bold shadow-2xl shadow-indigo-500/20" onclick="updateStoreSettings()">
+                        Guardar Configuración
+                    </button>
                 </div>
             </div>
             <div style="height: 80px;" class="md:hidden"></div> <!-- Spacer for bottom nav -->
@@ -324,67 +582,93 @@
     <!-- ======================================================= -->
     <!-- VISTA 4: TIENDA PUBLICA (Storefront) -->
     <!-- ======================================================= -->
-    <div id="view-store" style="display: none;">
-        <nav class="nav-saas" style="background: var(--bg);">
+    <div id="view-store" style="display: none;" class="bg-white text-slate-900 min-h-screen">
+        <nav class="nav-saas border-b border-slate-100" style="background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px);">
             <div class="nav-saas-inner">
-                <h2 id="store-title-nav" style="color: var(--accent);">Tienda</h2>
-                <button class="btn btn-secondary" onclick="showView('view-admin')">Volver al Admin</button>
+                <div class="flex items-center gap-3">
+                    <div id="store-logo-placeholder" class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-xl">
+                        T
+                    </div>
+                    <h2 id="store-title-nav" class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600">Tienda</h2>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="showView('view-admin')">Mi Panel</button>
             </div>
         </nav>
 
-        <header class="store-header">
-            <h1 id="store-title-main" style="font-size: 2.5rem; font-weight: 800;">Nombre Tienda</h1>
-            <p id="store-tagline" style="color: var(--text-sec); margin-top: 8px;">Bienvenido a nuestra tienda</p>
+        <header class="store-header bg-slate-50 border-b border-slate-100 py-24 px-6 text-center">
+            <h1 id="store-title-main" class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Nombre Tienda</h1>
+            <p id="store-tagline" class="text-slate-500 text-lg max-w-xl mx-auto">Bienvenido a nuestra tienda virtual. Elige tus productos favoritos y recíbelos por WhatsApp.</p>
         </header>
 
-        <div style="max-width: 1000px; margin: 0 auto; padding: 0 24px;">
-            <!-- Filtro de Categorías -->
-            <div id="category-filter-bar" class="hide-scrollbar" style="display: flex; gap: 10px; overflow-x: auto; padding: 10px 0 20px;">
-                <!-- Botones inyectados por JS -->
+        <div class="max-w-6xl mx-auto px-6 py-12">
+            <!-- Selector de Categorías -->
+            <div class="mb-10">
+                <h3 class="text-sm uppercase tracking-widest text-slate-400 font-bold mb-6">Categorías</h3>
+                <div id="category-filter-bar" class="flex gap-3 overflow-x-auto pb-4 hide-scrollbar">
+                    <!-- Botones inyectados por JS -->
+                    <button class="cat-btn active">Todos</button>
+                </div>
+            </div>
+
+            <div id="store-products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+                <!-- Productos inyectados por JS -->
             </div>
         </div>
 
-        <div style="max-width: 1000px; margin: 0 auto; padding: 0 24px 100px;">
-            <div id="store-products-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px;"></div>
-        </div>
-
-        <!-- Carrito Flotante -->
-        <div style="position: fixed; bottom: 24px; right: 24px; z-index: 50;">
-            <button class="btn btn-primary" style="padding: 16px 24px; border-radius: 50px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);" onclick="openCart()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                Ver Pedido (<span id="cart-count">0</span>)
+        <!-- Carrito Flotante Premium -->
+        <div class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-50">
+            <button class="w-full bg-slate-900 text-white rounded-2xl p-5 shadow-2xl flex items-center justify-between hover:scale-[1.02] active:scale-95 transition-all" onclick="openCart()">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        <span id="cart-count" class="absolute -top-2 -right-2 bg-indigo-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-slate-900">0</span>
+                    </div>
+                    <span class="font-bold text-lg">Ver mi pedido</span>
+                </div>
+                <span id="cart-total-float" class="font-bold text-xl">$0.00</span>
             </button>
         </div>
         
-        <!-- Modal Carrito -->
+        <!-- Modal Carrito Premium -->
         <div id="modal-cart" class="modal">
-            <div class="modal-content" style="max-width: 400px;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
-                    <h3>Tu Pedido</h3>
-                    <button class="btn btn-ghost" onclick="closeModal('modal-cart')">X</button>
+            <div class="modal-content !p-0 !max-w-md overflow-hidden bg-white">
+                <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <h3 class="text-xl font-bold text-slate-900">Tu Carrito</h3>
+                    <button class="p-2 text-slate-400 hover:text-slate-900" onclick="closeModal('modal-cart')">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
                 </div>
-                <div id="cart-items" style="max-height: 250px; overflow-y: auto;"></div>
                 
-                <!-- Selector Delivery/Recojo -->
-                <div id="delivery-option-ui" style="margin-top: 16px; padding: 12px; background: #f8fafc; border-radius: 12px; display: none;">
-                    <p style="font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #1e293b;">Tipo de Entrega</p>
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" id="btn-opt-delivery" class="btn btn-secondary btn-sm w-full" onclick="setDeliveryOption('delivery')">🛵 Delivery</button>
-                        <button type="button" id="btn-opt-pickup" class="btn btn-secondary btn-sm w-full" onclick="setDeliveryOption('pickup')">🥡 Recojo</button>
+                <div class="p-6 max-h-[60vh] overflow-y-auto">
+                    <div id="cart-items" class="space-y-6">
+                        <!-- Items del carrito -->
                     </div>
                 </div>
 
-                <div style="border-top: 1px solid var(--border); margin-top: 16px; padding-top: 16px;">
-                    <div id="cart-summary-lines" style="margin-bottom: 12px;"></div>
-                    <div style="display: flex; justify-content: space-between; font-weight: 900; font-size: 20px; color: #0f172a;">
-                        <span>Total</span>
-                        <span id="cart-total">$0</span>
+                <div class="p-6 bg-slate-50 border-t border-slate-100 space-y-4">
+                    <!-- Opciones de entrega -->
+                    <div id="delivery-option-ui" class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm hidden">
+                        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3">Método de entrega</p>
+                        <div class="flex gap-3">
+                            <button id="btn-opt-delivery" class="flex-1 py-3 px-4 rounded-lg text-sm font-bold border-2 border-slate-100 transition-all hover:border-indigo-500" onclick="setDeliveryOption('delivery')">🛵 Delivery</button>
+                            <button id="btn-opt-pickup" class="flex-1 py-3 px-4 rounded-lg text-sm font-bold border-2 border-slate-100 transition-all hover:border-indigo-500" onclick="setDeliveryOption('pickup')">🥡 Recojo</button>
+                        </div>
                     </div>
-                    <form id="checkout-form" style="margin-top: 16px;" onsubmit="handleCheckout(event)">
-                        <input type="text" id="cust-name" class="input" placeholder="Tu Nombre" required style="margin-bottom: 8px;">
-                        <input type="tel" id="cust-whatsapp" class="input" placeholder="WhatsApp (ej: 51900...)" required style="margin-bottom: 8px;">
-                        <textarea id="cust-address" class="input" placeholder="Dirección de entrega o mesa..." rows="2"></textarea>
-                        <button type="submit" class="btn btn-primary w-full" style="margin-top: 16px; padding: 16px; font-size: 16px;">Enviar Pedido por WhatsApp</button>
+
+                    <div id="cart-summary-lines" class="space-y-2 text-sm text-slate-500"></div>
+                    
+                    <div class="flex justify-between items-center pt-2">
+                        <span class="text-slate-900 font-bold text-lg">Total final</span>
+                        <span id="cart-total" class="text-2xl font-black text-indigo-600">$0.00</span>
+                    </div>
+
+                    <form id="checkout-form" onsubmit="handleCheckout(event)" class="space-y-3 mt-4">
+                        <input type="text" id="cust-name" class="input !bg-white !text-slate-900 !border-slate-200" placeholder="Tu nombre completo" required>
+                        <input type="tel" id="cust-whatsapp" class="input !bg-white !text-slate-900 !border-slate-200" placeholder="WhatsApp (Ej: 51900...)" required>
+                        <textarea id="cust-address" class="input !bg-white !text-slate-900 !border-slate-200" placeholder="Dirección de entrega o especificaciones..." rows="2"></textarea>
+                        <button type="submit" class="btn btn-primary w-full py-5 text-lg shadow-xl shadow-indigo-500/20">
+                            Confirmar Pedido vía WhatsApp
+                        </button>
                     </form>
                 </div>
             </div>
@@ -399,26 +683,68 @@
         <button class="btn btn-primary" onclick="showView('view-landing')">Ir al Inicio</button>
     </div>
 
-    <!-- Modal Agregar Producto -->
+    <!-- Modal Producto Upgrade -->
     <div id="modal-product" class="modal">
-        <div class="modal-content">
-            <h3 id="modal-product-title" style="margin-bottom: 16px;">Agregar Producto</h3>
-            <form onsubmit="saveProduct(event)">
-                <input type="text" id="p-name" class="input" placeholder="Nombre del producto" required>
-                <input type="number" id="p-price" class="input" placeholder="Precio (ej: 3.50)" required style="margin-top: 12px;" step="0.01">
-                <div class="input-group" style="margin-top: 12px;">
-                    <label>Categoría</label>
-                    <select id="p-category" class="input">
-                        <option value="">Sin Categoría</option>
-                    </select>
+        <div class="modal-content dark-modal !max-w-xl">
+            <div class="flex justify-between items-center mb-8">
+                <h3 id="modal-product-title" class="text-2xl font-black text-white">Agregar Producto</h3>
+                <button class="p-2 text-slate-500 hover:text-white transition-colors" onclick="closeModal('modal-product')">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <form id="form-product" onsubmit="saveProduct(event)" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Nombre del Producto</label>
+                            <input type="text" id="p-name" class="input" placeholder="Ej: Hamburguesa Clásica" required>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Precio</label>
+                            <input type="number" step="0.01" id="p-price" class="input" placeholder="0.00" required>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Categoría</label>
+                            <select id="p-category" class="input">
+                                <option value="">Sin Categoría</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Descripción (Opcional)</label>
+                            <textarea id="p-description" class="input h-[120px] resize-none" placeholder="Ingredientes, info, etc..."></textarea>
+                        </div>
+                        <div>
+                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Imagen del Producto</label>
+                            <div class="relative group">
+                                <input type="file" id="p-image-file" class="hidden" accept="image/*" onchange="previewImage(event)">
+                                <label for="p-image-file" class="cursor-pointer border-2 border-dashed border-slate-700 rounded-2xl p-6 block text-center hover:border-indigo-500 transition-all font-bold text-slate-400">
+                                    <div id="image-preview-container" class="hidden mb-2">
+                                        <img id="image-preview" src="" class="w-20 h-20 object-cover mx-auto rounded-lg">
+                                    </div>
+                                    <div id="image-upload-prompt" class="space-y-1">
+                                        <svg class="mx-auto text-slate-500" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                        <p class="text-xs">Subir foto</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group" style="margin-top: 12px;">
-                    <label>Imagen del Producto</label>
-                    <input type="file" id="p-image-file" class="input" accept="image/*">
+
+                <div class="flex items-center gap-3 bg-slate-800/50 p-4 rounded-2xl">
+                    <input type="checkbox" id="p-active" checked class="w-5 h-5 rounded border-slate-700 bg-slate-900 text-indigo-500">
+                    <label for="p-active" class="text-sm font-bold text-white">Producto Visible en la Tienda</label>
                 </div>
-                <div style="display: flex; gap: 12px; margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary w-full" onclick="closeModal('modal-product')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary w-full">Guardar</button>
+
+                <div class="flex gap-4 pt-4">
+                    <button type="button" class="btn btn-ghost flex-1" onclick="closeModal('modal-product')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary flex-[2]">
+                        <span class="btn-text">Guardar Producto</span>
+                    </button>
                 </div>
             </form>
         </div>

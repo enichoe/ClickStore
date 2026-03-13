@@ -11,27 +11,38 @@ let appState = {
 
 // ======================= VIEW CONTROLLER =======================
 async function showView(viewId, sectionId = null) {
-    document.querySelectorAll('#view-landing, #view-admin, #view-store, #view-superadmin, .modal, #view-error').forEach(el => {
-        if (!el.classList.contains('modal')) el.style.display = 'none';
-        else el.classList.remove('active');
+    console.log(`[Navigation] Switching to: ${viewId}`);
+    
+    // Elementos principales de vista (No modales)
+    const mainViews = ['view-landing', 'view-admin', 'view-store', 'view-superadmin', 'view-error'];
+    const target = document.getElementById(viewId);
+    if (!target) return console.error(`View not found: ${viewId}`);
+
+    const isTargetModal = target.classList.contains('modal');
+
+    // 1. Gestionar vistas principales
+    if (!isTargetModal) {
+        document.querySelectorAll('#view-landing, #view-admin, #view-store, #view-superadmin, #view-error').forEach(el => {
+            el.style.display = 'none';
+        });
+        target.style.display = 'block';
+    }
+
+    // 2. Gestionar Modales
+    document.querySelectorAll('.modal').forEach(el => {
+        if (el.id === viewId) {
+            el.classList.add('active');
+        } else if (!isTargetModal || el.id !== 'view-landing') {
+            // Si el target NO es un modal, cerramos todos los modales.
+            // Si el target ES un modal, cerramos el resto (excepto si queremos overlays anidados, pero aquí no)
+            el.classList.remove('active');
+        }
     });
 
     if (viewId === 'view-admin') {
         localStorage.setItem('clickSaaS_lastView', viewId);
         if (sectionId) localStorage.setItem('clickSaaS_lastSection', sectionId);
-    }
-
-    const target = document.getElementById(viewId);
-    if (target) {
-        if (target.classList.contains('modal')) {
-            target.classList.add('active');
-        } else {
-            target.style.display = 'block';
-        }
-    }
-
-    if (viewId === 'view-admin' && sectionId) {
-        showAdminSection(sectionId);
+        showAdminSection(sectionId || 'dash');
     }
 }
 
