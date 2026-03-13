@@ -408,25 +408,30 @@ async function handleCheckout(e) {
         const deliveryType = deliverySelected ? `🛵 Envío a Domicilio` : `🥡 Recojo en Local`;
         const currency = getCurrencySymbol(appState.tenant.currency);
         
-        let message = `*🛍️ NUEVO PEDIDO - ${appState.tenant.name}*%0A`;
-        message += `--------------------------------%0A`;
-        message += `*Cliente:* ${customerName}%0A`;
-        message += `*WhatsApp:* ${customerWhatsapp}%0A`;
-        message += `*Entrega:* ${deliveryType}%0A`;
-        if (customerAddress) message += `*Dirección:* ${customerAddress}%0A`;
-        message += `--------------------------------%0A`;
-        message += `*PRODUCTOS:*%0A`;
-        
-        appState.cart.forEach(i => {
-            message += `- ${i.name} (${i.qty} x ${currency}${i.price.toFixed(2)}) = *${currency}${(i.price * i.qty).toFixed(2)}*%0A`;
-        });
-        
-        message += `--------------------------------%0A`;
-        message += `*Subtotal:* ${currency}${subtotal.toFixed(2)}%0A`;
-        if (deliveryFee > 0) message += `*Envío:* ${currency}${deliveryFee.toFixed(2)}%0A`;
-        message += `*TOTAL:* ${currency}${total.toFixed(2)}%0A`;
-        message += `--------------------------------%0A`;
-        message += `_Enviado desde ClickStore_`;
+        let message = `🛍️ *NUEVO PEDIDO - ${appState.tenant.name}* %0A`;
+message += `━━━━━━━━━━━━━━━━━━%0A`;
+message += `👤 *Cliente:* ${customerName}%0A`;
+message += `📱 *WhatsApp:* ${customerWhatsapp}%0A`;
+message += `🚚 *Tipo de entrega:* ${deliveryType}%0A`;
+if (customerAddress) message += `📍 *Dirección:* ${customerAddress}%0A`;
+message += `━━━━━━━━━━━━━━━━━━%0A`;
+message += `🍔 *PRODUCTOS DEL PEDIDO:* %0A`;
+
+appState.cart.forEach(i => {
+    message += `🧾 ${i.name}%0A`;
+    message += `   🔢 Cantidad: ${i.qty}%0A`;
+    message += `   💰 Precio: ${currency}${i.price.toFixed(2)}%0A`;
+    message += `   🧮 Subtotal: *${currency}${(i.price * i.qty).toFixed(2)}*%0A`;
+    message += `----------------------------%0A`;
+});
+
+message += `━━━━━━━━━━━━━━━━━━%0A`;
+message += `💵 *Subtotal:* ${currency}${subtotal.toFixed(2)}%0A`;
+if (deliveryFee > 0) message += `🚚 *Costo de envío:* ${currency}${deliveryFee.toFixed(2)}%0A`;
+message += `💳 *TOTAL A PAGAR:* *${currency}${total.toFixed(2)}* %0A`;
+message += `━━━━━━━━━━━━━━━━━━%0A`;
+message += `🚀 _Pedido generado desde ClickStore_%0A`;
+message += `🛒 _Tu plataforma para vender online_`;
 
         window.open(`https://wa.me/${businessPhone}?text=${message}`, '_blank');
 
