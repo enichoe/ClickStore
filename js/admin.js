@@ -173,14 +173,14 @@ function renderProducts() {
     if (!grid) return;
     const currencySymbol = getCurrencySymbol(appState.tenant.currency);
     grid.innerHTML = appState.products.map(p => `
-        <div class="card" style="padding: 0; overflow: hidden;">
+        <div class="card product-card-admin" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
             <img src="${p.image || 'https://via.placeholder.com/300'}" style="width: 100%; height: 150px; object-fit: cover;">
-            <div style="padding: 12px;">
-                <h4 style="font-weight: 600;">${p.name}</h4>
-                <p style="color: var(--accent); font-weight: 700;">${currencySymbol}${parseFloat(p.price).toFixed(2)}</p>
-                <div style="display: flex; gap: 8px; margin-top: 8px;">
-                    <button class="btn btn-secondary btn-sm" onclick="editProduct('${p.id}')">Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Eliminar</button>
+            <div class="card-body" style="padding: 12px; flex: 1;">
+                <h4 style="font-weight: 600; margin-bottom: 4px;">${p.name}</h4>
+                <p style="color: var(--accent); font-weight: 700; margin-bottom: 12px;">${currencySymbol}${parseFloat(p.price).toFixed(2)}</p>
+                <div class="btn-group" style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary btn-sm" style="flex: 1;" onclick="editProduct('${p.id}')">Editar</button>
+                    <button class="btn btn-danger btn-sm" style="flex: 1;" onclick="deleteProduct('${p.id}')">Eliminar</button>
                 </div>
             </div>
         </div>
