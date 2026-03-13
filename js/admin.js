@@ -166,6 +166,15 @@ async function fetchCategories() {
 
 function renderCategories() {
     const list = document.getElementById('list-categories');
+    
+    // Sincronizar select de producto también
+    const catSelect = document.getElementById('p-category');
+    if (catSelect) {
+        catSelect.innerHTML = '<option value="">Sin Categoría</option>' + (appState.categories || []).map(c => `
+            <option value="${c.id}">${c.name}</option>
+        `).join('');
+    }
+
     if (!list) return;
     
     if (appState.categories.length === 0) {
@@ -267,6 +276,10 @@ function openNewProductModal() {
     if (preview) preview.src = '';
     if (previewCont) previewCont.classList.add('hidden');
     if (prompt) prompt.classList.remove('hidden');
+
+    // Reset category
+    const catSelect = document.getElementById('p-category');
+    if (catSelect) catSelect.value = '';
 
     const fileInput = document.getElementById('p-image-file');
     if (fileInput) fileInput.value = '';
