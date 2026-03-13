@@ -183,6 +183,7 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    overflow-y: auto; /* Enable scroll on the main container */
 }
 
 .drawer.active {
@@ -480,8 +481,7 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
 }
 
 .cart-drawer-body {
-    flex: 1;
-    overflow-y: auto;
+    flex-shrink: 0; /* Prevent shrinking */
     padding: 24px;
 }
 
