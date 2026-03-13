@@ -134,18 +134,20 @@ function filterByCategory(id) {
 
 function renderProductCard(p, currencySymbol) {
     return `
-        <div class="store-card animate-slide">
-            <div style="position: relative; height: 220px; overflow: hidden;">
+        <div class="store-card animate-slide" style="display: flex; flex-direction: column;">
+            <div style="position: relative; height: 150px; overflow: hidden; background: #f8fafc;">
                 <img src="${p.image || 'https://via.placeholder.com/300'}" style="width: 100%; height: 100%; object-fit: cover;">
-                ${p.active === false ? '<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #ef4444;">Agotado</div>' : ''}
+                ${p.active === false ? '<div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; font-weight: 800; color: #ef4444; font-size: 13px;">Agotado</div>' : ''}
             </div>
-            <div style="padding: 20px;">
-                <h4 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 4px;">${p.name}</h4>
-                <p style="font-size: 0.85rem; color: #64748b; line-height: 1.5; margin-bottom: 16px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.description || 'Sin descripción disponible'}</p>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 1.25rem; font-weight: 800; color: var(--accent);">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
-                    <button class="btn btn-primary" style="padding: 10px 16px; border-radius: 12px; font-weight: 600;" onclick="addToCart('${p.id}')">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+            <div style="padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; line-height: 1.2;">${p.name}</h4>
+                    <p style="font-size: 0.75rem; color: #64748b; line-height: 1.4; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${p.description || 'Sin descripción'}</p>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                    <span style="font-size: 1.05rem; font-weight: 800; color: var(--accent);">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
+                    <button class="btn btn-primary" style="padding: 6px 10px; border-radius: 8px; font-weight: 600;" onclick="addToCart('${p.id}')">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
                     </button>
                 </div>
             </div>
