@@ -107,16 +107,16 @@ function setLoading(btnOrId, isLoading) {
 // ======================= INIT =======================
 // = [currency helper] =
 function getCurrencySymbol(currency) {
-    if (!currency) return '$';
+    if (!currency) return 'S/. ';
     const symbols = {
         'USD': '$',
-        'PEN': 'S/',
+        'PEN': 'S/. ',
         'MXN': '$',
         'COP': '$',
         'EUR': '€',
         'ARS': '$'
     };
-    return symbols[currency] || '$';
+    return symbols[currency] || 'S/. ';
 }
 
 // = [UI Helpers] =

@@ -14,7 +14,7 @@ async function initializeAdminUI() {
         document.getElementById('setting-whatsapp').value = appState.tenant.whatsapp_phone || '';
     }
     if (document.getElementById('setting-currency')) {
-        document.getElementById('setting-currency').value = appState.tenant.currency || 'USD';
+        document.getElementById('setting-currency').value = appState.tenant.currency || 'PEN';
     }
 
     // Delivery settings
@@ -607,7 +607,7 @@ function loadStoreSettingsForm() {
     document.getElementById('setting-name').value = s.name || '';
     document.getElementById('setting-slug').value = s.slug || '';
     document.getElementById('setting-whatsapp').value = s.whatsapp_phone || '';
-    document.getElementById('setting-currency').value = s.currency || 'USD';
+    document.getElementById('setting-currency').value = s.currency || 'PEN';
     
     const deliveryCheck = document.getElementById('setting-delivery-active');
     const deliveryPriceInput = document.getElementById('setting-delivery-price');

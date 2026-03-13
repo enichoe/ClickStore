@@ -4,7 +4,7 @@ var SUPABASE_URL = (window.__env && window.__env.SUPABASE_URL) || 'https://amfxy
 var SUPABASE_KEY = (window.__env && window.__env.SUPABASE_KEY) || 'REPLACE_WITH_ANON_KEY';
 
 if (!SUPABASE_KEY || SUPABASE_KEY === 'REPLACE_WITH_ANON_KEY' || SUPABASE_KEY === '') {
-    const errorMsg = '[ClickStore] CONFIGURACIÓN REQUERIDA: La SUPABASE_KEY no está configurada.\n\n' +
+    const errorMsg = '[StoreClick] CONFIGURACIÓN REQUERIDA: La SUPABASE_KEY no está configurada.\n\n' +
         '1. Local: Edita js/env.js con tus claves.\n' +
         '2. Producción: Configura SUPABASE_URL y SUPABASE_KEY en las variables de entorno de Vercel.\n\n' +
         'Sin esto, el sistema no podrá crear tiendas ni guardar datos.';
