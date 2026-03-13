@@ -3,6 +3,9 @@ async function initializeAdminUI() {
     if (!appState.tenant) return;
     
     document.getElementById('admin-store-name').innerText = appState.tenant.name;
+    const mobileHeaderName = document.getElementById('mobile-store-name');
+    if (mobileHeaderName) mobileHeaderName.innerText = appState.tenant.name;
+    
     document.getElementById('setting-name').value = appState.tenant.name;
     if (document.getElementById('setting-slug')) {
         document.getElementById('setting-slug').value = appState.tenant.slug || '';
@@ -400,6 +403,18 @@ function closeModal(id) {
     document.getElementById(id).classList.remove('active');
 }
 
+function toggleSidebar(force) {
+    const sidebar = document.getElementById('admin-sidebar');
+    if (!sidebar) return;
+    
+    if (typeof force === 'boolean') {
+        if (force) sidebar.classList.add('open');
+        else sidebar.classList.remove('open');
+    } else {
+        sidebar.classList.toggle('open');
+    }
+}
+
 // ======================= SUPER ADMIN ACTIONS =======================
 async function fetchGlobalStores() {
     try {
@@ -534,5 +549,17 @@ async function saveStoreByAdmin(e) {
         alert("Error: " + err.message);
     } finally {
         setLoading(btn, false);
+    }
+}
+
+function toggleSidebarSuper(force) {
+    const sidebar = document.getElementById('super-sidebar');
+    if (!sidebar) return;
+    
+    if (typeof force === 'boolean') {
+        if (force) sidebar.classList.add('open');
+        else sidebar.classList.remove('open');
+    } else {
+        sidebar.classList.toggle('open');
     }
 }

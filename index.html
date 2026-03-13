@@ -131,24 +131,24 @@
             </div>
             
             <nav>
-                <div class="nav-item active" onclick="showAdminSection('dash')">
+                <div class="nav-item active" onclick="showAdminSection('dash'); toggleSidebar(false)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     Dashboard
                 </div>
-                <div class="nav-item" onclick="showAdminSection('products')">
+                <div class="nav-item" onclick="showAdminSection('products'); toggleSidebar(false)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                     Productos
                 </div>
-                <div class="nav-item" onclick="showAdminSection('categories')">
+                <div class="nav-item" onclick="showAdminSection('categories'); toggleSidebar(false)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
                     Categorías
                 </div>
-                <div class="nav-item" onclick="showAdminSection('orders')">
+                <div class="nav-item" onclick="showAdminSection('orders'); toggleSidebar(false)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                     Pedidos
                     <span id="order-badge" class="badge" style="background: var(--danger); color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px; display: none;">0</span>
                 </div>
-                <div class="nav-item" onclick="showAdminSection('settings')">
+                <div class="nav-item" onclick="showAdminSection('settings'); toggleSidebar(false)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
                     Configuración
                 </div>
@@ -162,6 +162,13 @@
                 <button class="btn btn-ghost w-full" style="margin-top: 8px; color: var(--text-sec);" onclick="logout()">Cerrar Sesion</button>
             </div>
         </aside>
+
+        <header class="admin-mobile-header">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+            <h2 style="font-size: 18px; color: var(--accent); margin: 0;" id="mobile-store-name">Mi Tienda</h2>
+        </header>
 
         <main class="main-admin">
             <!-- Dashboard Section -->
@@ -303,14 +310,14 @@
             </div>
         </nav>
 
-        <header class="store-header" style="padding: 60px 24px 30px;">
+        <header class="store-header">
             <h1 id="store-title-main" style="font-size: 2.5rem; font-weight: 800;">Nombre Tienda</h1>
             <p id="store-tagline" style="color: var(--text-sec); margin-top: 8px;">Bienvenido a nuestra tienda</p>
         </header>
 
         <div style="max-width: 1000px; margin: 0 auto; padding: 0 24px;">
             <!-- Filtro de Categorías -->
-            <div id="category-filter-bar" style="display: flex; gap: 10px; overflow-x: auto; padding: 10px 0 20px; scrollbar-width: none; -ms-overflow-style: none;">
+            <div id="category-filter-bar" class="hide-scrollbar" style="display: flex; gap: 10px; overflow-x: auto; padding: 10px 0 20px;">
                 <!-- Botones inyectados por JS -->
             </div>
         </div>
@@ -397,17 +404,17 @@
 
     <!-- VISTA 5: SUPER ADMINISTRADOR (Platform Master) -->
     <div id="view-superadmin" style="display: none;">
-        <aside class="sidebar">
+        <aside class="sidebar" id="super-sidebar">
             <div style="margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);">
                 <h2 style="font-size: 18px; color: var(--accent);">Super Admin</h2>
                 <span style="font-size: 12px; color: var(--text-sec);">Control Maestro</span>
             </div>
             <nav>
-                <div class="nav-item active" onclick="showSuperAdminSection('dash')">
+                <div class="nav-item active" onclick="showSuperAdminSection('dash'); toggleSidebar(false)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                     Estadísticas
                 </div>
-                <div class="nav-item" onclick="showSuperAdminSection('stores')">
+                <div class="nav-item" onclick="showSuperAdminSection('stores'); toggleSidebar(false)">
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                     Tiendas
                 </div>
@@ -416,6 +423,13 @@
                 <button class="btn btn-ghost w-full" style="color: var(--text-sec);" onclick="logout()">Cerrar Sesión</button>
             </div>
         </aside>
+
+        <header class="admin-mobile-header">
+            <button class="menu-toggle" onclick="toggleSidebarSuper()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+            <h2 style="font-size: 18px; color: var(--accent); margin: 0;">Super Admin</h2>
+        </header>
 
         <main class="main-admin">
             <div id="section-super-dash" class="fade-in">

@@ -47,11 +47,34 @@ h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .sidebar { transform: translateX(-100%); z-index: 50; }
+    .sidebar { transform: translateX(-100%); z-index: 200; }
     .sidebar.open { transform: translateX(0); }
-    .main-admin { margin-left: 0; padding: 16px; }
+    .main-admin { margin-left: 0; padding: 16px; padding-top: 80px; }
     .hero h1 { font-size: 2.5rem; }
+    
+    .admin-mobile-header { 
+        display: flex; 
+        align-items: center; 
+        gap: 16px; 
+        padding: 16px; 
+        background: var(--card); 
+        border-bottom: 1px solid var(--border); 
+        position: fixed; 
+        top: 0; 
+        width: 100%; 
+        z-index: 150; 
+    }
+    
+    .menu-toggle {
+        background: none;
+        border: none;
+        color: var(--text);
+        cursor: pointer;
+        padding: 4px;
+    }
 }
+
+.admin-mobile-header { display: none; }
 
 .fade-in { animation: fadeIn 0.5s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -94,5 +117,15 @@ h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
 
 @media (max-width: 640px) {
     .store-card img { height: 160px !important; }
-    .store-header h1 { font-size: 1.75rem !important; }
+    .store-header { padding: 80px 24px 40px !important; }
+    .store-header h1 { font-size: 2rem !important; }
+    .nav-saas-inner h2 { font-size: 1.25rem !important; }
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
 }
