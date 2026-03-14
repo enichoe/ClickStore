@@ -123,10 +123,36 @@ function renderCategoryFilter() {
     }
 
     bar.parentElement.classList.remove('hidden');
-    const allBtn = `<button class="cat-btn ${appState.selectedCategory === 'all' ? 'active' : ''}" onclick="filterByCategory('all')">Todos</button>`;
-    const catBtns = appState.categories.map(c => `
-        <button class="cat-btn ${appState.selectedCategory === c.id ? 'active' : ''}" onclick="filterByCategory('${c.id}')">${c.name}</button>
-    `).join('');
+    
+    // Lista de iconos para rotar
+    const icons = ['✨', '📦', '🔥', '💎', '🌈', '🍀', '🍎', '👕', '🍔', '📱'];
+
+    // Contar productos por categoría
+    const counts = {};
+    appState.products.forEach(p => {
+        if (p.active !== false) {
+            counts[p.category_id] = (counts[p.category_id] || 0) + 1;
+        }
+    });
+    const totalCount = appState.products.filter(p => p.active !== false).length;
+
+    const allBtn = `
+        <button class="cat-btn ${appState.selectedCategory === 'all' ? 'active' : ''}" onclick="filterByCategory('all')">
+            <span class="text-lg">🎯</span>
+            Todos
+            <span class="ml-1 opacity-50 px-1.5 py-0.5 rounded-full bg-slate-100 text-[10px] text-slate-800 font-bold">${totalCount}</span>
+        </button>`;
+        
+    const catBtns = appState.categories.map((c, idx) => {
+        const count = counts[c.id] || 0;
+        return `
+            <button class="cat-btn ${appState.selectedCategory === c.id ? 'active' : ''}" onclick="filterByCategory('${c.id}')">
+                <span class="text-lg">${icons[idx % icons.length]}</span>
+                ${c.name}
+                <span class="ml-1 opacity-50 px-1.5 py-0.5 rounded-full bg-slate-100 text-[10px] text-slate-800 font-bold">${count}</span>
+            </button>
+        `;
+    }).join('');
 
     bar.innerHTML = allBtn + catBtns;
 }
