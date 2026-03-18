@@ -235,7 +235,7 @@ function renderProducts() {
         card.className = 'product-card group';
         card.innerHTML = `
             <div class="product-image-container relative">
-                <img src="${p.image_url || 'https://via.placeholder.com/300'}" alt="${p.name}" loading="lazy">
+                <img src="${p.image || 'https://via.placeholder.com/300'}" alt="${p.name}" loading="lazy">
                 <div class="absolute top-3 right-3 flex gap-2">
                     <button class="w-8 h-8 rounded-full bg-white/90 text-indigo-600 flex items-center justify-center shadow-lg hover:bg-white active:scale-95 transition-all" onclick="openEditProduct('${p.id}')">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
@@ -600,7 +600,7 @@ async function saveProduct(e) {
         } else if (editingProductId) {
              // Mantener imagen anterior si estamos editando y no subimos nueva
              const oldProd = appState.products.find(p => p.id === editingProductId);
-             if (oldProd) imageUrl = oldProd.image_url;
+             if (oldProd) imageUrl = oldProd.image;
         }
 
         const product = {
@@ -610,7 +610,7 @@ async function saveProduct(e) {
             category_id: document.getElementById('p-category').value || null,
             description: document.getElementById('p-description').value,
             active: document.getElementById('p-active').checked,
-            image_url: imageUrl
+            image: imageUrl
         };
 
         // Validaciones básicas

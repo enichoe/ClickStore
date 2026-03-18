@@ -222,7 +222,7 @@ function renderProductGrid() {
         <div class="product-card-premium stagger-in group">
             <div class="product-image-container">
                 <div class="product-image-inner shadow-sm">
-                    <img src="${p.image_url || 'https://via.placeholder.com/400'}" alt="${p.name}">
+                    <img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}">
                 </div>
             </div>
             <div class="p-6 pt-2 flex flex-col flex-1">
@@ -312,7 +312,7 @@ function renderCartContent() {
         itemsDiv.innerHTML = appState.cart.map(i => `
             <div class="flex gap-4 group p-4 bg-white rounded-3xl border border-slate-50 shadow-sm mb-4">
                 <div class="w-20 h-20 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100 shadow-inner">
-                    <img src="${i.image_url || 'https://via.placeholder.com/100'}" class="w-full h-full object-cover">
+                    <img src="${i.image || 'https://via.placeholder.com/100'}" class="w-full h-full object-cover">
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex justify-between items-start mb-1">
@@ -521,7 +521,7 @@ async function handleCheckout(e) {
         const { data: orderData, error } = await supabase.from('orders').insert([{
             store_id: appState.tenant.id,
             customer_name: customerName,
-            whatsapp_phone: customerWhatsapp,
+            whatsapp: customerWhatsapp,
             items: JSON.stringify(itemsForRpc),
             total: total,
             status: 'pending',
