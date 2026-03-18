@@ -220,20 +220,22 @@ function renderProductGrid() {
 
     grid.innerHTML = prods.map(p => `
         <div class="product-card-premium stagger-in group">
-            <div class="product-image-container">
-                <div class="product-image-inner shadow-sm">
-                    <img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}">
+            <div class="product-image-container p-4">
+                <div class="product-image-inner shadow-sm rounded-3xl overflow-hidden aspect-square">
+                    <img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-full object-cover">
                 </div>
             </div>
-            <div class="p-6 pt-2 flex flex-col flex-1">
-                <h4 class="font-bold text-slate-800 mb-1 group-hover:text-indigo-600 transition-colors">${p.name}</h4>
-                <p class="text-xs text-slate-400 line-clamp-2 mb-4 leading-relaxed">${p.description || 'Sin descripción'}</p>
-                <div class="flex items-center justify-between mt-auto">
-                    <span class="text-xl font-black text-slate-900">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
-                    <button class="btn-add-cart-mini" onclick="addToCart('${p.id}')">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-                    </button>
+            <div class="px-6 pb-6 pt-2 flex flex-col flex-1">
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="text-lg md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors truncate pr-4">${p.name}</h4>
+                    <span class="text-xl font-black text-indigo-600 shrink-0">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
                 </div>
+                <p class="text-sm text-slate-500 line-clamp-2 mb-6 leading-relaxed flex-1">${p.description || 'Sin descripción adicional'}</p>
+                
+                <button class="w-full bg-slate-900 text-white rounded-2xl py-4 font-black flex items-center justify-center gap-3 hover:bg-indigo-600 active:scale-95 transition-all shadow-xl shadow-slate-900/10" onclick="addToCart('${p.id}')">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                    <span>Añadir al Carrito</span>
+                </button>
             </div>
         </div>
     `).join('');
