@@ -571,7 +571,7 @@ async function handleCheckout(e) {
         }
 
         message += `📲 _Ref: ${orderRef}_%0A`;
-        message += `🛒 _Creado en StoreClick.pe_`;
+        message += `🛒 _Creado en https://click-store-weld.vercel.app/_`;
 
         // Abrir WhatsApp
         window.open(`https://wa.me/${businessPhone}?text=${message}`, '_blank');
