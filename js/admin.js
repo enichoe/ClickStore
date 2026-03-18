@@ -41,8 +41,7 @@ async function updateUsageStats() {
     if (!appState.tenant) return;
     
     try {
-        const { data: prods } = await supabase.from('products').select('count', { count: 'exact' }).eq('store_id', appState.tenant.id);
-        const { data: orders } = await supabase.from('orders').select('*').eq('store_id', appState.tenant.id);
+        const { data: prods } = await supabase.from('products').select('id', { count: 'exact' }).eq('store_id', appState.tenant.id);
         
         const count = prods?.length || 0;
         const max = appState.tenant.plan === 'pro' ? 999 : (appState.tenant.plan === 'base' ? 100 : 10);
@@ -56,38 +55,10 @@ async function updateUsageStats() {
         if (usageCountEl) usageCountEl.innerText = count;
         if (usageMaxEl) usageMaxEl.innerText = max;
         if (usageFillEl) usageFillEl.style.width = `${Math.min((count / max) * 100, 100)}%`;
-        if (planNameEl) planNameEl.innerText = appState.tenant.plan.toUpperCase();
-
-        // Calcular Ventas por Método
-        let totalSales = 0;
-        let digitalSales = 0;
-        let cashSales = 0;
-        let digitalCount = 0;
-        let cashCount = 0;
-
-        orders?.forEach(o => {
-            const amount = parseFloat(o.total || 0);
-            totalSales += amount;
-            if (o.payment_method === 'cash') {
-                cashSales += amount;
-                cashCount++;
-            } else {
-                digitalSales += amount;
-                digitalCount++;
-            }
-        });
-
-        // Update Dashboard Cards
-        const currency = getCurrencySymbol(appState.tenant.currency);
-        document.getElementById('stat-sales').innerText = `${currency}${totalSales.toFixed(2)}`;
-        document.getElementById('stat-sales-digital').innerText = `${currency}${digitalSales.toFixed(2)}`;
-        document.getElementById('stat-sales-cash').innerText = `${currency}${cashSales.toFixed(2)}`;
-        document.getElementById('stat-count-digital').innerText = `${digitalCount} Pedidos`;
-        document.getElementById('stat-count-cash').innerText = `${cashCount} Pedidos`;
-        document.getElementById('stat-orders').innerText = orders?.length || 0;
+        if (planNameEl) planNameEl.innerText = (appState.tenant.plan || 'Gratis').toUpperCase();
 
     } catch (err) {
-        console.error("Error stats:", err);
+        console.error("Error stats usage:", err);
     }
 }
 
@@ -405,21 +376,54 @@ function renderOrders() {
     const dashList = document.getElementById('dash-recent-orders');
     if (!list || !dashList) return;
     
-    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
-    const pending = appState.orders.filter(o => o.status === 'pending').length;
-    const sales = appState.orders.reduce((sum, o) => sum + parseFloat(o.total || 0), 0);
+    // 1. Calcular Estadísticas
+    let totalSales = 0;
+    let digitalSales = 0;
+    let cashSales = 0;
+    let digitalCount = 0;
+    let cashCount = 0;
+    let pendingCount = 0;
+
+    appState.orders.forEach(o => {
+        const amount = parseFloat(o.total || 0);
+        totalSales += amount;
+        
+        if (o.status === 'pending') pendingCount++;
+
+        // Diferenciar por método de pago
+        // (cash vs yape/plin/etc)
+        if (o.payment_method === 'cash') {
+            cashSales += amount;
+            cashCount++;
+        } else {
+            digitalSales += amount;
+            digitalCount++;
+        }
+    });
+
+    const currency = getCurrencySymbol(appState.tenant.currency);
+
+    // 2. Actualizar Tarjetas del Dashboard
+    const elSales = document.getElementById('stat-sales');
+    const elDigital = document.getElementById('stat-sales-digital');
+    const elCash = document.getElementById('stat-sales-cash');
+    const elCountDigital = document.getElementById('stat-count-digital');
+    const elCountCash = document.getElementById('stat-count-cash');
+    const elOrders = document.getElementById('stat-orders');
+
+    if (elSales) elSales.innerText = `${currency}${totalSales.toFixed(2)}`;
+    if (elDigital) elDigital.innerText = `${currency}${digitalSales.toFixed(2)}`;
+    if (elCash) elCash.innerText = `${currency}${cashSales.toFixed(2)}`;
+    if (elCountDigital) elCountDigital.innerText = `${digitalCount} Pedidos`;
+    if (elCountCash) elCountCash.innerText = `${cashCount} Pedidos`;
+    if (elOrders) elOrders.innerText = appState.orders.length;
     
-    // Sincronizar estadísticas SIEMPRE, incluso si no hay pedidos
-    const statOrders = document.getElementById('stat-orders');
-    const statSales = document.getElementById('stat-sales');
-    if (statOrders) statOrders.innerText = appState.orders.length;
-    if (statSales) statSales.innerText = currencySymbol + sales.toFixed(2);
-    
+    // 3. Badge de notificación
     const badge = document.getElementById('order-badge');
     if (badge) {
-        if (pending > 0) {
+        if (pendingCount > 0) {
             badge.style.display = 'block';
-            badge.innerText = pending;
+            badge.innerText = pendingCount;
         } else {
             badge.style.display = 'none';
         }
@@ -430,6 +434,8 @@ function renderOrders() {
         dashList.innerHTML = '<p class="text-slate-500 italic text-center py-6">No hay pedidos recientes.</p>';
         return;
     }
+
+    // 4. Renderizar Lista
     const html = appState.orders.map(o => {
         let itemsCount = 0;
         try {
@@ -445,20 +451,20 @@ function renderOrders() {
             <div class="p-4 bg-slate-900/40 border border-slate-800 rounded-xl flex flex-col md:flex-row justify-between md:items-center group hover:border-slate-700 transition-all gap-4">
                 <div class="flex items-center gap-4 w-full md:w-auto">
                     <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold shrink-0">
-                        ${o.customer_name[0].toUpperCase()}
+                        ${o.customer_name ? o.customer_name[0].toUpperCase() : '?'}
                     </div>
                     <div>
-                        <p class="font-bold text-white">${o.customer_name}</p>
+                        <p class="font-bold text-white">${o.customer_name || 'Cliente'}</p>
                         <p class="text-[11px] text-slate-500 uppercase tracking-wider">${date} • ${itemsCount} items</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t border-slate-800 pt-3 md:border-t-0 md:pt-0">
                     <div class="text-left md:text-right flex flex-col items-start md:items-end w-full max-w-[120px]">
-                        <p class="font-bold text-white mb-1">${currencySymbol}${parseFloat(o.total).toFixed(2)}</p>
+                        <p class="font-bold text-white mb-1">${currency}${parseFloat(o.total || 0).toFixed(2)}</p>
                         <select class="input !py-1 !px-2 !text-[10px] font-bold uppercase tracking-wider !bg-slate-800 !border-slate-700 !rounded !text-slate-300 w-full" onchange="updateOrderStatus('${o.id}', this.value)">
                             <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendiente</option>
-                            <option value="attended" ${o.status === 'attended' || o.status === 'processing' ? 'selected' : ''}>Atendido</option>
-                            <option value="delivered" ${o.status === 'delivered' || o.status === 'completed' ? 'selected' : ''}>Entregado</option>
+                            <option value="attended" ${o.status === 'attended' ? 'selected' : ''}>Atendido</option>
+                            <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregado</option>
                         </select>
                     </div>
                     <button class="btn btn-secondary btn-sm whitespace-nowrap" onclick="viewOrderDetails('${o.id}')">Ver Detalle</button>
@@ -469,8 +475,6 @@ function renderOrders() {
 
     list.innerHTML = `<div class="space-y-4 p-4">${html}</div>`;
     dashList.innerHTML = html;
-
-    // Estadísticas ya actualizadas arriba
 }
 
 let currentViewOrderId = null;
