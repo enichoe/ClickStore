@@ -240,6 +240,9 @@ function renderProducts() {
                     <button class="w-8 h-8 rounded-full bg-white/90 text-indigo-600 flex items-center justify-center shadow-lg hover:bg-white active:scale-95 transition-all" onclick="openEditProduct('${p.id}')">
                         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                     </button>
+                    <button class="w-8 h-8 rounded-full bg-white/90 text-red-600 flex items-center justify-center shadow-lg hover:bg-white active:scale-95 transition-all" onclick="deleteProduct('${p.id}')">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
                 </div>
                 ${!p.active ? '<span class="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-[8px] font-black uppercase rounded-md shadow-lg">Inactivo</span>' : ''}
             </div>
@@ -286,13 +289,31 @@ function openEditProduct(id) {
     document.getElementById('p-category').value = p.category_id || '';
     document.getElementById('p-active').checked = p.active;
 
-    // Preview
+    // Reset image input
+    document.getElementById('p-image-file').value = '';
+
+    // Modal Image Preview
+    const imgPreview = document.getElementById('image-preview');
+    const uploadPrompt = document.getElementById('image-upload-prompt');
+    if (p.image && imgPreview) {
+        imgPreview.src = p.image;
+        imgPreview.classList.remove('hidden');
+        if (uploadPrompt) uploadPrompt.classList.add('hidden');
+    } else {
+        if (imgPreview) imgPreview.classList.add('hidden');
+        if (uploadPrompt) uploadPrompt.classList.remove('hidden');
+    }
+
+    // Simulator Preview
     const simImg = document.getElementById('sim-p-image');
-    const simPlc = document.getElementById('sim-p-placeholder');
-    if (p.image_url && simImg) {
-        simImg.src = p.image_url;
+    const simPlc = document.getElementById('sim-p-placeholder') || document.getElementById('sim-p-image-placeholder');
+    if (p.image && simImg) {
+        simImg.src = p.image;
         simImg.classList.remove('hidden');
         if (simPlc) simPlc.classList.add('hidden');
+    } else {
+        if (simImg) simImg.classList.add('hidden');
+        if (simPlc) simPlc.classList.remove('hidden');
     }
 
     openModal('modal-product');
@@ -319,12 +340,38 @@ function previewImage(event) {
 
     const reader = new FileReader();
     reader.onload = function(e) {
+        // Modal Preview
+        const imgPre = document.getElementById('image-preview');
+        const uploadPr = document.getElementById('image-upload-prompt');
+        if (imgPre) {
+            imgPre.src = e.target.result;
+            imgPre.classList.remove('hidden');
+            if (uploadPr) uploadPr.classList.add('hidden');
+        }
+
+        // Simulator Preview
         const simImg = document.getElementById('sim-p-image');
-        const simPlc = document.getElementById('sim-p-placeholder');
+        const simPlc = document.getElementById('sim-p-placeholder') || document.getElementById('sim-p-image-placeholder');
         if (simImg) {
             simImg.src = e.target.result;
             simImg.classList.remove('hidden');
             if (simPlc) simPlc.classList.add('hidden');
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+function previewQR(event, type) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const preview = document.getElementById(`setting-qr-${type}-preview`);
+        const placeholder = document.getElementById(`setting-qr-${type}-placeholder`);
+        if (preview) {
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+            if (placeholder) placeholder.classList.add('hidden');
         }
     };
     reader.readAsDataURL(file);
@@ -553,7 +600,7 @@ async function saveProduct(e) {
         } else if (editingProductId) {
              // Mantener imagen anterior si estamos editando y no subimos nueva
              const oldProd = appState.products.find(p => p.id === editingProductId);
-             if (oldProd) imageUrl = oldProd.image;
+             if (oldProd) imageUrl = oldProd.image_url;
         }
 
         const product = {
@@ -563,7 +610,7 @@ async function saveProduct(e) {
             category_id: document.getElementById('p-category').value || null,
             description: document.getElementById('p-description').value,
             active: document.getElementById('p-active').checked,
-            image: imageUrl
+            image_url: imageUrl
         };
 
         // Validaciones básicas
@@ -634,18 +681,21 @@ function loadStoreSettingsForm() {
     if (tkInput) tkInput.value = s.tiktok_url || '';
     if (waInput) waInput.value = s.whatsapp_url || '';
 
-    // Logo preview
-    const logoPreview = document.getElementById('setting-logo-preview');
-    const logoPlaceholder = document.getElementById('setting-logo-placeholder');
-    if (s.logo_url && logoPreview) {
-        logoPreview.src = s.logo_url;
-        logoPreview.classList.remove('hidden');
-        if (logoPlaceholder) logoPlaceholder.classList.add('hidden');
-    } else if (logoPreview) {
-        logoPreview.src = '';
-        logoPreview.classList.add('hidden');
-        if (logoPlaceholder) logoPlaceholder.classList.remove('hidden');
-    }
+    // QR Preview
+    const qrs = ['yape', 'plin'];
+    qrs.forEach(type => {
+        const url = s[`${type}_qr_url`];
+        const preview = document.getElementById(`setting-qr-${type}-preview`);
+        const placeholder = document.getElementById(`setting-qr-${type}-placeholder`);
+        if (url && preview) {
+            preview.src = url;
+            preview.classList.remove('hidden');
+            if (placeholder) placeholder.classList.add('hidden');
+        } else if (preview) {
+             preview.classList.add('hidden');
+             if (placeholder) placeholder.classList.remove('hidden');
+        }
+    });
 
     syncStorePreview();
 }
@@ -747,26 +797,45 @@ async function updateStoreSettings(event) {
             logoUrl = publicData.publicUrl;
         }
 
+        // Redes Sociales
         const fbInput = document.getElementById('setting-fb');
         const igInput = document.getElementById('setting-ig');
         const tkInput = document.getElementById('setting-tk');
         const waUrlInput = document.getElementById('setting-wa-url');
 
+        // Manejo de QRs de pago
+        const updateData = {
+            name: nameInput.value.trim(),
+            slug: slugInput.value.trim().toLowerCase(),
+            whatsapp_phone: whatsappInput.value.trim(),
+            currency: currencyInput.value,
+            active_delivery: deliveryCheck.checked,
+            delivery_price: parseFloat(deliveryPriceInput.value) || 0,
+            logo_url: logoUrl,
+            facebook_url: fbInput?.value.trim() || null,
+            instagram_url: igInput?.value.trim() || null,
+            tiktok_url: tkInput?.value.trim() || null,
+            whatsapp_url: waUrlInput?.value.trim() || null
+        };
+
+        // Subir QRs de pago si hay nuevos archivos
+        const qrs = ['yape', 'plin'];
+        for (const type of qrs) {
+            const qrFile = document.getElementById(`setting-qr-${type}-file`).files[0];
+            if (qrFile) {
+                const compQR = await compressImage(qrFile, 512, 512, 0.8);
+                const qrName = `${appState.tenant.id}/qr_${type}_${Date.now()}.jpg`;
+                const { error: qrErr } = await supabase.storage.from('product-images').upload(qrName, compQR, { upsert: true });
+                if (!qrErr) {
+                    const { data: qp } = supabase.storage.from('product-images').getPublicUrl(qrName);
+                    updateData[`${type}_qr_url`] = qp.publicUrl;
+                }
+            }
+        }
+
         const { data, error } = await supabase
             .from('stores')
-            .update({
-                name: nameInput.value.trim(),
-                slug: slugInput.value.trim().toLowerCase(),
-                whatsapp_phone: whatsappInput.value.trim(),
-                currency: currencyInput.value,
-                active_delivery: deliveryCheck.checked,
-                delivery_price: parseFloat(deliveryPriceInput.value) || 0,
-                logo_url: logoUrl,
-                facebook_url: fbInput?.value.trim() || null,
-                instagram_url: igInput?.value.trim() || null,
-                tiktok_url: tkInput?.value.trim() || null,
-                whatsapp_url: waUrlInput?.value.trim() || null
-            })
+            .update(updateData)
             .eq('id', appState.tenant.id)
             .select()
             .single();

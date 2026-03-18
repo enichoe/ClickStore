@@ -222,7 +222,7 @@ function renderProductGrid() {
         <div class="product-card-premium stagger-in group">
             <div class="product-image-container">
                 <div class="product-image-inner shadow-sm">
-                    <img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}">
+                    <img src="${p.image_url || 'https://via.placeholder.com/400'}" alt="${p.name}">
                 </div>
             </div>
             <div class="p-6 pt-2 flex flex-col flex-1">
@@ -312,7 +312,7 @@ function renderCartContent() {
         itemsDiv.innerHTML = appState.cart.map(i => `
             <div class="flex gap-4 group p-4 bg-white rounded-3xl border border-slate-50 shadow-sm mb-4">
                 <div class="w-20 h-20 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100 shadow-inner">
-                    <img src="${i.image || 'https://via.placeholder.com/100'}" class="w-full h-full object-cover">
+                    <img src="${i.image_url || 'https://via.placeholder.com/100'}" class="w-full h-full object-cover">
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex justify-between items-start mb-1">
@@ -439,8 +439,22 @@ function setPaymentMethod(method) {
     } else {
         digitalInfo.classList.remove('hidden');
         methodName.innerText = `Paga con ${method.toUpperCase()}`;
-        // En un caso real, aquí cargaríamos el QR y número del tenant
-        document.getElementById('pay-phone-label').innerText = appState.tenant.whatsapp_phone || '987 654 321';
+        
+        // Cargar QR y número
+        const qrUrl = appState.tenant[`${method}_qr_url`];
+        const qrImg = document.getElementById('pay-qr-img');
+        const qrPlc = document.getElementById('pay-qr-placeholder');
+        
+        if (qrUrl && qrImg) {
+            qrImg.src = qrUrl;
+            qrImg.classList.remove('hidden');
+            if (qrPlc) qrPlc.classList.add('hidden');
+        } else {
+            if (qrImg) qrImg.classList.add('hidden');
+            if (qrPlc) qrPlc.classList.remove('hidden');
+        }
+
+        document.getElementById('pay-phone-label').innerText = appState.tenant.whatsapp_phone || 'Pendiente Configurar';
     }
 }
 
@@ -489,12 +503,16 @@ async function handleCheckout(e) {
         if (voucherFile && appState.paymentMethod !== 'cash') {
             const fileName = `vouchers/${appState.tenant.id}/${Date.now()}_${voucherFile.name}`;
             const { error: uploadError } = await supabase.storage
-                .from('product-images') // Reutilizamos el bucket o usamos uno dedicado
+                .from('product-images')
                 .upload(fileName, voucherFile);
             
             if (!uploadError) {
                 const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(fileName);
                 voucherUrl = publicUrl;
+            } else {
+                console.warn('Voucher upload failed:', uploadError.message);
+                // Si falla la subida del voucher, intentamos seguir igual pero avisamos
+                showToast('⚠️ No se pudo subir la foto del comprobante, pero enviaremos el pedido.', 'warning');
             }
         }
 
