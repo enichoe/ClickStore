@@ -25,6 +25,7 @@ async function loadPublicStore(identifier) {
         
         // Configuración de Delivery
         appState.deliveryOption = appState.tenant.active_delivery ? 'delivery' : 'pickup';
+        appState.paymentMethod = 'cash'; // Default
         
         renderStorefront();
         showView('view-store');
@@ -423,70 +424,140 @@ function setDeliveryOption(opt) {
     updateTotals();
 }
 
+function setPaymentMethod(method) {
+    appState.paymentMethod = method;
+    
+    // UI Update
+    document.querySelectorAll('.payment-method-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(`pay-${method}`).classList.add('active');
+
+    const digitalInfo = document.getElementById('payment-digital-info');
+    const methodName = document.getElementById('payment-method-name');
+    
+    if (method === 'cash') {
+        digitalInfo.classList.add('hidden');
+    } else {
+        digitalInfo.classList.remove('hidden');
+        methodName.innerText = `Paga con ${method.toUpperCase()}`;
+        // En un caso real, aquí cargaríamos el QR y número del tenant
+        document.getElementById('pay-phone-label').innerText = appState.tenant.whatsapp_phone || '987 654 321';
+    }
+}
+
+function copyPaymentNumber() {
+    const num = document.getElementById('pay-phone-label').innerText;
+    navigator.clipboard.writeText(num);
+    showToast('✅ Número copiado');
+}
+
+function previewVoucher(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const img = document.getElementById('voucher-img-preview');
+        img.src = e.target.result;
+        img.classList.remove('hidden');
+        document.getElementById('voucher-placeholder').classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+}
+
 async function handleCheckout(e) {
     e.preventDefault();
-    const btn = e.target.querySelector('button[type="submit"]');
-
+    const btn = document.getElementById('btn-submit-order');
     const customerName = document.getElementById('cust-name').value.trim();
     const customerWhatsapp = document.getElementById('cust-whatsapp').value.trim();
     const customerAddress = document.getElementById('cust-address').value.trim();
+    const businessPhone = (appState.tenant.whatsapp_phone || '').replace(/\D/g, '');
+
+    if (!customerName || !customerWhatsapp) {
+        showToast('❌ Completa tus datos', 'error');
+        return;
+    }
 
     setLoading(btn, true);
     try {
-        if (!appState.tenant || !appState.tenant.id) throw new Error('Tienda no definida.');
-        if (appState.cart.length === 0) throw new Error('El carrito está vacío.');
-
-        const businessPhone = (appState.tenant.whatsapp_phone || '').replace(/\D/g, '');
-        if (!businessPhone) throw new Error('Esta tienda no tiene WhatsApp configurado.');
-
         const deliverySelected = appState.deliveryOption === 'delivery';
-        const itemsForRpc = appState.cart.map(i => ({ id: i.id, qty: i.qty }));
-
-        const { error } = await supabase.rpc('create_order', {
-            _store_id:      appState.tenant.id,
-            _customer_name: customerName,
-            _whatsapp:      customerWhatsapp,
-            _items:         itemsForRpc,
-            _delivery_address: customerAddress || null,
-            _delivery_selected: deliverySelected
-        });
-
-        if (error) throw error;
-
         const subtotal = appState.cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
         const deliveryFee = deliverySelected ? parseFloat(appState.tenant.delivery_price || 0) : 0;
         const total = subtotal + deliveryFee;
 
-        const deliveryType = deliverySelected ? `🛵 Envío a Domicilio` : `🥡 Recojo en Local`;
+        // Subida de Voucher si aplica
+        let voucherUrl = null;
+        const voucherFile = document.getElementById('pay-voucher-file')?.files[0];
+        if (voucherFile && appState.paymentMethod !== 'cash') {
+            const fileName = `vouchers/${appState.tenant.id}/${Date.now()}_${voucherFile.name}`;
+            const { error: uploadError } = await supabase.storage
+                .from('product-images') // Reutilizamos el bucket o usamos uno dedicado
+                .upload(fileName, voucherFile);
+            
+            if (!uploadError) {
+                const { data: { publicUrl } } = supabase.storage.from('product-images').getPublicUrl(fileName);
+                voucherUrl = publicUrl;
+            }
+        }
+
+        // Crear pedido en DB
+        const itemsForRpc = appState.cart.map(i => ({ id: i.id, qty: i.qty, name: i.name, price: i.price }));
+        const { data: orderData, error } = await supabase.from('orders').insert([{
+            store_id: appState.tenant.id,
+            customer_name: customerName,
+            whatsapp_phone: customerWhatsapp,
+            items: JSON.stringify(itemsForRpc),
+            total: total,
+            status: 'pending',
+            delivery_address: customerAddress || null,
+            delivery_selected: deliverySelected,
+            payment_method: appState.paymentMethod,
+            voucher_url: voucherUrl
+        }]).select().single();
+
+        if (error) throw error;
+
+        // RECONSTRUCCIÓN DEL MENSAJE DE WHATSAPP (FIX CRÍTICO)
         const currency = getCurrencySymbol(appState.tenant.currency);
+        const deliveryText = deliverySelected ? `🛵 Delivery` : `🥡 Recojo en local`;
+        const paymentText = appState.paymentMethod === 'cash' ? '💵 Efectivo (Contraentrega)' : `📱 ${appState.paymentMethod.toUpperCase()}`;
+
+        let message = `🛍️ *NUEVO PEDIDO EN ${appState.tenant.name.toUpperCase()}*%0A`;
+        message += `━━━━━━━━━━━━━━━━━━%0A`;
+        message += `👤 *CLIENTE:* ${customerName}%0A`;
+        message += `📱 *WSP:* ${customerWhatsapp}%0A`;
+        message += `🚚 *ENTREGA:* ${deliveryText}%0A`;
+        if (customerAddress) message += `📍 *DIRECCIÓN:* ${customerAddress}%0A`;
+        message += `💳 *PAGO:* ${paymentText}%0A`;
+        message += `━━━━━━━━━━━━━━━━━━%0A`;
+        message += `📦 *PRODUCTOS:*%0A`;
+
+        appState.cart.forEach(i => {
+            message += `• ${i.qty}x ${i.name} (${currency}${i.price.toFixed(2)})%0A`;
+        });
+
+        message += `━━━━━━━━━━━━━━━━━━%0A`;
+        message += `💵 *SUBTOTAL:* ${currency}${subtotal.toFixed(2)}%0A`;
+        if (deliveryFee > 0) message += `🚚 *ENVÍO:* ${currency}${deliveryFee.toFixed(2)}%0A`;
+        message += `💰 *TOTAL A PAGAR: ${currency}${total.toFixed(2)}*%0A`;
+        message += `━━━━━━━━━━━━━━━━━━%0A`;
         
-        let message = `📦 *PEDIDO #${Math.floor(1000 + Math.random() * 9000)} - ${appState.tenant.name.toUpperCase()}* %0A`;
-message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `👤 *CLIENTE:* ${customerName}%0A`;
-message += `📱 *WHATSAPP:* ${customerWhatsapp}%0A`;
-message += `🚚 *ENTREGA:* ${deliveryType}%0A`;
-if (customerAddress) message += `📍 *DIRECCIÓN:* ${customerAddress}%0A`;
-message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `🛍️ *DETALLE DEL PEDIDO:* %0A`;
+        if (voucherUrl) {
+            message += `🖼️ *COMPROBANTE:* ${voucherUrl}%0A`;
+        } else if (appState.paymentMethod !== 'cash') {
+            message += `⚠️ _Pendiente enviar captura de pago_%0A`;
+        }
 
-appState.cart.forEach(i => {
-    message += `🔹 ${i.qty}x ${i.name} (${currency}${i.price.toFixed(2)}) %0A`;
-});
+        message += `📲 _Pedido #${orderData.id.split('-')[0].toUpperCase()}_%0A`;
+        message += `🛒 _Creado en StoreClick.pe_`;
 
-message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `💵 *SUBTOTAL:* ${currency}${subtotal.toFixed(2)}%0A`;
-if (deliveryFee > 0) message += `🚚 *ENVÍO:* ${currency}${deliveryFee.toFixed(2)}%0A`;
-message += `💰 *TOTAL A PAGAR:* *${currency}${total.toFixed(2)}* %0A`;
-message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `📲 _Generado por StoreClick.pe_`;
-
+        // Abrir WhatsApp
         window.open(`https://wa.me/${businessPhone}?text=${message}`, '_blank');
 
-        showToast('¡Pedido enviado!');
+        showToast('✅ ¡Pedido enviado con éxito!');
         appState.cart = [];
         updateCartBadge();
         closeDrawer('drawer-cart');
         e.target.reset();
+
     } catch (err) {
         showToast('❌ Error: ' + err.message, 'error');
     } finally {

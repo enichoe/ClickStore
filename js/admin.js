@@ -38,36 +38,56 @@ function copyStoreLink() {
 }
 
 async function updateUsageStats() {
+    if (!appState.tenant) return;
+    
     try {
-        const { data, error } = await supabase.rpc('get_store_usage', { p_store_id: appState.tenant.id });
-        if (error) throw error;
-
-        const usage = data[0];
-        appState.usage = usage;
-
-        const badge = document.getElementById('store-plan-badge');
-        if (badge) badge.innerText = usage.plan_name;
-
-        const currentPlanName = document.getElementById('current-plan-name');
-        if (currentPlanName) currentPlanName.innerText = usage.plan_name;
-
-        const usageCount = document.getElementById('usage-count');
-        const usageMax = document.getElementById('usage-max');
-        const usageBar = document.getElementById('usage-bar-fill');
+        const { data: prods } = await supabase.from('products').select('count', { count: 'exact' }).eq('store_id', appState.tenant.id);
+        const { data: orders } = await supabase.from('orders').select('*').eq('store_id', appState.tenant.id);
         
-        if (usageCount) usageCount.innerText = usage.product_count;
-        if (usageMax) usageMax.innerText = usage.max_products;
-        if (usageBar) {
-            const percent = Math.min((usage.product_count / usage.max_products) * 100, 100);
-            usageBar.style.width = percent + '%';
-        }
+        const count = prods?.length || 0;
+        const max = appState.tenant.plan === 'pro' ? 999 : (appState.tenant.plan === 'base' ? 100 : 10);
+        
+        // Update UI
+        const usageCountEl = document.getElementById('usage-count');
+        const usageMaxEl = document.getElementById('usage-max');
+        const usageFillEl = document.getElementById('usage-bar-fill');
+        const planNameEl = document.getElementById('current-plan-name');
 
-        const upgradeCta = document.getElementById('plan-upgrade-cta');
-        if (upgradeCta) {
-            upgradeCta.style.display = (usage.plan_name.toLowerCase().includes('pro')) ? 'none' : 'block';
-        }
+        if (usageCountEl) usageCountEl.innerText = count;
+        if (usageMaxEl) usageMaxEl.innerText = max;
+        if (usageFillEl) usageFillEl.style.width = `${Math.min((count / max) * 100, 100)}%`;
+        if (planNameEl) planNameEl.innerText = appState.tenant.plan.toUpperCase();
+
+        // Calcular Ventas por Método
+        let totalSales = 0;
+        let digitalSales = 0;
+        let cashSales = 0;
+        let digitalCount = 0;
+        let cashCount = 0;
+
+        orders?.forEach(o => {
+            const amount = parseFloat(o.total || 0);
+            totalSales += amount;
+            if (o.payment_method === 'cash') {
+                cashSales += amount;
+                cashCount++;
+            } else {
+                digitalSales += amount;
+                digitalCount++;
+            }
+        });
+
+        // Update Dashboard Cards
+        const currency = getCurrencySymbol(appState.tenant.currency);
+        document.getElementById('stat-sales').innerText = `${currency}${totalSales.toFixed(2)}`;
+        document.getElementById('stat-sales-digital').innerText = `${currency}${digitalSales.toFixed(2)}`;
+        document.getElementById('stat-sales-cash').innerText = `${currency}${cashSales.toFixed(2)}`;
+        document.getElementById('stat-count-digital').innerText = `${digitalCount} Pedidos`;
+        document.getElementById('stat-count-cash').innerText = `${cashCount} Pedidos`;
+        document.getElementById('stat-orders').innerText = orders?.length || 0;
+
     } catch (err) {
-        console.warn("Error updating usage stats:", err);
+        console.error("Error stats:", err);
     }
 }
 
@@ -208,153 +228,107 @@ async function deleteCategory(id) {
 function renderProducts() {
     const grid = document.getElementById('grid-products');
     if (!grid) return;
-    const currencySymbol = getCurrencySymbol(appState.tenant.currency);
-    
-    if (appState.products.length === 0) {
-        grid.innerHTML = '<div class="col-span-full py-12 text-center text-slate-500">No tienes productos todavía. ¡Agrega el primero!</div>';
-        return;
-    }
+    grid.innerHTML = '';
 
-    grid.innerHTML = appState.products.map(p => `
-        <div class="card overflow-hidden !p-0 group hover:border-indigo-500/50 transition-all duration-300">
-            <div class="relative h-48 overflow-hidden">
-                <img src="${p.image || 'https://via.placeholder.com/300'}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                <div class="absolute top-2 right-2 flex gap-1">
-                    <span class="px-2 py-1 rounded-md bg-slate-900/80 backdrop-blur-md text-[10px] font-bold text-white uppercase">${p.active ? 'Activo' : 'Oculto'}</span>
-                </div>
-            </div>
-            <div class="p-4">
-                <div class="flex justify-between items-start mb-2">
-                    <h4 class="text-lg font-bold text-white truncate pr-2">${p.name}</h4>
-                    <span class="text-indigo-400 font-bold">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <button class="btn btn-secondary btn-sm flex-1 !rounded-lg" onclick="editProduct('${p.id}')">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        Editar
-                    </button>
-                    <button class="btn btn-danger btn-sm px-3 !rounded-lg" onclick="deleteProduct('${p.id}')">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+    appState.products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card group';
+        card.innerHTML = `
+            <div class="product-image-container relative">
+                <img src="${p.image_url || 'https://via.placeholder.com/300'}" alt="${p.name}" loading="lazy">
+                <div class="absolute top-3 right-3 flex gap-2">
+                    <button class="w-8 h-8 rounded-full bg-white/90 text-indigo-600 flex items-center justify-center shadow-lg hover:bg-white active:scale-95 transition-all" onclick="openEditProduct('${p.id}')">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                     </button>
                 </div>
+                ${!p.active ? '<span class="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-[8px] font-black uppercase rounded-md shadow-lg">Inactivo</span>' : ''}
             </div>
-        </div>
-    `).join('');
+            <div class="p-4 bg-slate-900">
+                <div class="flex justify-between items-start mb-1">
+                    <h4 class="text-sm font-black text-white truncate pr-2">${p.name}</h4>
+                    <span class="text-sm font-black text-indigo-400">S/${parseFloat(p.price).toFixed(2)}</span>
+                </div>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">${p.category_id || 'Sin Categoría'}</p>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
 }
 
 // Abre el modal para CREAR un producto nuevo (limpia el estado anterior)
 function openNewProductModal() {
     editingProductId = null;
+    const form = document.getElementById('form-product');
+    if (form) form.reset();
+    
     document.getElementById('modal-product-title').innerText = 'Agregar Producto';
-    document.getElementById('p-name').value = '';
-    document.getElementById('p-price').value = '';
-    document.getElementById('p-description').value = '';
-    document.getElementById('p-active').checked = true;
     
-    // Reset image preview
-    const preview = document.getElementById('image-preview');
-    const previewCont = document.getElementById('image-preview-container');
-    const prompt = document.getElementById('image-upload-prompt');
-    if (preview) preview.src = '';
-    if (previewCont) previewCont.classList.add('hidden');
-    if (prompt) prompt.classList.remove('hidden');
-
     // Reset simulator preview
-    document.getElementById('sim-p-image').src = '';
-    document.getElementById('sim-p-image').style.display = 'none';
-    document.getElementById('sim-p-image-placeholder').style.display = 'flex';
+    const simImg = document.getElementById('sim-p-image');
+    const simPlc = document.getElementById('sim-p-placeholder');
+    if (simImg) { simImg.src = ''; simImg.classList.add('hidden'); }
+    if (simPlc) { simPlc.classList.remove('hidden'); }
 
-    // Reset category
-    const catSelect = document.getElementById('p-category');
-    if (catSelect) catSelect.value = '';
-
-    const fileInput = document.getElementById('p-image-file');
-    if (fileInput) fileInput.value = '';
-    
-    syncProductPreview();
     openModal('modal-product');
+    syncProductPreview();
 }
 
-function editProduct(id) {
-    const p = appState.products.find(prod => prod.id === id);
+function openEditProduct(id) {
+    const p = appState.products.find(item => item.id === id);
     if (!p) return;
+
     editingProductId = id;
+    document.getElementById('modal-product-title').innerText = 'Editar Producto';
+    
     document.getElementById('p-name').value = p.name;
     document.getElementById('p-price').value = p.price;
-    document.getElementById('p-category').value = p.category_id || '';
     document.getElementById('p-description').value = p.description || '';
-    document.getElementById('p-active').checked = p.active !== false;
-    
-    // Set image preview
-    const preview = document.getElementById('image-preview');
-    const previewCont = document.getElementById('image-preview-container');
-    const prompt = document.getElementById('image-upload-prompt');
-    if (p.image && preview) {
-        preview.src = p.image;
-        if (previewCont) previewCont.classList.remove('hidden');
-        if (prompt) prompt.classList.add('hidden');
+    document.getElementById('p-category').value = p.category_id || '';
+    document.getElementById('p-active').checked = p.active;
+
+    // Preview
+    const simImg = document.getElementById('sim-p-image');
+    const simPlc = document.getElementById('sim-p-placeholder');
+    if (p.image_url && simImg) {
+        simImg.src = p.image_url;
+        simImg.classList.remove('hidden');
+        if (simPlc) simPlc.classList.add('hidden');
     }
 
-    document.getElementById('modal-product-title').innerText = "Editar Producto";
-    syncProductPreview();
     openModal('modal-product');
-}
-
-function previewImage(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const preview = document.getElementById('image-preview');
-        const previewCont = document.getElementById('image-preview-container');
-        const prompt = document.getElementById('image-upload-prompt');
-        
-        if (preview) {
-            preview.src = e.target.result;
-            if (previewCont) previewCont.classList.remove('hidden');
-            if (prompt) prompt.classList.add('hidden');
-
-            // Update simulator also
-            const simImg = document.getElementById('sim-p-image');
-            const simPlaceholder = document.getElementById('sim-p-image-placeholder');
-            if (simImg) {
-                simImg.src = e.target.result;
-                simImg.style.display = 'block';
-                if (simPlaceholder) simPlaceholder.style.display = 'none';
-            }
-        }
-    };
-    reader.readAsDataURL(file);
+    syncProductPreview();
 }
 
 function syncProductPreview() {
     const name = document.getElementById('p-name').value || 'Nombre del Producto';
     const price = document.getElementById('p-price').value || '0.00';
-    const desc = document.getElementById('p-description').value || 'Aquí aparecerá la descripción detallada de tu producto...';
-    const currencySymbol = getCurrencySymbol(appState.tenant?.currency);
-
+    const desc = document.getElementById('p-description').value || 'Aquí aparecerá la descripción...';
+    
     const simName = document.getElementById('sim-p-name');
     const simPrice = document.getElementById('sim-p-price');
     const simDesc = document.getElementById('sim-p-desc');
-    const simImg = document.getElementById('sim-p-image');
-    const simPlaceholder = document.getElementById('sim-p-image-placeholder');
-
+    
     if (simName) simName.innerText = name;
-    if (simPrice) simPrice.innerText = currencySymbol + parseFloat(price || 0).toFixed(2);
+    if (simPrice) simPrice.innerText = `S/ ${parseFloat(price || 0).toFixed(2)}`;
     if (simDesc) simDesc.innerText = desc;
-
-    // Handle initial edit image if no new file is selected
-    if (editingProductId && !document.getElementById('p-image-file').files[0]) {
-        const p = appState.products.find(prod => prod.id === editingProductId);
-        if (p && p.image && simImg) {
-            simImg.src = p.image;
-            simImg.style.display = 'block';
-            if (simPlaceholder) simPlaceholder.style.display = 'none';
-        }
-    }
 }
 
+function previewImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const simImg = document.getElementById('sim-p-image');
+        const simPlc = document.getElementById('sim-p-placeholder');
+        if (simImg) {
+            simImg.src = e.target.result;
+            simImg.classList.remove('hidden');
+            if (simPlc) simPlc.classList.add('hidden');
+        }
+    };
+    reader.readAsDataURL(file);
+}
 async function fetchOrders() {
     try {
         const { data, error } = await supabase

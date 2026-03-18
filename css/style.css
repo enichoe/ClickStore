@@ -99,18 +99,18 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; let
 
 .input { 
     width: 100%; 
-    padding: 16px 20px; 
-    background: rgba(255, 255, 255, 0.02); 
+    padding: 14px 20px; 
+    border-radius: 14px; 
+    background: rgba(255, 255, 255, 0.03); 
     border: 1px solid var(--border); 
-    border-radius: 16px; 
     color: var(--text); 
-    outline: none; 
-    transition: all 0.3s;
     font-size: 15px;
+    transition: all 0.3s;
+    outline: none;
 }
 
 .input:focus { 
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.05); 
     border-color: var(--primary); 
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
@@ -136,41 +136,39 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; let
 .store-header { padding: 120px 24px 60px; text-align: center; background: linear-gradient(to bottom, var(--card), var(--bg)); }
 
 /* === Modals & Drawers Redesign === */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(2, 6, 23, 0.85);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
+/* Modal Responsivo Fix */
+.modal { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0, 0, 0, 0.85); 
+    backdrop-filter: blur(12px); 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 1000; 
+    padding: 16px; 
+    overflow-y: auto;
 }
 
-.modal.active {
-    opacity: 1;
-    pointer-events: auto;
-}
+.modal.active { display: flex; }
 
 /* Modal Content (Centered) */
-.modal-content {
-    background: #ffffff;
-    width: 100%;
-    max-width: 500px;
-    border-radius: 28px;
-    padding: 32px;
-    position: relative;
-    transform: translateY(30px) scale(0.95);
-    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+.modal-content { 
+    background: var(--bg-sec); 
+    width: 100%; 
+    max-width: 550px; 
+    border-radius: 28px; 
+    padding: 32px; 
+    position: relative; 
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    animation: modal-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal.active .modal-content {
-    transform: translateY(0) scale(1);
+@keyframes modal-up {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .drawer {
@@ -252,9 +250,9 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; let
 
 /* Responsive */
 @media (max-width: 768px) {
-    .sidebar { transform: translateX(-100%); z-index: 200; }
+    .sidebar { transform: translateX(-100%); z-index: 200; width: 280px; }
     .sidebar.open { transform: translateX(0); }
-    .main-admin { margin-left: 0; padding: 16px; padding-top: 80px; }
+    .main-admin { margin-left: 0; padding: 20px; padding-top: 80px; }
     .hero h1 { font-size: 2.5rem; }
     
     #grid-products {
@@ -307,6 +305,22 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; let
         gap: 12px;
     }
     .admin-header h2 { font-size: 1.5rem; }
+
+    /* Mobile Specific Tweaks */
+    .mobile-simulator { display: none !important; }
+    
+    /* Grid adjustments */
+    .grid-admin { grid-template-columns: 1fr; }
+    
+    /* Hero text mobile size */
+    h1 { font-size: 3.5rem !important; }
+    
+    /* Touch friendly footer / nav */
+    .bottom-nav { 
+        height: 75px; 
+        padding-bottom: constant(safe-area-inset-bottom);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
 }
 
 .admin-mobile-header { display: none; }
@@ -386,6 +400,33 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; let
 .search-input-group input::placeholder {
     color: #94a3b8;
     font-weight: 500;
+}
+
+/* Product Cards & Images */
+.product-card {
+    background: var(--bg-sec);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-image-container {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: #111827;
+}
+
+.product-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image-container img {
+    transform: scale(1.1);
 }
 
 .product-card-premium {
