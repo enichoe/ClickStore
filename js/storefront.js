@@ -520,18 +520,22 @@ async function handleCheckout(e) {
 
         // Crear pedido en DB
         const itemsForRpc = appState.cart.map(i => ({ id: i.id, qty: i.qty, name: i.name, price: i.price }));
-        const { data: orderData, error } = await supabase.from('orders').insert([{
+        
+        // Generar una referencia única local para el mensaje (el cliente no tiene permiso para leer el ID real)
+        const orderRef = 'CMD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+        const { error } = await supabase.from('orders').insert([{
             store_id: appState.tenant.id,
             customer_name: customerName,
             whatsapp: customerWhatsapp,
             items: JSON.stringify(itemsForRpc),
-            total: total,
+            total: isNaN(total) ? 0 : total,
             status: 'pending',
             delivery_address: customerAddress || null,
             delivery_selected: deliverySelected,
             payment_method: appState.paymentMethod,
             voucher_url: voucherUrl
-        }]).select().single();
+        }]);
 
         if (error) throw error;
 
@@ -566,7 +570,7 @@ async function handleCheckout(e) {
             message += `⚠️ _Pendiente enviar captura de pago_%0A`;
         }
 
-        message += `📲 _Pedido #${orderData.id.split('-')[0].toUpperCase()}_%0A`;
+        message += `📲 _Ref: ${orderRef}_%0A`;
         message += `🛒 _Creado en StoreClick.pe_`;
 
         // Abrir WhatsApp
