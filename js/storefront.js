@@ -221,8 +221,8 @@ function renderProductGrid() {
     grid.innerHTML = prods.map(p => `
         <div class="product-card-premium stagger-in group">
             <div class="product-image-container p-4">
-                <div class="product-image-inner shadow-sm rounded-3xl overflow-hidden aspect-square">
-                    <img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-full object-cover">
+                <div class="product-image-inner shadow-sm rounded-3xl overflow-hidden aspect-square bg-slate-50 flex items-center justify-center">
+                    <img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-full object-contain p-2">
                 </div>
             </div>
             <div class="px-6 pb-6 pt-2 flex flex-col flex-1">
