@@ -121,44 +121,79 @@ function getCurrencySymbol(currency) {
 
 // = [UI Helpers] =
 function showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
 
     const toast = document.createElement('div');
-    toast.className = `fade-in`;
+    toast.className = 'toast';
     
-    const colors = {
-        'success': '#10B981',
-        'error': '#EF4444',
-        'warning': '#F59E0B',
-        'info': '#3B82F6'
-    };
-    
-    toast.style.cssText = `
-        background: ${colors[type] || colors.success};
-        color: white;
-        padding: 12px 24px;
-        border-radius: 12px;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        font-weight: 600;
-        min-width: 250px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        border: 1px solid rgba(255,255,255,0.1);
-        z-index: 9999;
-    `;
-    
-    toast.innerHTML = `<span>${message}</span>`;
+    let icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'warning') icon = '⚠️';
+    if (type === 'info') icon = 'ℹ️';
+
+    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(20px)';
-        toast.style.transition = 'all 0.3s ease';
+        toast.classList.add('removing');
         setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    }, 4000);
+}
+
+/**
+ * Compresión de imágenes client-side para optimizar carga y almacenamiento
+ */
+async function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const compressedFile = new File([blob], file.name, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now(),
+                        });
+                        resolve(compressedFile);
+                    } else {
+                        reject(new Error('Error al comprimir imagen'));
+                    }
+                }, 'image/jpeg', quality);
+            };
+            img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+    });
 }
 
 // ======================= GLOBAL ERROR HANDLING =======================

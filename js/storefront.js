@@ -41,6 +41,29 @@ async function loadPublicStore(identifier) {
     }
 }
 
+function shareStore() {
+    const url = window.location.href;
+    const title = appState.tenant?.name || 'StoreClick Store';
+    const text = `¡Mira esta tienda increíble en StoreClick! 🛍️`;
+
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            text: text,
+            url: url,
+        }).catch(err => console.error('Error sharing:', err));
+    } else {
+        // Fallback a copiar link
+        const tempInput = document.createElement("input");
+        tempInput.value = url;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        showToast("✅ Enlace de tienda copiado al portapapeles");
+    }
+}
+
 function openStorefront() {
     if (!appState.tenant) return;
     const identifier = appState.tenant.slug || appState.tenant.id;
@@ -437,30 +460,25 @@ async function handleCheckout(e) {
         const deliveryType = deliverySelected ? `🛵 Envío a Domicilio` : `🥡 Recojo en Local`;
         const currency = getCurrencySymbol(appState.tenant.currency);
         
-        let message = `🛍️ *NUEVO PEDIDO - ${appState.tenant.name}* %0A`;
+        let message = `📦 *PEDIDO #${Math.floor(1000 + Math.random() * 9000)} - ${appState.tenant.name.toUpperCase()}* %0A`;
 message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `👤 *Cliente:* ${customerName}%0A`;
-message += `📱 *WhatsApp:* ${customerWhatsapp}%0A`;
-message += `🚚 *Tipo de entrega:* ${deliveryType}%0A`;
-if (customerAddress) message += `📍 *Dirección:* ${customerAddress}%0A`;
+message += `👤 *CLIENTE:* ${customerName}%0A`;
+message += `📱 *WHATSAPP:* ${customerWhatsapp}%0A`;
+message += `🚚 *ENTREGA:* ${deliveryType}%0A`;
+if (customerAddress) message += `📍 *DIRECCIÓN:* ${customerAddress}%0A`;
 message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `🛍️ *PRODUCTOS DEL PEDIDO:* %0A`;
+message += `🛍️ *DETALLE DEL PEDIDO:* %0A`;
 
 appState.cart.forEach(i => {
-    message += `🧾 ${i.name}%0A`;
-    message += `   🔢 Cantidad: ${i.qty}%0A`;
-    message += `   💰 Precio: ${currency}${i.price.toFixed(2)}%0A`;
-    message += `   🧮 Subtotal: *${currency}${(i.price * i.qty).toFixed(2)}*%0A`;
-    message += `----------------------------%0A`;
+    message += `🔹 ${i.qty}x ${i.name} (${currency}${i.price.toFixed(2)}) %0A`;
 });
 
 message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `💵 *Subtotal:* ${currency}${subtotal.toFixed(2)}%0A`;
-if (deliveryFee > 0) message += `🚚 *Costo de envío:* ${currency}${deliveryFee.toFixed(2)}%0A`;
-message += `💳 *TOTAL A PAGAR:* *${currency}${total.toFixed(2)}* %0A`;
+message += `💵 *SUBTOTAL:* ${currency}${subtotal.toFixed(2)}%0A`;
+if (deliveryFee > 0) message += `🚚 *ENVÍO:* ${currency}${deliveryFee.toFixed(2)}%0A`;
+message += `💰 *TOTAL A PAGAR:* *${currency}${total.toFixed(2)}* %0A`;
 message += `━━━━━━━━━━━━━━━━━━%0A`;
-message += `🚀 _Pedido generado desde ClickStore_%0A`;
-message += `🛒 _Tu plataforma para vender online_`;
+message += `📲 _Generado por StoreClick.pe_`;
 
         window.open(`https://wa.me/${businessPhone}?text=${message}`, '_blank');
 

@@ -2,43 +2,23 @@
 async function initializeAdminUI() {
     if (!appState.tenant) return;
     
-    document.getElementById('admin-store-name').innerText = appState.tenant.name;
+    // Update basic text
+    const storeName = appState.tenant.name;
+    const headerName = document.getElementById('admin-store-name');
     const mobileHeaderName = document.getElementById('mobile-store-name');
-    if (mobileHeaderName) mobileHeaderName.innerText = appState.tenant.name;
     
-    document.getElementById('setting-name').value = appState.tenant.name;
-    if (document.getElementById('setting-slug')) {
-        document.getElementById('setting-slug').value = appState.tenant.slug || '';
-    }
-    if (document.getElementById('setting-whatsapp')) {
-        document.getElementById('setting-whatsapp').value = appState.tenant.whatsapp_phone || '';
-    }
-    if (document.getElementById('setting-currency')) {
-        document.getElementById('setting-currency').value = appState.tenant.currency || 'PEN';
-    }
-
-    // Delivery settings
-    const deliveryCheck = document.getElementById('setting-delivery-active');
-    const deliveryPrice = document.getElementById('setting-delivery-price');
-    const deliveryContainer = document.getElementById('delivery-price-container');
-
-    if (deliveryCheck) {
-        deliveryCheck.checked = appState.tenant.active_delivery || false;
-        deliveryContainer.style.display = deliveryCheck.checked ? 'block' : 'none';
-        deliveryCheck.onchange = (e) => deliveryContainer.style.display = e.target.checked ? 'block' : 'none';
-    }
-    if (deliveryPrice) {
-        deliveryPrice.value = appState.tenant.delivery_price || 0;
-    }
+    if (headerName) headerName.innerText = storeName;
+    if (mobileHeaderName) mobileHeaderName.innerText = storeName;
     
-    // Usar slug para el enlace si existe
+    // Load all settings into inputs & sync preview
+    loadStoreSettingsForm();
+
     const storeIdentifier = appState.tenant.slug || appState.tenant.id;
     const linkInput = document.getElementById('store-link-input');
     if (linkInput) {
         linkInput.value = window.location.origin + window.location.pathname + '?store=' + storeIdentifier;
     }
     
-    // Carga de datos en paralelo para mejorar performance
     await Promise.all([
         updateUsageStats(),
         fetchProducts(),
@@ -46,7 +26,6 @@ async function initializeAdminUI() {
         fetchOrders()
     ]);
 
-    // Comprobar si es Super Admin
     checkSuperAdmin();
 }
 
@@ -280,12 +259,19 @@ function openNewProductModal() {
     if (previewCont) previewCont.classList.add('hidden');
     if (prompt) prompt.classList.remove('hidden');
 
+    // Reset simulator preview
+    document.getElementById('sim-p-image').src = '';
+    document.getElementById('sim-p-image').style.display = 'none';
+    document.getElementById('sim-p-image-placeholder').style.display = 'flex';
+
     // Reset category
     const catSelect = document.getElementById('p-category');
     if (catSelect) catSelect.value = '';
 
     const fileInput = document.getElementById('p-image-file');
     if (fileInput) fileInput.value = '';
+    
+    syncProductPreview();
     openModal('modal-product');
 }
 
@@ -310,6 +296,7 @@ function editProduct(id) {
     }
 
     document.getElementById('modal-product-title').innerText = "Editar Producto";
+    syncProductPreview();
     openModal('modal-product');
 }
 
@@ -327,9 +314,45 @@ function previewImage(event) {
             preview.src = e.target.result;
             if (previewCont) previewCont.classList.remove('hidden');
             if (prompt) prompt.classList.add('hidden');
+
+            // Update simulator also
+            const simImg = document.getElementById('sim-p-image');
+            const simPlaceholder = document.getElementById('sim-p-image-placeholder');
+            if (simImg) {
+                simImg.src = e.target.result;
+                simImg.style.display = 'block';
+                if (simPlaceholder) simPlaceholder.style.display = 'none';
+            }
         }
     };
     reader.readAsDataURL(file);
+}
+
+function syncProductPreview() {
+    const name = document.getElementById('p-name').value || 'Nombre del Producto';
+    const price = document.getElementById('p-price').value || '0.00';
+    const desc = document.getElementById('p-description').value || 'Aquí aparecerá la descripción detallada de tu producto...';
+    const currencySymbol = getCurrencySymbol(appState.tenant?.currency);
+
+    const simName = document.getElementById('sim-p-name');
+    const simPrice = document.getElementById('sim-p-price');
+    const simDesc = document.getElementById('sim-p-desc');
+    const simImg = document.getElementById('sim-p-image');
+    const simPlaceholder = document.getElementById('sim-p-image-placeholder');
+
+    if (simName) simName.innerText = name;
+    if (simPrice) simPrice.innerText = currencySymbol + parseFloat(price || 0).toFixed(2);
+    if (simDesc) simDesc.innerText = desc;
+
+    // Handle initial edit image if no new file is selected
+    if (editingProductId && !document.getElementById('p-image-file').files[0]) {
+        const p = appState.products.find(prod => prod.id === editingProductId);
+        if (p && p.image && simImg) {
+            simImg.src = p.image;
+            simImg.style.display = 'block';
+            if (simPlaceholder) simPlaceholder.style.display = 'none';
+        }
+    }
 }
 
 async function fetchOrders() {
@@ -536,10 +559,13 @@ async function saveProduct(e) {
             throw new Error('No hay tienda definida. Refresca e intenta de nuevo.');
         }
         if (file) {
+            // Comprimir imagen antes de subir (Max 1000px, 80% calidad)
+            const compressedFile = await compressImage(file, 1000, 1000, 0.8);
+            
             const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
             const { data: uploadData, error: uploadError } = await supabase.storage
                 .from('product-images')
-                .upload(fileName, file);
+                .upload(fileName, compressedFile);
             if (uploadError) {
                 console.warn('Upload error:', uploadError);
                 throw uploadError;
@@ -646,6 +672,8 @@ function loadStoreSettingsForm() {
         logoPreview.classList.add('hidden');
         if (logoPlaceholder) logoPlaceholder.classList.remove('hidden');
     }
+
+    syncStorePreview();
 }
 
 function toggleDeliveryPriceUI() {
@@ -674,9 +702,36 @@ function previewLogo(event) {
             preview.src = e.target.result;
             preview.classList.remove('hidden');
             if (placeholder) placeholder.classList.add('hidden');
+
+            // Update simulator also
+            const simLogo = document.getElementById('sim-store-logo');
+            const simPlaceholder = document.getElementById('sim-store-logo-placeholder');
+            if (simLogo) {
+                simLogo.src = e.target.result;
+                simLogo.classList.remove('hidden');
+                if (simPlaceholder) simPlaceholder.style.display = 'none';
+            }
         }
     };
     reader.readAsDataURL(file);
+}
+
+function syncStorePreview() {
+    const name = document.getElementById('setting-name').value || 'Nombre de tu Tienda';
+    const simName = document.getElementById('sim-store-name');
+    const simLogo = document.getElementById('sim-store-logo');
+    const simPlaceholder = document.getElementById('sim-store-logo-placeholder');
+
+    if (simName) simName.innerText = name;
+
+    // Handle initial load logo
+    if (appState.tenant?.logo_url && !document.getElementById('setting-logo-file').files[0]) {
+        if (simLogo) {
+            simLogo.src = appState.tenant.logo_url;
+            simLogo.classList.remove('hidden');
+            if (simPlaceholder) simPlaceholder.style.display = 'none';
+        }
+    }
 }
 
 async function updateStoreSettings(event) {
@@ -697,15 +752,17 @@ async function updateStoreSettings(event) {
         const logoFile = document.getElementById('setting-logo-file').files[0];
 
         if (logoFile) {
-            const fileExt = logoFile.name.split('.').pop();
-            const fileName = `${appState.tenant.id}/logo_${Date.now()}.${fileExt}`;
+            // Comprimir logo (Max 512px para identidad visual)
+            const compressedLogo = await compressImage(logoFile, 512, 512, 0.8);
+            
+            const fileName = `${appState.tenant.id}/logo_${Date.now()}.jpg`; // Forzado a JPG por compressImage
             const { error: uploadError } = await supabase.storage
                 .from('product-images')
-                .upload(fileName, logoFile, { upsert: true });
+                .upload(fileName, compressedLogo, { upsert: true });
 
             if (uploadError) {
                 if (uploadError.message === 'Bucket not found') {
-                    throw new Error('El contenedor de almacenamiento "product-images" no existe en Supabase. Por favor, créalo en tu dashboard o ejecuta el script SQL de storage.');
+                    throw new Error('El contenedor de almacenamiento "product-images" no existe en Supabase.');
                 }
                 throw uploadError;
             }

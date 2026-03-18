@@ -25,11 +25,22 @@
         <!-- Modern Glassmorphism Nav -->
         <nav class="nav-saas">
             <div class="nav-saas-inner">
-                <div class="flex items-center gap-2 text-2xl font-bold tracking-tight">
-                    <div class="p-2 rounded-lg bg-indigo-500 shadow-lg shadow-indigo-500/20">
-                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                <div class="flex items-center gap-3 text-2xl font-black tracking-tight text-white group cursor-pointer" onclick="showView('view-landing')">
+                    <div class="relative">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                        <div class="relative p-2.5 rounded-xl bg-slate-900 border border-white/10 shadow-lg flex items-center justify-center">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="url(#logo-grad)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+                                <defs>
+                                    <linearGradient id="logo-grad" x1="3" y1="2" x2="21" y2="22" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#6366F1"/>
+                                        <stop offset="1" stop-color="#8B5CF6"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
                     </div>
-                    <span>StoreClick</span>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">StoreClick</span>
                 </div>
                 <div class="flex gap-1 md:gap-4">
                     <button class="btn btn-ghost !px-3 md:!px-6 !text-sm md:!text-base" onclick="showView('view-login')">Iniciar Sesión</button>
@@ -38,42 +49,75 @@
             </div>
         </nav>
 
-        <!-- Hero Section Impactante -->
-        <section class="hero relative overflow-hidden">
-            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none opacity-20">
-                <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-indigo-500 rounded-full blur-[120px] animate-pulse"></div>
-                <div class="absolute bottom-[10%] right-[10%] w-96 h-96 bg-purple-500 rounded-full blur-[150px] animate-pulse" style="animation-delay: 1s;"></div>
+        <!-- Hero Section Impactante - StoreClick Evolution -->
+        <section class="hero relative overflow-hidden pt-32 pb-20">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none">
+                <div class="absolute top-[10%] left-[10%] w-72 h-72 bg-indigo-600 rounded-full blur-[120px] opacity-30 animate-pulse"></div>
+                <div class="absolute bottom-[10%] right-[10%] w-96 h-96 bg-purple-600 rounded-full blur-[150px] opacity-20 animate-pulse" style="animation-delay: 2s;"></div>
             </div>
 
-            <div class="relative z-10 flex flex-col items-center max-w-4xl px-6">
-                <span class="px-4 py-1.5 rounded-full bg-indigo-500/10 text-indigo-400 text-sm font-semibold border border-indigo-500/20 mb-8 fade-in">
-                    🚀 La plataforma #1 para emprendedores
-                </span>
-                <h1 class="text-5xl md:text-7xl mb-8 leading-[1.1] animate-slide-up">
-                    Vende por <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">WhatsApp</span> <br/> de forma profesional
+            <div class="relative z-10 flex flex-col items-center max-w-5xl px-6 text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-indigo-400 text-xs font-bold tracking-widest uppercase mb-10 fade-in backdrop-blur-md">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                    </span>
+                    🚀 La solución definitiva para emprendedores en Perú
+                </div>
+                
+                <h1 class="text-6xl md:text-8xl mb-8 leading-[1.05] tracking-tight animate-slide-up">
+                    Tu tienda en <br/>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-300% animate-gradient">WhatsApp</span>
+                    en minutos
                 </h1>
-                <p class="text-xl text-slate-400 max-w-2xl mb-12 animate-slide-up" style="animation-delay: 0.1s;">
-                    Crea tu tienda virtual en segundos, gestiona tu catálogo y recibe pedidos directamente en tu móvil. Sin complicaciones técnicas.
+                
+                <p class="text-xl text-slate-400 max-w-2xl mb-12 animate-slide-up leading-relaxed" style="animation-delay: 0.1s;">
+                    Olvídate de procesos complejos. Crea tu catálogo digital, recibe pedidos automáticos y gestiona todo desde tu celular. **Sin comisiones, sin dramas.**
                 </p>
                 
-                <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto animate-slide-up" style="animation-delay: 0.2s;">
-                    <button class="btn btn-primary px-10 py-5 text-lg" onclick="showView('view-register')">
-                        Crear mi Tienda Ahora
+                <div class="flex flex-col sm:flex-row gap-5 w-full sm:w-auto animate-slide-up" style="animation-delay: 0.2s;">
+                    <button class="btn btn-primary px-12 py-5 text-lg group" onclick="showView('view-register')">
+                        Empezar Gratis Ahora
+                        <svg class="group-hover:translate-x-1 transition-transform" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                     </button>
-                    <button class="btn btn-secondary px-10 py-5 text-lg" onclick="document.getElementById('planes').scrollIntoView({behavior: 'smooth'})">
-                        Ver Planes
+                    <button class="btn btn-secondary px-12 py-5 text-lg" onclick="document.getElementById('planes').scrollIntoView({behavior: 'smooth'})">
+                        Explorar Planes
                     </button>
                 </div>
 
-                <!-- Product Demo Placeholder -->
-                <div class="mt-24 w-full max-w-5xl rounded-2xl border border-slate-800 bg-slate-900/50 p-4 shadow-2xl animate-slide-up" style="animation-delay: 0.3s;">
-                    <div class="flex items-center gap-2 mb-4 px-2">
-                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                        <div class="ml-4 h-6 px-4 rounded bg-slate-800 text-[10px] flex items-center text-slate-500 font-mono">clicksaas.com/mi-tienda</div>
+                <!-- Live Metrics Mockup -->
+                <div class="mt-20 flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all">
+                    <div class="flex flex-col items-center">
+                        <span class="text-2xl font-bold text-white">+5,000</span>
+                        <span class="text-xs uppercase tracking-widest text-slate-500 font-bold">Tiendas Activas</span>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=2070" class="w-full h-auto rounded-lg grayscale-[20%] opacity-80" alt="Dashboard Demo">
+                    <div class="flex flex-col items-center">
+                        <span class="text-2xl font-bold text-white">S/ 2M+</span>
+                        <span class="text-xs uppercase tracking-widest text-slate-500 font-bold">Ventas Procesadas</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-2xl font-bold text-white">100%</span>
+                        <span class="text-xs uppercase tracking-widest text-slate-500 font-bold">Mobile First</span>
+                    </div>
+                </div>
+
+                <!-- Product Preview Card -->
+                <div class="mt-24 w-full max-w-5xl rounded-[32px] border border-white/10 bg-slate-900/50 p-3 shadow-2xl animate-slide-up relative" style="animation-delay: 0.3s;">
+                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 blur-3xl rounded-full"></div>
+                    <div class="rounded-[24px] overflow-hidden border border-white/5 bg-slate-950">
+                        <div class="flex items-center justify-between gap-2 px-6 py-4 bg-white/5 border-b border-white/5">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+                            </div>
+                            <div class="h-8 px-6 rounded-full bg-white/5 text-[11px] flex items-center text-slate-400 font-mono tracking-wider border border-white/5">
+                                storeclick.pe/tu-negocio
+                            </div>
+                            <div class="w-10"></div>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=2070" class="w-full h-auto opacity-90 hover:opacity-100 transition-opacity" alt="StoreClick Dashboard">
+                    </div>
                 </div>
             </div>
         </section>
@@ -263,7 +307,7 @@
                             <li>
                                 <div class="p-4 mt-6 rounded-2xl bg-slate-900 border border-slate-800">
                                     <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">Escríbenos</p>
-                                    <a href="mailto:hola@clickstore.com" class="text-white hover:text-indigo-400 text-sm font-bold transition-colors flex items-center gap-2">
+                                    <a href="mailto:hola@StoreClick.com" class="text-white hover:text-indigo-400 text-sm font-bold transition-colors flex items-center gap-2">
                                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg> 
                                         enichoe@gmail.com
                                     </a>
@@ -430,46 +474,67 @@
                     </div>
                 </div>
 
-                <!-- Stats Cards -->
+                <!-- Stats Cards Revitalized -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-                    <div class="card bg-gradient-to-br from-indigo-500/10 to-transparent border-indigo-500/20 group hover:border-indigo-500/40 transition-all p-6">
-                        <div class="flex justify-between items-start mb-4">
+                    <!-- Plan Info -->
+                    <div class="card bg-gradient-to-br from-indigo-500/10 via-transparent to-transparent border-indigo-500/20 group hover:border-indigo-500/40 transition-all p-8 relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl group-hover:bg-indigo-500/10 transition-all"></div>
+                        <div class="flex justify-between items-start mb-6">
                             <div>
-                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Tu Plan Activo</p>
-                                <h3 id="current-plan-name" class="text-2xl font-black text-indigo-400">Gratis</h3>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] mb-1">Membresía Activa</p>
+                                <h3 id="current-plan-name" class="text-3xl font-black text-indigo-400 tracking-tight">Carga...</h3>
                             </div>
-                            <div class="p-2 bg-indigo-500/10 rounded-lg text-indigo-400">
-                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.286-6.857L1 12l7.714-2.143L11 3z"/></svg>
+                            <div class="w-12 h-12 bg-indigo-500/10 rounded-2xl text-indigo-400 flex items-center justify-center border border-indigo-500/20 shadow-lg shadow-indigo-500/10">
+                                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.286-6.857L1 12l7.714-2.143L11 3z"/></svg>
                             </div>
                         </div>
                         
-                        <div class="space-y-3">
-                            <div class="flex justify-between text-xs font-bold">
-                                <span class="text-slate-500">Capacidad Catálogo</span>
+                        <div class="space-y-4">
+                            <div class="flex justify-between text-[11px] font-black uppercase tracking-widest">
+                                <span class="text-slate-500">Capacidad Total</span>
                                 <span class="text-white"><span id="usage-count">0</span> / <span id="usage-max">10</span></span>
                             </div>
-                            <div class="usage-bar-container">
-                                <div id="usage-bar-fill" class="usage-bar-fill" style="width: 0%"></div>
+                            <div class="usage-bar-container !h-2.5 !bg-slate-900 shadow-inner">
+                                <div id="usage-bar-fill" class="usage-bar-fill !bg-gradient-to-r !from-indigo-600 !to-violet-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]" style="width: 0%"></div>
                             </div>
-                            <button id="plan-upgrade-cta" class="text-[10px] font-black text-indigo-400 hover:text-white flex items-center gap-1 transition-all uppercase tracking-wider" onclick="alert('Próximamente: Pagos con Stripe')">
-                                Mejorar Plan <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                            <button id="plan-upgrade-cta" class="w-full mt-2 py-3 bg-slate-800/50 hover:bg-indigo-600 text-slate-300 hover:text-white transition-all rounded-xl text-[10px] font-black uppercase tracking-[0.2em] border border-slate-700/50 hover:border-indigo-400" onclick="alert('Próximamente: Pagos de membresía')">
+                                Mejorar a Plan Pro
                             </button>
                         </div>
                     </div>
 
-                    <div class="card hover:border-slate-700 transition-all p-6 flex flex-col justify-center">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Ventas Totales</p>
-                        <h3 id="stat-sales" class="text-4xl font-black text-white">$0.00</h3>
-                        <p class="text-[10px] text-emerald-500 font-bold mt-2 flex items-center gap-1">
-                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg>
-                            Actualizado al instante
-                        </p>
+                    <!-- Ventas Reales -->
+                    <div class="card bg-slate-900 border-slate-800 hover:border-emerald-500/30 transition-all p-8 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 bg-emerald-500/10 rounded-xl text-emerald-500 flex items-center justify-center border border-emerald-500/20">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em]">Ventas Totales</p>
+                            </div>
+                            <h3 id="stat-sales" class="text-5xl font-black text-white tracking-tighter group-hover:scale-105 transition-transform origin-left">S/ 0.00</h3>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between text-[10px] font-bold text-slate-500 border-t border-slate-800 pt-4">
+                            <span class="flex items-center gap-1 text-emerald-500"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"/></svg> +0% hoy</span>
+                            <span class="uppercase tracking-widest opacity-50">Ingresos Brutos</span>
+                        </div>
                     </div>
 
-                    <div class="card hover:border-slate-700 transition-all p-6 flex flex-col justify-center">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Pedidos Hoy</p>
-                        <h3 id="stat-orders" class="text-4xl font-black text-white">0</h3>
-                        <p class="text-[10px] text-slate-500 font-bold mt-2">Visitas registradas: <span id="stat-visits">24</span></p>
+                    <!-- Pedidos Acumulados -->
+                    <div class="card bg-slate-900 border-slate-800 hover:border-indigo-500/30 transition-all p-8 flex flex-col justify-between group">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-10 h-10 bg-indigo-500/10 rounded-xl text-indigo-400 flex items-center justify-center border border-indigo-500/20">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                                </div>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em]">Órdenes Recibidas</p>
+                            </div>
+                            <h3 id="stat-orders" class="text-5xl font-black text-white tracking-tighter group-hover:scale-105 transition-transform origin-left">0</h3>
+                        </div>
+                        <div class="mt-6 flex items-center justify-between text-[10px] font-bold text-slate-500 border-t border-slate-800 pt-4">
+                            <span class="text-indigo-400">Total histórico</span>
+                            <span class="uppercase tracking-widest opacity-50">Pedidos activos</span>
+                        </div>
                     </div>
                 </div>
 
@@ -497,43 +562,63 @@
             </div>
 
             <!-- Super Admin Section -->
-            <div id="section-super" class="fade-in" style="display: none;">
-                <h2 style="margin-bottom: 24px;">Panel de Control Global</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px;">
-                    <div class="card" style="border-left: 4px solid var(--accent);">
-                        <p style="color: var(--text-sec); font-size: 14px;">Total Tiendas</p>
-                        <p style="font-size: 28px; font-weight: 800;" id="super-total-stores">0</p>
+            <div id="section-super" class="fade-in space-y-8" style="display: none;">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-black text-white">Panel de Control Global</h2>
+                    <button class="btn btn-primary btn-sm !rounded-xl !px-6" onclick="openStoreModal()">+ Crear Tienda</button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card bg-slate-900/50 border-slate-800 p-6 border-l-4 border-l-indigo-500">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Total Tiendas</p>
+                        <p class="text-4xl font-black text-white" id="super-total-stores">0</p>
                     </div>
-                    <div class="card" style="border-left: 4px solid #10b981;">
-                        <p style="color: var(--text-sec); font-size: 14px;">Pedidos Totales</p>
-                        <p style="font-size: 28px; font-weight: 800;" id="super-total-orders">0</p>
+                    <div class="card bg-slate-900/50 border-slate-800 p-6 border-l-4 border-l-emerald-500">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Pedidos Totales</p>
+                        <p class="text-4xl font-black text-white" id="super-total-orders">0</p>
                     </div>
                 </div>
-                <div class="card" style="padding: 0; overflow: hidden;">
-                    <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg-sec);">
-                        <h3 style="margin: 0;">Gestión de Tiendas</h3>
-                        <button class="btn btn-primary btn-sm" onclick="openStoreModal()">+ Crear Tienda</button>
+
+                <div class="card bg-slate-900 border-slate-800 overflow-hidden shadow-2xl">
+                    <div class="px-8 py-6 border-b border-slate-800 bg-slate-800/30">
+                        <h3 class="text-sm font-black text-white uppercase tracking-[0.2em]">Gestión de Locales</h3>
                     </div>
-                    <div id="super-stores-list"></div>
+                    <div id="super-stores-list" class="divide-y divide-slate-800">
+                        <!-- Inyectado por JS -->
+                    </div>
                 </div>
             </div>
 
             <!-- Products Section -->
-            <div id="section-products" class="fade-in" style="display: none;">
-                <div class="admin-header">
-                    <h2>Productos</h2>
-                    <button class="btn btn-primary" onclick="openNewProductModal()">+ Agregar</button>
+            <div id="section-products" class="fade-in space-y-8" style="display: none;">
+                <div class="flex justify-between items-center bg-slate-900/30 p-8 rounded-[32px] border border-white/5 shadow-2xl">
+                    <div>
+                        <h2 class="text-4xl font-black text-white tracking-tighter">Catálogo</h2>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Gestiona tus productos en venta</p>
+                    </div>
+                    <button class="btn btn-primary !rounded-2xl !py-4 !px-8 shadow-xl shadow-indigo-500/20 active:scale-95 transition-all font-black text-sm" onclick="openNewProductModal()">
+                        + Nuevo Producto
+                    </button>
                 </div>
-                <div id="grid-products" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;"></div>
+                <div id="grid-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Inyectado por JS -->
+                </div>
             </div>
 
             <!-- Categories Section -->
-            <div id="section-categories" class="fade-in" style="display: none;">
-                <div class="admin-header">
-                    <h2>Categorías</h2>
-                    <button class="btn btn-primary" onclick="openModal('modal-category')">+ Nueva</button>
+            <div id="section-categories" class="fade-in space-y-8" style="display: none;">
+                <div class="flex justify-between items-center bg-slate-900/30 p-8 rounded-[32px] border border-white/5 shadow-2xl">
+                    <div>
+                        <h2 class="text-4xl font-black text-white tracking-tighter">Categorías</h2>
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Organiza tu menú o tienda</p>
+                    </div>
+                    <button class="btn btn-primary !rounded-2xl !py-4 !px-8 shadow-xl shadow-indigo-500/20 active:scale-95 transition-all font-black text-sm" onclick="openModal('modal-category')">
+                        + Nueva Categoría
+                    </button>
                 </div>
-                <div id="list-categories" style="display: grid; gap: 12px;"></div>
+                <div id="list-categories" class="max-w-4xl mx-auto space-y-3">
+                    <!-- Inyectado por JS -->
+                </div>
             </div>
 
             <!-- Orders Section -->
@@ -548,53 +633,72 @@
                     <h2 class="text-3xl font-black text-white">Configuración</h2>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Brand Identity Card -->
-                    <div class="card bg-slate-900 border-slate-800 p-8">
-                        <div class="flex flex-col items-center mb-10 text-center">
-                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Logo de tu Negocio</p>
-                            <div class="relative group cursor-pointer" onclick="document.getElementById('setting-logo-file').click()">
-                                <div class="w-28 h-28 rounded-3xl border-2 border-dashed border-slate-700 overflow-hidden flex items-center justify-center group-hover:border-indigo-500 transition-all bg-slate-950 shadow-inner">
-                                    <img id="setting-logo-preview" src="" class="hidden w-full h-full object-cover">
-                                    <svg id="setting-logo-placeholder" class="text-slate-700 group-hover:text-indigo-400 group-hover:scale-110 transition-all" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Configuración Formulario -->
+                    <div class="lg:col-span-8 space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Brand Identity Card -->
+                            <div class="card bg-slate-900 border-slate-800 p-8 shadow-2xl">
+                                <div class="flex flex-col items-center mb-10 text-center">
+                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-6">Identidad Visual</p>
+                                    <div class="relative group cursor-pointer" onclick="document.getElementById('setting-logo-file').click()">
+                                        <div class="w-28 h-28 rounded-3xl border-2 border-dashed border-slate-700/50 overflow-hidden flex items-center justify-center group-hover:border-indigo-500 transition-all bg-slate-950/50 shadow-inner backdrop-blur-md">
+                                            <img id="setting-logo-preview" src="" class="hidden w-full h-full object-cover">
+                                            <svg id="setting-logo-placeholder" class="text-slate-700 group-hover:text-indigo-400 group-hover:scale-110 transition-all" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                        </div>
+                                        <div class="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-xl border-4 border-slate-900 group-hover:bg-indigo-500 transition-all">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                                        </div>
+                                        <input type="file" id="setting-logo-file" class="hidden" accept="image/*" onchange="previewLogo(event); syncStorePreview();">
+                                    </div>
+                                    <p class="text-[10px] text-slate-500 mt-4 font-bold tracking-wider">LOGO RECOMENDADO: 512x512px</p>
                                 </div>
-                                <div class="absolute -bottom-2 -right-2 w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-xl border-4 border-slate-900 group-hover:bg-indigo-500 transition-all">
-                                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+
+                                <div class="space-y-6">
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Nombre del Negocio</label>
+                                        <input type="text" id="setting-name" class="input" placeholder="Ej: Pizzería Roma" oninput="syncStorePreview()">
+                                    </div>
+                                    <div>
+                                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Identificador URL (Slug)</label>
+                                        <div class="relative">
+                                            <input type="text" id="setting-slug" class="input pl-[110px]" placeholder="mi-negocio">
+                                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm font-black tracking-tight">storeclick.pe/</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="file" id="setting-logo-file" class="hidden" accept="image/*" onchange="previewLogo(event)">
                             </div>
-                            <p class="text-[10px] text-slate-500 mt-4 font-bold">RECOMENDADO: 512x512px (PNG/JPG)</p>
+
+                            <!-- Store Link & Actions -->
+                            <div class="space-y-6">
+                                <div class="card bg-slate-900 border-slate-800 p-8 shadow-2xl">
+                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Compartir Tienda</p>
+                                    <div class="flex flex-col gap-4">
+                                        <input type="text" id="store-link-input" class="input bg-slate-950 font-mono text-xs text-indigo-400 border-slate-800" readonly>
+                                        <button type="button" class="btn btn-secondary w-full" onclick="copyStoreLink()">
+                                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                                            Copiar Enlace
+                                        </button>
+                                        <div class="pt-4 border-t border-slate-800/50 mt-2">
+                                            <button class="btn btn-primary w-full" onclick="updateStoreSettings(event)">
+                                                Guardar Todo
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card bg-indigo-600/10 border-indigo-500/20 p-6 flex items-center justify-between group cursor-pointer hover:bg-indigo-600 hover:border-indigo-500 transition-all" onclick="window.open(document.getElementById('store-link-input').value, '_blank')">
+                                    <div>
+                                        <p class="text-white font-black group-hover:text-white transition-colors">Abrir Tienda Pública</p>
+                                        <p class="text-[10px] text-slate-400 uppercase tracking-widest group-hover:text-indigo-200">Ver cambios en vivo</p>
+                                    </div>
+                                    <svg class="text-indigo-400 group-hover:text-white transition-all group-hover:translate-x-1" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="space-y-6">
-                            <div>
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Nombre de la Tienda</label>
-                                <input type="text" id="setting-name" class="input" placeholder="Ej: Pizzería Roma">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Identificador de URL (Slug)</label>
-                                <div class="relative">
-                                    <input type="text" id="setting-slug" class="input pl-[100px]" placeholder="mi-negocio">
-                                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-sm font-medium">clicks.store/</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Store Link Display -->
-                        <div class="card bg-slate-900 border-slate-800 p-8 mt-6">
-                            <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Enlace de tu Tienda</h4>
-                            <div class="flex flex-col sm:flex-row gap-3">
-                                <input type="text" id="store-link-input" class="input flex-1 bg-slate-950 font-mono text-xs text-indigo-400" readonly>
-                                <button type="button" class="btn btn-secondary whitespace-nowrap" onclick="copyStoreLink()">
-                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-                                    Copiar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Business Info Card -->
-                    <div class="space-y-6">
+                        <!-- Info Cards Row -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="card bg-slate-900 border-slate-800 p-8">
                             <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-6">Información de Pedidos</h4>
                             <div class="space-y-6">
@@ -650,15 +754,57 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Lado Derecho: Simulador de Tienda -->
+                    <div class="lg:col-span-4 hidden xl:block sticky top-[120px]">
+                        <div class="flex flex-col items-center">
+                            <p class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.25em] mb-8">Vista Previa de tu Tienda</p>
+                            
+                            <div class="mobile-simulator">
+                                <div class="simulator-screen !bg-white">
+                                    <div class="p-6 border-b border-slate-50 flex flex-col items-center text-center">
+                                        <div class="w-20 h-20 rounded-2xl bg-slate-50 border border-slate-100 mb-4 overflow-hidden flex items-center justify-center shadow-sm">
+                                            <img id="sim-store-logo" src="" class="hidden w-full h-full object-cover">
+                                            <div id="sim-store-logo-placeholder" class="text-slate-200">
+                                                <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            </div>
+                                        </div>
+                                        <h4 id="sim-store-name" class="font-black text-xl text-slate-900 tracking-tight">Nombre de tu Tienda</h4>
+                                        <div class="flex gap-2 mt-3">
+                                            <div class="w-6 h-6 rounded-full bg-slate-100"></div>
+                                            <div class="w-6 h-6 rounded-full bg-slate-100"></div>
+                                            <div class="w-6 h-6 rounded-full bg-slate-100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 space-y-4">
+                                        <div class="h-8 w-3/4 bg-slate-50 rounded-full"></div>
+                                        <div class="grid grid-cols-2 gap-3">
+                                            <div class="aspect-square bg-slate-100/30 rounded-2xl"></div>
+                                            <div class="aspect-square bg-slate-100/30 rounded-2xl"></div>
+                                        </div>
+                                    </div>
+                                    <div class="simulator-footer mt-auto">
+                                        <div class="w-12 h-1 bg-slate-200 rounded-full mb-2"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Action Bar -->
-                <div class="sticky bottom-0 bg-slate-950/80 backdrop-blur-xl border-t border-slate-800 p-6 flex items-center justify-between rounded-t-3xl -mx-8 mt-12">
-                    <div class="hidden md:block">
-                        <p class="text-xs text-slate-400 font-medium">Asegúrate de guardar tus cambios antes de salir.</p>
+                <!-- Action Bar Moderno -->
+                <div class="sticky bottom-0 bg-slate-950/90 backdrop-blur-2xl border-t border-white/5 p-6 flex flex-col md:flex-row items-center justify-between rounded-t-3xl -mx-8 mt-12 gap-6 shadow-[0_-20px_50px_rgba(0,0,0,0.5)]">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 border border-indigo-500/20">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-xs text-white font-bold">Cambios Pendientes</p>
+                            <p class="text-[10px] text-slate-500 uppercase tracking-widest font-black">Recuerda guardar antes de salir</p>
+                        </div>
                     </div>
-                    <button class="btn btn-primary px-12 py-4 text-base font-bold shadow-2xl shadow-indigo-500/20" onclick="updateStoreSettings()">
-                        Guardar Configuración
+                    <button class="btn btn-primary px-16 py-5 text-lg font-black shadow-2xl shadow-indigo-500/30 w-full md:w-auto" onclick="updateStoreSettings(event)">
+                        Guardar Todo Ahora
                     </button>
                 </div>
             </div>
@@ -693,15 +839,20 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <div id="store-social-links" class="flex items-center gap-3 mr-4">
+                    <div id="store-social-links" class="flex items-center gap-2 mr-2">
                         <!-- Injected by JS -->
                     </div>
-                    <button class="relative p-3 rounded-full hover:bg-slate-100 transition-colors" onclick="openDrawer('drawer-cart')">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                        <span id="cart-count" class="absolute top-1 right-1 bg-indigo-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
+                    
+                    <button class="p-3 rounded-full hover:bg-indigo-50 text-indigo-600 transition-all active:scale-95" title="Compartir Tienda" onclick="shareStore()">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M8.684 10.748L15.316 7.252M15.316 16.748L8.684 13.252M21 7a3 3 0 11-6 0 3 3 0 016 0zm-12 5a3 3 0 11-6 0 3 3 0 016 0zm12 5a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </button>
-                    <!-- Mi Panel solo visible si es el dueño (simulado en app logic) -->
-                    <button id="btn-back-to-admin" class="btn btn-secondary btn-sm hidden" onclick="showView('view-admin')">Mi Panel</button>
+
+                    <button class="relative p-3 rounded-full hover:bg-slate-100 transition-colors group" onclick="openDrawer('drawer-cart')">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        <span id="cart-count" class="absolute top-1.5 right-1.5 bg-indigo-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-white group-hover:scale-110 transition-transform">0</span>
+                    </button>
+                    <!-- Mi Panel solo visible si es el dueño -->
+                    <button id="btn-back-to-admin" class="btn btn-secondary !bg-indigo-600 !text-white !border-none !rounded-2xl !px-6 !py-2.5 !text-xs !font-black !uppercase !tracking-widest hidden ml-2 shadow-xl shadow-indigo-500/20" onclick="showView('view-admin')">Mi Panel</button>
                 </div>
             </div>
             <!-- Mobile Search Bar -->
@@ -727,40 +878,44 @@
 
         <div class="max-w-7xl mx-auto px-6 py-12">
             <!-- Categorías Scroll Horizontal Sticky -->
-            <div class="sticky top-[128px] md:top-[80px] z-[90] bg-white/95 backdrop-blur-sm -mx-6 px-6 py-4 mb-4 border-b border-slate-100/50">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xs uppercase tracking-[0.2em] text-slate-400 font-black flex items-center gap-3">
-                        <div class="w-8 h-1 bg-indigo-500 rounded-full"></div>
-                        Explorar Categorías
+            <div class="sticky top-[128px] md:top-[80px] z-[90] bg-white/95 backdrop-blur-md -mx-6 px-6 py-5 mb-8 border-b border-slate-100 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black flex items-center gap-3">
+                        <div class="w-12 h-[2px] bg-indigo-500 rounded-full"></div>
+                        Categorías
                     </h3>
                 </div>
                 <div class="category-scroll-container">
-                    <div id="category-filter-bar" class="flex gap-3 overflow-x-auto pb-4 hide-scrollbar">
+                    <div id="category-filter-bar" class="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
                         <!-- Injected by JS -->
                     </div>
                 </div>
             </div>
 
             <!-- Grid de Productos -->
-            <div id="store-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div id="store-products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
                 <!-- Injected by JS -->
             </div>
         </div>
 
-        <!-- Floating Cart (Mobile Only or Minimalist) -->
-        <div id="cart-float-bar" class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-md z-[100] scale-in hidden">
-            <button class="w-full bg-slate-900 text-white rounded-full p-4 pr-6 shadow-2xl flex items-center justify-between hover:scale-[1.02] active:scale-95 transition-all" onclick="openDrawer('drawer-cart')">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center shadow-lg">
-                        <svg width="24" height="24" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <!-- Floating Cart Evolution -->
+        <div id="cart-float-bar" class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-md z-[100] scale-in hidden">
+            <button class="w-full bg-slate-900 text-white rounded-3xl p-5 pr-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-between group hover:scale-[1.03] active:scale-95 transition-all border border-white/10" onclick="openDrawer('drawer-cart')">
+                <div class="flex items-center gap-5">
+                    <div class="relative">
+                        <div class="absolute -inset-1 bg-indigo-500 blur opacity-40 group-hover:opacity-100 transition duration-500"></div>
+                        <div class="relative w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg">
+                            <svg width="28" height="28" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest">Tu Pedido</p>
-                        <p class="font-bold">Ver Carrito</p>
+                    <div class="text-left">
+                        <p class="text-[10px] text-indigo-300 uppercase font-black tracking-widest mb-0.5">Tu Pedido</p>
+                        <p class="font-black text-lg">Ver Carrito</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <p id="cart-float-total" class="text-xl font-black text-white">$0.00</p>
+                    <p id="cart-float-total" class="text-2xl font-black text-white tracking-tight">$0.00</p>
+                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Checkout Seguro</p>
                 </div>
             </button>
         </div>
@@ -881,70 +1036,106 @@
         <button class="btn btn-primary" onclick="showView('view-landing')">Ir al Inicio</button>
     </div>
 
-    <!-- Modal Producto Upgrade -->
+    <!-- Modal Producto Upgrade con Realtime Preview -->
     <div id="modal-product" class="modal">
-        <div class="modal-content dark-modal !max-w-xl">
+        <div class="modal-content dark-modal !max-w-4xl">
             <div class="flex justify-between items-center mb-8">
-                <h3 id="modal-product-title" class="text-2xl font-black text-white">Agregar Producto</h3>
+                <h3 id="modal-product-title" class="text-2xl font-black text-white">Gestionar Producto</h3>
                 <button class="p-2 text-slate-500 hover:text-white transition-colors" onclick="closeModal('modal-product')">
                     <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             
-            <form id="form-product" onsubmit="saveProduct(event)" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Nombre del Producto</label>
-                            <input type="text" id="p-name" class="input" placeholder="Ej: Hamburguesa Clásica" required>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <!-- Columna de Formulario -->
+                <form id="form-product" onsubmit="saveProduct(event)" class="lg:col-span-7 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Nombre del Producto</label>
+                                <input type="text" id="p-name" class="input" placeholder="Ej: Hamburguesa Clásica" required oninput="syncProductPreview()">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Precio</label>
+                                <input type="number" step="0.01" id="p-price" class="input" placeholder="0.00" required oninput="syncProductPreview()">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Categoría</label>
+                                <select id="p-category" class="input" onchange="syncProductPreview()">
+                                    <option value="">Sin Categoría</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Precio</label>
-                            <input type="number" step="0.01" id="p-price" class="input" placeholder="0.00" required>
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Categoría</label>
-                            <select id="p-category" class="input">
-                                <option value="">Sin Categoría</option>
-                            </select>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Descripción</label>
+                                <textarea id="p-description" class="input h-[120px] resize-none" placeholder="Ingredientes, info, etc..." oninput="syncProductPreview()"></textarea>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Imagen</label>
+                                <div class="relative group">
+                                    <input type="file" id="p-image-file" class="hidden" accept="image/*" onchange="previewImage(event); syncProductPreview();">
+                                    <label for="p-image-file" class="cursor-pointer border-2 border-dashed border-slate-700/50 rounded-2xl p-6 block text-center hover:border-indigo-500 hover:bg-indigo-500/5 transition-all font-bold text-slate-500">
+                                        <div id="image-preview-container" class="hidden mb-2">
+                                            <img id="image-preview" src="" class="w-16 h-16 object-cover mx-auto rounded-xl">
+                                        </div>
+                                        <div id="image-upload-prompt" class="space-y-1">
+                                            <svg class="mx-auto" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            <p class="text-[10px] uppercase">Elegir Foto</p>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Descripción (Opcional)</label>
-                            <textarea id="p-description" class="input h-[120px] resize-none" placeholder="Ingredientes, info, etc..."></textarea>
-                        </div>
-                        <div>
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Imagen del Producto</label>
-                            <div class="relative group">
-                                <input type="file" id="p-image-file" class="hidden" accept="image/*" onchange="previewImage(event)">
-                                <label for="p-image-file" class="cursor-pointer border-2 border-dashed border-slate-700 rounded-2xl p-6 block text-center hover:border-indigo-500 transition-all font-bold text-slate-400">
-                                    <div id="image-preview-container" class="hidden mb-2">
-                                        <img id="image-preview" src="" class="w-20 h-20 object-cover mx-auto rounded-lg">
+
+                    <div class="flex items-center gap-3 bg-slate-900 border border-slate-700/50 p-4 rounded-2xl">
+                        <input type="checkbox" id="p-active" checked class="w-5 h-5 rounded border-slate-700 bg-slate-950 text-indigo-500">
+                        <label for="p-active" class="text-xs font-bold text-slate-300">Producto visible en la tienda</label>
+                    </div>
+
+                    <div class="flex gap-4 pt-4">
+                        <button type="button" class="btn btn-secondary flex-1" onclick="closeModal('modal-product')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary flex-1">Guardar Cambios</button>
+                    </div>
+                </form>
+
+                <!-- Columna de Preview (Simulator) -->
+                <div class="lg:col-span-5 hidden lg:flex flex-col items-center justify-center bg-slate-950/50 rounded-[32px] p-8 border border-white/5">
+                    <p class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-6">Vista Previa en Vivo</p>
+                    <div class="mobile-simulator">
+                        <div class="simulator-screen">
+                            <div class="simulator-content">
+                                <div class="px-4 mb-4">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-500 mb-2"></div>
+                                    <div class="h-2 w-20 bg-slate-300 rounded-full mb-1"></div>
+                                    <div class="h-1 w-12 bg-slate-200 rounded-full"></div>
+                                </div>
+                                <div class="preview-card">
+                                    <img id="sim-p-image" src="" class="preview-img" style="display: none;">
+                                    <div id="sim-p-image-placeholder" class="preview-img flex items-center justify-center text-slate-400">
+                                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                     </div>
-                                    <div id="image-upload-prompt" class="space-y-1">
-                                        <svg class="mx-auto text-slate-500" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                                        <p class="text-xs">Subir foto</p>
+                                    <div class="preview-body">
+                                        <p id="sim-p-name" class="preview-name">Nombre del Producto</p>
+                                        <p id="sim-p-desc" class="preview-desc line-clamp-2">Aquí aparecerá la descripción detallada de tu producto...</p>
+                                        <div class="flex justify-between items-center">
+                                            <p id="sim-p-price" class="preview-price">S/ 0.00</p>
+                                            <div class="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white text-xs">+</div>
+                                        </div>
                                     </div>
-                                </label>
+                                </div>
+                            </div>
+                            <div class="simulator-footer">
+                                <div class="w-5 h-5 rounded-full border-2 border-slate-200"></div>
+                                <div class="w-5 h-5 rounded-full border-2 border-slate-200"></div>
+                                <div class="w-5 h-5 rounded-full border-2 border-slate-200"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="flex items-center gap-3 bg-slate-800/50 p-4 rounded-2xl">
-                    <input type="checkbox" id="p-active" checked class="w-5 h-5 rounded border-slate-700 bg-slate-900 text-indigo-500">
-                    <label for="p-active" class="text-sm font-bold text-white">Producto Visible en la Tienda</label>
-                </div>
-
-                <div class="flex gap-4 pt-4">
-                    <button type="button" class="btn btn-ghost flex-1" onclick="closeModal('modal-product')">Cancelar</button>
-                    <button type="submit" class="btn btn-primary flex-[2]">
-                        <span class="btn-text">Guardar Producto</span>
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
