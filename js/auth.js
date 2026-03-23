@@ -197,7 +197,14 @@ async function handleRegister(btn) {
         alert('¡Tienda creada con éxito! Tu enlace es: ' + window.location.origin + '?store=' + finalSlug);
         
         if (typeof initializeAdminUI === 'function') initializeAdminUI();
-        showView('view-admin', 'dash');
+        
+        // Redirección según rol (Super Admin o Admin regular)
+        if (session.user.email === SUPER_ADMIN_EMAIL) {
+            showView('view-superadmin');
+            if (typeof fetchGlobalStores === 'function') fetchGlobalStores();
+        } else {
+            showView('view-admin', 'dash');
+        }
     } catch (err) {
         console.error('Excepción en handleRegister:', err);
         showToast('❌ Error en el registro: ' + (err.description || err.message), 'error');
