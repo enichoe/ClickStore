@@ -29,7 +29,7 @@ async function checkSession() {
         appState.session = session;
         console.log("Sesión activa detectada para:", session.user.email);
         
-        if (session.user.email === SUPER_ADMIN_EMAIL) {
+        if (session.user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
             console.log("Entrando como Super Admin");
             showView('view-superadmin');
             fetchGlobalStores();
@@ -88,7 +88,7 @@ async function handleLogin(btn) {
         appState.session = data.session;
 
         // Si el usuario es super admin, mostrar panel maestro
-        if (data.user && data.user.email === SUPER_ADMIN_EMAIL) {
+        if (data.user && data.user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
             showView('view-superadmin');
             showSuperAdminSection('dash');
             fetchGlobalStores();
@@ -199,7 +199,7 @@ async function handleRegister(btn) {
         if (typeof initializeAdminUI === 'function') initializeAdminUI();
         
         // Redirección según rol (Super Admin o Admin regular)
-        if (session.user.email === SUPER_ADMIN_EMAIL) {
+        if (session.user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()) {
             showView('view-superadmin');
             if (typeof fetchGlobalStores === 'function') fetchGlobalStores();
         } else {

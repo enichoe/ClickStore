@@ -63,7 +63,7 @@ window.initSupabasePromise = new Promise((resolve) => {
 });
 
 // Configuración de Super Admin
-var SUPER_ADMIN_EMAIL = 'enich@ejemplo.com';
+var SUPER_ADMIN_EMAIL = 'ernichoespinoza@gmail.com';
 
 // Modo desarrollador
 var DEV_MODE = false;
