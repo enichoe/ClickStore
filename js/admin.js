@@ -902,31 +902,63 @@ async function fetchGlobalStores() {
         document.getElementById('super-total-orders').innerText = totalOrders || 0;
 
         const list = document.getElementById('super-stores-list');
-        list.innerHTML = stores.map(s => `
-            <div style="padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: ${s.active ? 'white' : '#f8fafc'};">
-                <div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <h4 style="margin: 0; font-weight: 700;">${s.name}</h4>
-                        <span style="font-size: 10px; padding: 2px 8px; border-radius: 20px; background: ${s.active ? '#dcfce7' : '#fee2e2'}; color: ${s.active ? '#166534' : '#991b1b'}; font-weight: 800; text-transform: uppercase;">
-                            ${s.active ? 'Activa' : 'Desactivada'}
-                        </span>
+        list.innerHTML = stores.map(s => {
+            const planColor = s.plan === 'pro' ? 'text-indigo-400 bg-indigo-500/10' : (s.plan === 'base' ? 'text-emerald-400 bg-emerald-500/10' : 'text-slate-500 bg-slate-500/10');
+            const planName = s.plan === 'pro' ? 'PROFESIONAL' : (s.plan === 'base' ? 'ESCENCIAL' : 'GRATUITO');
+            
+            return `
+            <div data-store-name="${s.name}" data-store-slug="${s.slug}" class="p-8 border-b border-white/5 flex flex-col lg:flex-row justify-between lg:items-center bg-slate-900/40 hover:bg-slate-800/20 transition-all gap-8">
+                <div class="flex items-center gap-6">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center overflow-hidden border border-white/5 shrink-0">
+                        ${s.logo_url ? `<img src="${s.logo_url}" class="w-full h-full object-cover">` : `<span class="text-2xl">🏬</span>`}
                     </div>
-                    <p style="font-size: 13px; color: var(--text-sec); margin-top: 4px;">
-                        Slug: <strong>${s.slug || 'N/A'}</strong> | WhatsApp: ${s.whatsapp_phone || 'N/A'}
-                    </p>
-                    <p style="font-size: 11px; color: #94a3b8; margin-top: 2px;">ID: ${s.id}</p>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h4 class="text-xl font-black text-white">${s.name}</h4>
+                            <span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${s.active ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
+                                ${s.active ? 'SISTEMA ACTIVO' : 'SISTEMA PAUSADO'}
+                            </span>
+                        </div>
+                        <p class="text-sm text-slate-500 font-medium">
+                            URL: <strong class="text-indigo-300">/${s.slug || 'sin-slug'}</strong> | 
+                            WhatsApp: <span class="text-slate-300 font-bold">${s.whatsapp_phone || 'Pendiente'}</span>
+                        </p>
+                        <div class="flex gap-2 mt-4">
+                            <div class="px-3 py-1 rounded-lg ${planColor} text-[9px] font-black tracking-widest uppercase">
+                                PLAN ${planName}
+                            </div>
+                            <div class="px-3 py-1 rounded-lg bg-white/5 text-[9px] font-black tracking-widest uppercase text-slate-400">
+                                ID: ${s.id.slice(0, 8)}...
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn btn-secondary btn-sm" onclick="toggleStoreActive('${s.id}', ${s.active})">
-                        ${s.active ? 'Desactivar' : 'Activar'}
+                
+                <div class="flex items-center gap-3 w-full lg:w-auto mt-4 lg:mt-0 pt-6 lg:pt-0 border-t lg:border-t-0 border-white/5">
+                    <button class="btn btn-secondary btn-sm flex-1 lg:flex-none py-3 px-6 !rounded-xl" onclick="toggleStoreActive('${s.id}', ${s.active})">
+                        ${s.active ? 'Suspender' : 'Reactivar'}
                     </button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteStoreByAdmin('${s.id}')">Eliminar</button>
+                    <button class="btn btn-ghost btn-sm flex-1 lg:flex-none py-3 px-6 !rounded-xl text-white hover:bg-slate-700" onclick="editStoreByAdmin('${s.id}')">
+                        Configurar
+                    </button>
+                    <button class="btn btn-danger btn-sm flex-1 lg:flex-none py-3 px-6 !rounded-xl" onclick="deleteStoreByAdmin('${s.id}')">
+                       Eliminar
+                    </button>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
     } catch (err) {
         showToast("Error cargando dashboard global", "error");
     }
+}
+
+function filterGlobalStores(val) {
+    const q = val.toLowerCase();
+    document.querySelectorAll('#super-stores-list > div').forEach(el => {
+        const name = el.dataset.storeName?.toLowerCase() || '';
+        const slug = el.dataset.storeSlug?.toLowerCase() || '';
+        el.style.display = (name.includes(q) || slug.includes(q)) ? 'flex' : 'none';
+    });
 }
 
 async function toggleStoreActive(id, currentStatus) {
@@ -960,6 +992,7 @@ function openStoreModal() {
     document.getElementById('s-name').value = '';
     document.getElementById('s-slug').value = '';
     document.getElementById('s-type').value = 'Otros';
+    document.getElementById('s-plan').value = 'free';
     openModal('modal-store');
 }
 
@@ -980,6 +1013,7 @@ async function loadStoreToEdit(id) {
         document.getElementById('s-name').value = data.name;
         document.getElementById('s-slug').value = data.slug || '';
         document.getElementById('s-type').value = data.type;
+        document.getElementById('s-plan').value = data.plan || 'free';
         openModal('modal-store');
     } catch (err) {
         showToast("❌ Error cargando datos: " + err.message, 'error');
@@ -992,7 +1026,8 @@ async function saveStoreByAdmin(e) {
     const store = {
         name: document.getElementById('s-name').value,
         slug: document.getElementById('s-slug').value || null,
-        type: document.getElementById('s-type').value
+        type: document.getElementById('s-type').value,
+        plan: document.getElementById('s-plan').value
     };
 
     setLoading(btn, true);
