@@ -1042,21 +1042,36 @@ async function saveStoreByAdmin(e) {
         }
 
         if (editingStoreId) {
+            console.log("Updating store:", editingStoreId, store);
             const { error } = await supabase.from('stores').update(store).eq('id', editingStoreId);
-            if (error) throw error;
+            if (error) {
+                console.error("Supabase Update Error:", error);
+                throw error;
+            }
             showToast("✅ Tienda actualizada");
         } else {
             // Nota: Al crear por admin no asociamos owner_id real a menos que lo pidas
             store.owner_id = appState.session?.user?.id || null;
             const { error } = await supabase.from('stores').insert([store]);
-            if (error) throw error;
+            if (error) {
+                console.error("Supabase Insert Error:", error);
+                throw error;
+            }
             showToast("✅ Tienda creada con éxito");
         }
         
         closeModal('modal-store');
         fetchGlobalStores();
     } catch (err) {
-        showToast("❌ Error: " + err.message, 'error');
+        console.error("TECHNICAL ERROR:", err);
+        // Diagnóstico detallado en pantalla
+        const detailMsg = err.details || err.hint || "Possible schema mismatch or missing column.";
+        showToast("❌ Error: " + (err.message || "Petición rechazada"), 'error');
+        alert(`DIAGNOSIS DEL ERROR:\n\n` +
+              `Mensaje: ${err.message}\n` +
+              `Detalles: ${detailMsg}\n` +
+              `Código: ${err.code}\n\n` +
+              `Asegúrate de que la columna 'plan' exista en tu tabla 'stores' de Supabase.`);
     } finally {
         setLoading(btn, false);
     }

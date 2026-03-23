@@ -1,0 +1,17 @@
+# Configuración de ignorados ClickStore
+node_modules/
+.env
+.env.local
+
+# Generado por el script de build de Vercel (seguro para local si no tiene claves)
+# Pero lo ignoramos para no subir las de desarrollo
+js/env.js
+
+# Logs y Cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Mac DS_Store
+.DS_Store
