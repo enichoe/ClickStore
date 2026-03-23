@@ -1,0 +1,100 @@
+<!-- Modal Tienda -->
+<div id="modal-store" class="modal">
+    <div class="modal-content">
+        <h3 id="modal-store-title" style="margin-bottom: 16px;">Gestionar Tienda</h3>
+        <form onsubmit="saveStoreByAdmin(event)">
+            <div class="input-group">
+                <label>Nombre de la Tienda</label>
+                <input type="text" id="s-name" class="input" required>
+            </div>
+            <div class="input-group mt-4">
+                <label>Slug (URL personalizada)</label>
+                <input type="text" id="s-slug" class="input" placeholder="mi-tienda-pro">
+            </div>
+            <div class="input-group mt-4">
+                <label>Categoría</label>
+                <select id="s-type" class="input">
+                    <option>Tienda de Ropa</option>
+                    <option>Restaurant</option>
+                    <option>Tecnología</option>
+                    <option>Otros</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button type="button" class="btn btn-secondary w-full" onclick="closeModal('modal-store')">Cancelar</button>
+                <button type="submit" class="btn btn-primary w-full">Guardar Tienda</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Categoría -->
+<div id="modal-category" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 16px;">Gestionar Categoría</h3>
+        <form onsubmit="saveCategory(event)">
+            <input type="text" id="cat-name" class="input" placeholder="Ej: Bebidas, Pizzas, Postres" required>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button type="button" class="btn btn-secondary w-full" onclick="closeModal('modal-category')">Cancelar</button>
+                <button type="submit" class="btn btn-primary w-full">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 10000; display: flex; flex-direction: column; gap: 8px;"></div>
+
+<!-- Modal Detalles de Pedido -->
+<div id="modal-order-details" class="modal">
+    <div class="modal-content dark-modal !max-w-2xl text-slate-200">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-black text-white">Detalles del Pedido</h3>
+            <button class="p-2 text-slate-500 hover:text-white transition-colors" onclick="closeModal('modal-order-details')">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-slate-800/50 p-4 rounded-xl">
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Cliente</p>
+                <p id="mo-customer" class="font-bold text-lg text-white mb-2">-</p>
+                
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">WhatsApp</p>
+                <p id="mo-whatsapp" class="font-medium text-slate-300 mb-2">-</p>
+                
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Dirección / Notas</p>
+                <p id="mo-address" class="font-medium text-slate-300">-</p>
+            </div>
+            
+            <div class="bg-slate-800/50 p-4 rounded-xl flex flex-col justify-between">
+                <div>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Estado del Pedido</p>
+                    <select id="mo-status" class="input !py-2 font-bold mb-4 w-full" onchange="updateOrderStatusFromModal(this.value)">
+                        <option value="pending">Pendiente</option>
+                        <option value="attended">Atendido</option>
+                        <option value="delivered">Entregado</option>
+                    </select>
+
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Fecha</p>
+                    <p id="mo-date" class="font-medium text-slate-300">-</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-800/50 p-4 rounded-xl mb-6">
+            <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4">Productos</p>
+            <div id="mo-items" class="space-y-3">
+                <!-- Items -->
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center text-xl font-black bg-slate-900 p-4 rounded-xl border border-slate-700">
+            <span>Total</span>
+            <span id="mo-total" class="text-indigo-400">$0.00</span>
+        </div>
+        
+        <div class="mt-6 flex gap-4">
+            <button type="button" class="btn btn-secondary flex-1" onclick="closeModal('modal-order-details')">Cerrar</button>
+        </div>
+    </div>
+</div>

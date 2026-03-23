@@ -1,0 +1,253 @@
+<div id="view-store" style="display: none;" class="bg-gray-50 text-slate-900 min-h-screen">
+    <!-- Premium Store Nav -->
+    <nav class="fixed top-0 w-full z-[100] bg-white/80 backdrop-blur-xl border-b border-slate-100 flex flex-col">
+        <div class="max-w-7xl mx-auto w-full px-6 flex justify-between items-center h-[80px]">
+            <div class="flex items-center gap-4">
+                <img id="store-logo-img" src="" class="w-12 h-12 rounded-full object-cover hidden shadow-sm border border-slate-100">
+                <div id="store-logo-placeholder" class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-800 font-bold text-xl uppercase shadow-sm">
+                    
+                </div>
+                <div class="hidden sm:block">
+                    <h2 id="store-title-nav" class="text-xl font-bold text-slate-800 tracking-tight"></h2>
+                </div>
+            </div>
+
+            <div class="flex-1 max-w-lg mx-8 hidden md:block">
+                <div class="search-input-group flex items-center px-6">
+                    <svg class="text-slate-400" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" id="store-search" class="w-full bg-transparent border-none py-3 px-4 outline-none text-slate-700 text-sm" placeholder="¿Qué estás buscando?" oninput="filterStoreProducts()">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="store-social-links" class="flex items-center gap-2 mr-2">
+                    <!-- Injected by JS -->
+                </div>
+                
+                <button class="p-3 rounded-full hover:bg-indigo-50 text-indigo-600 transition-all active:scale-95" title="Compartir Tienda" onclick="shareStore()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M8.684 10.748L15.316 7.252M15.316 16.748L8.684 13.252M21 7a3 3 0 11-6 0 3 3 0 016 0zm-12 5a3 3 0 11-6 0 3 3 0 016 0zm12 5a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </button>
+
+                <button class="relative p-3 rounded-full hover:bg-slate-100 transition-colors group" onclick="openDrawer('drawer-cart')">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    <span id="cart-count" class="absolute top-1.5 right-1.5 bg-indigo-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-white group-hover:scale-110 transition-transform">0</span>
+                </button>
+                <!-- Mi Panel solo visible si es el dueño -->
+                <button id="btn-back-to-admin" class="btn btn-secondary !bg-indigo-600 !text-white !border-none !rounded-2xl !px-6 !py-2.5 !text-xs !font-black !uppercase !tracking-widest hidden ml-2 shadow-xl shadow-indigo-500/20" onclick="showView('view-admin')">Mi Panel</button>
+            </div>
+        </div>
+        <!-- Mobile Search Bar -->
+        <div class="md:hidden px-6 pb-4">
+            <div class="search-input-group flex items-center px-4">
+                <svg class="text-slate-400" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" id="store-search-mobile" class="w-full bg-transparent border-none py-2 px-3 outline-none text-slate-700 text-sm" placeholder="Buscar productos..." oninput="filterStoreProducts()">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Store Hero -->
+    <header class="store-hero-bg pt-40 pb-20 px-6 text-center border-b border-slate-100 bg-white">
+        <div class="stagger-in flex flex-col items-center">
+            <img id="store-logo-hero" src="" class="w-24 h-24 rounded-3xl object-cover mb-8 shadow-2xl border-4 border-white rotate-2 hover:rotate-0 transition-transform hidden">
+            <div id="store-logo-hero-placeholder" class="w-24 h-24 rounded-3xl bg-indigo-500 text-white flex items-center justify-center text-4xl font-black mb-8 shadow-xl shadow-indigo-200 uppercase rotate-2">
+                
+            </div>
+            <h1 id="store-title-main" class="text-4xl md:text-6xl font-black text-slate-900 mb-4 tracking-tight">Cargando...</h1>
+            <p id="store-tagline" class="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">Personaliza esta descripción en tu panel de control.</p>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <!-- Categorías Scroll Horizontal Sticky -->
+        <div class="sticky top-[128px] md:top-[80px] z-[90] bg-white/95 backdrop-blur-md -mx-6 px-6 py-5 mb-8 border-b border-slate-100 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-[10px] uppercase tracking-[0.25em] text-slate-400 font-black flex items-center gap-3">
+                    <div class="w-12 h-[2px] bg-indigo-500 rounded-full"></div>
+                    Categorías
+                </h3>
+            </div>
+            <div class="category-scroll-container">
+                <div id="category-filter-bar" class="flex gap-3 overflow-x-auto pb-2 hide-scrollbar">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid de Productos -->
+        <div id="store-products-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-8">
+            <!-- Injected by JS -->
+        </div>
+    </div>
+
+    <!-- Floating Cart Evolution -->
+    <div id="cart-float-bar" class="fixed bottom-8 left-1/2 -translate-x-1/2 w-[calc(100%-40px)] max-w-md z-[100] scale-in hidden">
+        <button class="w-full bg-slate-900 text-white rounded-3xl p-5 pr-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-between group hover:scale-[1.03] active:scale-95 transition-all border border-white/10" onclick="openDrawer('drawer-cart')">
+            <div class="flex items-center gap-5">
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-indigo-500 blur opacity-40 group-hover:opacity-100 transition duration-500"></div>
+                    <div class="relative w-14 h-14 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg">
+                        <svg width="28" height="28" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    </div>
+                </div>
+                <div class="text-left">
+                    <p class="text-[10px] text-indigo-300 uppercase font-black tracking-widest mb-0.5">Tu Pedido</p>
+                    <p class="font-black text-lg">Ver Carrito</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p id="cart-float-total" class="text-2xl font-black text-white tracking-tight">$0.00</p>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Checkout Seguro</p>
+            </div>
+        </button>
+    </div>
+    
+    <!-- Carrito Drawer Overlay -->
+    <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer('drawer-cart')"></div>
+
+    <!-- Carrito Drawer Sidebar -->
+    <div id="drawer-cart" class="drawer bg-white">
+        <div class="cart-drawer-header">
+            <div>
+                <h3 class="text-2xl font-black text-slate-900 leading-tight">Tu Pedido</h3>
+                <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">StoreClick Checkout</p>
+            </div>
+            <div class="flex gap-2">
+                <button class="px-3 py-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 transition-colors font-bold text-xs flex items-center gap-2" onclick="clearCart()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    Vaciar
+                </button>
+                <button class="px-3 py-2 rounded-xl bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center gap-2 transition-colors font-bold text-xs" onclick="closeDrawer('drawer-cart')">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+        
+        <div class="cart-drawer-body">
+            <div id="cart-items" class="space-y-4 mb-4">
+                <!-- Items -->
+                <div class="py-20 text-center space-y-4">
+                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto text-slate-200">
+                        <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                    </div>
+                    <p class="text-slate-400 font-bold">Tu carrito está vacío</p>
+                </div>
+            </div>
+
+            <!-- Resumen y Formulario -->
+            <div class="space-y-6 pt-4 border-t border-slate-100">
+                <!-- Delivery Picker -->
+                <form id="form-checkout" onsubmit="handleCheckout(event)">
+                    <!-- Delivery Picker -->
+                    <div id="delivery-option-ui" class="hidden">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Método de Entrega</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button type="button" id="btn-opt-delivery" class="flex flex-col items-center gap-1 py-4 px-2 rounded-2xl border-2 border-slate-100 transition-all font-bold text-sm bg-white" onclick="setDeliveryOption('delivery')">
+                                <span class="text-2xl">🛵</span>
+                                <span>Delivery</span>
+                            </button>
+                            <button type="button" id="btn-opt-pickup" class="flex flex-col items-center gap-1 py-4 px-2 rounded-2xl border-2 border-slate-100 transition-all font-bold text-sm bg-white" onclick="setDeliveryOption('pickup')">
+                                <span class="text-2xl">🥡</span>
+                                <span>Recojo local</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Info Cliente -->
+                    <div class="space-y-4 mt-6">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Tus Datos</p>
+                        <input type="text" id="cust-name" class="input" placeholder="Nombre Completo" required>
+                        <input type="tel" id="cust-whatsapp" class="input" placeholder="Tu WhatsApp (Ej: 987654321)" required>
+                        <div class="relative">
+                            <textarea id="cust-address" class="input min-h-[80px] pt-3" placeholder="Dirección exacta o puntos de referencia..."></textarea>
+                            <button type="button" class="absolute right-3 bottom-3 p-2 bg-slate-100 rounded-lg text-slate-500 hover:text-indigo-600 transition-colors" onclick="getCurrentLocation()">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="cart-summary-lines" class="space-y-3 pt-6">
+                        <!-- Subtotal / Envío -->
+                    </div>
+                    
+                    <div class="flex justify-between items-end border-b border-slate-100 pb-4 mt-4">
+                        <p class="text-slate-500 font-bold">Total a pagar</p>
+                        <p id="cart-total" class="text-4xl font-black text-slate-900">$0.00</p>
+                    </div>
+
+                    <!-- Payment Option Picker -->
+                    <div class="space-y-4 mt-6">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-3">Método de Pago</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" id="pay-cash" class="payment-method-btn active" onclick="setPaymentMethod('cash')">
+                                <span class="text-xl">💵</span>
+                                <span class="text-[10px] font-bold uppercase">Efectivo</span>
+                            </button>
+                            <button type="button" id="pay-yape" class="payment-method-btn" onclick="setPaymentMethod('yape')">
+                                <span class="text-xl">🟣</span>
+                                <span class="text-[10px] font-bold uppercase">Yape</span>
+                            </button>
+                            <button type="button" id="pay-plin" class="payment-method-btn" onclick="setPaymentMethod('plin')">
+                                <span class="text-xl">🔵</span>
+                                <span class="text-[10px] font-bold uppercase">Plin</span>
+                            </button>
+                        </div>
+
+                        <!-- Digital Payment Details -->
+                        <div id="payment-digital-info" class="hidden animate-slide-up">
+                            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center">
+                                <p id="payment-method-name" class="font-black text-slate-900 uppercase tracking-widest mb-2">Paga con Yape</p>
+                                <div class="bg-white p-3 rounded-xl border border-slate-100 inline-block mb-3 shadow-sm overflow-hidden">
+                                    <div id="pay-qr-container" class="w-32 h-32 flex items-center justify-center text-slate-200">
+                                        <img id="pay-qr-img" src="" class="w-full h-full object-contain hidden border-none">
+                                        <div id="pay-qr-placeholder">
+                                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M20 8h.01M4 8h.01M4 16h.01M4 20h4M4 4h4v4H4V4zm12 0h4v4h-4V4zM4 16h4v4H4v-4z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col items-center gap-2">
+                                    <p id="pay-phone-label" class="text-xl font-black text-slate-900 tracking-tight">987 654 321</p>
+                                    <button type="button" onclick="copyPaymentNumber()" class="text-[10px] font-black text-indigo-600 uppercase tracking-widest bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100 active:scale-95 transition-all">Copiar Número</button>
+                                </div>
+                                
+                                <!-- Voucher Upload -->
+                                <div class="mt-6 border-t border-slate-200 pt-6 text-left">
+                                    <label class="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2 block">📸 Sube tu comprobante (Opcional)</label>
+                                    <input type="file" id="pay-voucher-file" class="hidden" accept="image/*" onchange="previewVoucher(event)">
+                                    <div class="voucher-upload-preview" onclick="document.getElementById('pay-voucher-file').click()">
+                                        <div id="voucher-placeholder" class="text-center">
+                                            <svg class="mx-auto text-slate-300 mb-2" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            <p class="text-[10px] font-bold text-slate-400">Click para subir foto</p>
+                                        </div>
+                                        <img id="voucher-img-preview" class="hidden w-full h-full object-cover">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 pb-8">
+                        <button type="submit" id="btn-submit-order" class="btn btn-primary w-full py-5 text-lg font-black shadow-2xl shadow-indigo-500/40 uppercase tracking-widest flex items-center justify-center gap-3 active:scale-[0.98] transition-all bg-indigo-600 text-white hover:bg-indigo-700">
+                            <span>Realizar Pedido</span>
+                            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h14"/></svg>
+                        </button>
+                        <p class="text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest mt-4">Recibirás el resumen en WhatsApp</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <footer class="py-12 border-t border-slate-100 bg-white text-center mt-20">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col items-center gap-4">
+            <div class="flex items-center gap-2 text-xl font-bold tracking-tight text-slate-800">
+                <div class="p-1.5 rounded-lg bg-indigo-600 shadow-lg shadow-indigo-600/20">
+                    <svg width="20" height="20" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <span>Click Store</span>
+            </div>
+            <p class="text-sm text-slate-500 max-w-sm">Esta tienda fue creada con <strong>StoreClick</strong>. Tu plataforma para crear tiendas online en minutos y vender por WhatsApp.</p>
+            <a href="/" class="text-indigo-600 font-bold hover:underline">Crea tu tienda gratis →</a>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-4">© 2026 StoreClick · Todos los derechos reservados</p>
+        </div>
+    </footer>
+</div>

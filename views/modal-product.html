@@ -1,0 +1,96 @@
+<div id="modal-product" class="modal">
+    <div class="modal-content dark-modal !max-w-4xl">
+        <div class="flex justify-between items-center mb-8">
+            <h3 id="modal-product-title" class="text-2xl font-black text-white">Gestionar Producto</h3>
+            <button class="p-2 text-slate-500 hover:text-white transition-colors" onclick="closeModal('modal-product')">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <!-- Formulario -->
+            <form id="form-product" onsubmit="saveProduct(event)" class="lg:col-span-7 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Nombre del Producto</label>
+                            <input type="text" id="p-name" class="input" placeholder="Ej: Pizza Americana" required oninput="syncProductPreview()">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Precio (S/)</label>
+                            <input type="number" id="p-price" class="input" placeholder="0.00" step="0.01" required oninput="syncProductPreview()">
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Categoría</label>
+                            <select id="p-category" class="input"></select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Foto del Producto</label>
+                        <div class="relative group cursor-pointer" onclick="document.getElementById('p-image-file').click()">
+                            <div class="aspect-square rounded-[32px] border-2 border-dashed border-slate-700 overflow-hidden flex flex-col items-center justify-center bg-slate-900 group-hover:border-indigo-500 transition-all">
+                                <img id="image-preview" src="" class="hidden w-full h-full object-cover">
+                                <div id="image-upload-prompt" class="flex flex-col items-center gap-2 text-slate-600 group-hover:text-indigo-400 transition-colors">
+                                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <p class="text-[10px] font-black uppercase tracking-widest">Elegir Foto</p>
+                                </div>
+                            </div>
+                            <input type="file" id="p-image-file" class="hidden" accept="image/*" onchange="previewImage(event); syncProductPreview();">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Descripción</label>
+                    <textarea id="p-description" class="input min-h-[100px]" placeholder="Describe los ingredientes o detalles..." oninput="syncProductPreview()"></textarea>
+                </div>
+
+                <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+                    <input type="checkbox" id="p-active" checked class="w-5 h-5 rounded border-slate-700 bg-slate-950 text-indigo-500">
+                    <label for="p-active" class="text-xs font-bold text-slate-300">Producto visible en la tienda</label>
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="button" class="btn btn-secondary flex-1 py-4" onclick="closeModal('modal-product')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary flex-1 py-4 font-black">Guardar Cambios</button>
+                </div>
+            </form>
+
+            <!-- Columna de Preview (Simulator) -->
+            <div class="lg:col-span-5 hidden lg:flex flex-col items-center justify-center bg-slate-950/50 rounded-[32px] p-8 border border-white/5">
+                <p class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-6">Vista Previa en Vivo</p>
+                <div class="mobile-simulator">
+                    <div class="simulator-screen">
+                        <div class="simulator-content">
+                            <div class="px-4 mb-4">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-500 mb-2"></div>
+                                <div class="h-2 w-20 bg-slate-300 rounded-full mb-1"></div>
+                                <div class="h-1 w-12 bg-slate-200 rounded-full"></div>
+                            </div>
+                            <div class="preview-card">
+                                <img id="sim-p-image" src="" class="preview-img" style="display: none;">
+                                <div id="sim-p-image-placeholder" class="preview-img flex items-center justify-center text-slate-400">
+                                    <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                </div>
+                                <div class="preview-body">
+                                    <p id="sim-p-name" class="preview-name">Nombre del Producto</p>
+                                    <p id="sim-p-desc" class="preview-desc line-clamp-2">Aquí aparecerá la descripción detallada de tu producto...</p>
+                                    <div class="flex justify-between items-center">
+                                        <p id="sim-p-price" class="preview-price">S/ 0.00</p>
+                                        <div class="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white text-xs">+</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simulator-footer">
+                            <div class="w-5 h-5 rounded-full border-2 border-slate-200"></div>
+                            <div class="w-5 h-5 rounded-full border-2 border-slate-200"></div>
+                            <div class="w-5 h-5 rounded-full border-2 border-slate-200"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

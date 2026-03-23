@@ -80,7 +80,7 @@ async function checkSuperAdmin() {
                 superItem.style.color = 'var(--accent)';
                 superItem.style.fontWeight = '800';
                 superItem.innerHTML = '🛡️ SUPER ADMIN';
-                superItem.onclick = () => showAdminSection('super');
+                superItem.onclick = () => showView('view-superadmin');
                 sidebar.prepend(superItem);
             }
         }

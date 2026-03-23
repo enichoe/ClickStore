@@ -208,8 +208,5 @@ window.addEventListener('error', (event) => {
     if (event.error) showToast('⚠️ Error inesperado en la aplicación.', 'error');
 });
 
-window.addEventListener('load', () => {
-    if (typeof checkSession === 'function') {
-        checkSession();
-    }
-});
+// Note: checkSession is now called by views.js after dynamic views are loaded.
+
