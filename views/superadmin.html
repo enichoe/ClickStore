@@ -124,10 +124,17 @@
                     </div>
                 </div>
                 <div id="super-stores-list" class="divide-y divide-white/5">
-                    <!-- Inyectado dinámicamente -->
-                    <div class="p-10 lg:p-20 text-center text-slate-500">
-                        <div class="spinner mb-4 mx-auto"></div>
-                        <p class="text-xs lg:text-sm">Cargando ecosistema de tiendas...</p>
+                    <!-- Skeletons Initial -->
+                    <div class="p-8 flex flex-col lg:flex-row gap-8 items-center animate-pulse">
+                        <div class="w-16 h-16 rounded-2xl skeleton shrink-0"></div>
+                        <div class="flex-1 space-y-3 w-full">
+                            <div class="h-6 w-1/3 skeleton"></div>
+                            <div class="h-4 w-1/2 skeleton opacity-50"></div>
+                        </div>
+                        <div class="flex gap-2 w-full lg:w-auto">
+                            <div class="h-10 w-24 skeleton !rounded-xl"></div>
+                            <div class="h-10 w-24 skeleton !rounded-xl"></div>
+                        </div>
                     </div>
                 </div>
             </div>

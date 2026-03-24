@@ -123,7 +123,21 @@
                         <button class="text-indigo-400 text-sm font-semibold hover:underline" onclick="showAdminSection('orders')">Ver todos</button>
                     </div>
                     <div id="dash-recent-orders" class="space-y-4">
-                        <!-- Pedidos cargados dinámicamente -->
+                        <!-- Skeletons Dashboard -->
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl flex gap-4 animate-pulse">
+                            <div class="w-12 h-12 rounded-lg skeleton"></div>
+                            <div class="flex-1 space-y-2">
+                                <div class="h-4 w-1/4 skeleton"></div>
+                                <div class="h-3 w-1/2 skeleton opacity-50"></div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-slate-900 border border-slate-800 rounded-xl flex gap-4 animate-pulse">
+                            <div class="w-12 h-12 rounded-lg skeleton"></div>
+                            <div class="flex-1 space-y-2">
+                                <div class="h-4 w-1/4 skeleton"></div>
+                                <div class="h-3 w-1/2 skeleton opacity-50"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -153,7 +167,27 @@
                 </button>
             </div>
             <div id="grid-products" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Inyectado por JS -->
+                <!-- Skeletons Products -->
+                <div class="card bg-slate-900 border-slate-800 p-4 space-y-4 animate-pulse">
+                    <div class="aspect-square skeleton rounded-2xl"></div>
+                    <div class="h-5 w-2/3 skeleton"></div>
+                    <div class="h-4 w-1/2 skeleton opacity-50"></div>
+                </div>
+                <div class="card bg-slate-900 border-slate-800 p-4 space-y-4 animate-pulse">
+                    <div class="aspect-square skeleton rounded-2xl"></div>
+                    <div class="h-5 w-2/3 skeleton"></div>
+                    <div class="h-4 w-1/2 skeleton opacity-50"></div>
+                </div>
+                <div class="card bg-slate-900 border-slate-800 p-4 space-y-4 animate-pulse">
+                    <div class="aspect-square skeleton rounded-2xl"></div>
+                    <div class="h-5 w-2/3 skeleton"></div>
+                    <div class="h-4 w-1/2 skeleton opacity-50"></div>
+                </div>
+                <div class="card bg-slate-900 border-slate-800 p-4 space-y-4 animate-pulse">
+                    <div class="aspect-square skeleton rounded-2xl"></div>
+                    <div class="h-5 w-2/3 skeleton"></div>
+                    <div class="h-4 w-1/2 skeleton opacity-50"></div>
+                </div>
             </div>
         </div>
 

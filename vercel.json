@@ -1,5 +1,11 @@
 {
   "version": 2,
   "buildCommand": "node scripts/generate-env.js",
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
