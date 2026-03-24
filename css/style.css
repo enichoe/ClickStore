@@ -621,6 +621,14 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; font-weight: 700; let
     gap: 8px;
 }
 
+@media (min-width: 768px) {
+    .cat-btn {
+        color: #1e293b; /* Slate-800 */
+        font-weight: 700;
+        border-color: #cbd5e1; /* Slate-300 */
+    }
+}
+
 .cat-btn:hover {
     background: #f8fafc;
     border-color: #e2e8f0;
