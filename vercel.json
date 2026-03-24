@@ -2,22 +2,22 @@
   "version": 2,
   "buildCommand": "node scripts/generate-env.js",
   "outputDirectory": ".",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/views/(.*)",
-      "destination": "/views/$1"
+      "src": "/views/(.+)",
+      "dest": "/views/$1"
     },
     {
-      "source": "/js/(.*)",
-      "destination": "/js/$1"
+      "src": "/js/(.+)",
+      "dest": "/js/$1"
     },
     {
-      "source": "/css/(.*)",
-      "destination": "/css/$1"
+      "src": "/css/(.+)",
+      "dest": "/css/$1"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "^/[^.]+$",
+      "dest": "/index.html"
     }
   ]
 }
