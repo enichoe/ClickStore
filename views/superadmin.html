@@ -32,79 +32,102 @@
         </div>
     </aside>
 
-    <header class="admin-mobile-header lg:hidden">
-        <button class="menu-toggle" onclick="toggleSidebarSuper()">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7"/></svg>
-        </button>
-        <h2 class="text-xl font-black text-white">Super Admin</h2>
+    <header class="admin-mobile-header lg:hidden bg-slate-900/60 backdrop-blur-xl border-b border-white/5 sticky top-0 z-50">
+        <div class="flex items-center justify-between w-full px-4 py-3">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center p-1.5 shadow-lg shadow-indigo-600/30">
+                    <svg width="100%" height="100%" fill="none" stroke="white" stroke-width="3" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h2 class="text-lg font-black text-white tracking-tight">Super <span class="text-indigo-400">Admin</span></h2>
+            </div>
+            <button class="menu-toggle p-2 rounded-lg bg-white/5 text-slate-400 hover:text-white transition-colors" onclick="toggleSidebarSuper()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7"/></svg>
+            </button>
+        </div>
     </header>
 
-    <main class="main-admin lg:ml-[280px] p-6 lg:p-10 space-y-10">
+    <!-- Bottom Navigation para Móvil (Super Admin) -->
+    <nav class="admin-bottom-nav lg:hidden z-50">
+        <div class="bottom-nav-item active" onclick="showSuperAdminSection('dash')">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span>General</span>
+        </div>
+        <div class="bottom-nav-item" onclick="showSuperAdminSection('stores')">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span>Tiendas</span>
+        </div>
+        <div class="bottom-nav-item" onclick="logout()">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <span>Salir</span>
+        </div>
+    </nav>
+
+    <main class="main-admin lg:ml-[280px] p-4 lg:p-10 pb-32 lg:pb-10 space-y-6 lg:space-y-10">
         <!-- Dashboard Section -->
-        <div id="section-super-dash" class="fade-in space-y-8">
+        <div id="section-super-dash" class="fade-in space-y-6 lg:space-y-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-3xl font-black text-white mb-2">Global Overview</h2>
-                    <p class="text-slate-500 text-sm">Monitorea el crecimiento de StoreClick en tiempo real.</p>
+                    <h2 class="text-2xl lg:text-3xl font-black text-white mb-2">Global Overview</h2>
+                    <p class="text-slate-500 text-xs lg:text-sm">Monitorea el crecimiento de StoreClick en tiempo real.</p>
                 </div>
-                <div class="px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-black tracking-widest uppercase">
+                <div class="px-3 lg:px-4 py-1.5 lg:py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[9px] lg:text-[10px] font-black tracking-widest uppercase">
                     Status: Operacional
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="card bg-slate-900/50 border-slate-800 p-8 border-l-4 border-l-indigo-500 hover:translate-y-[-4px] transition-all">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:grid-cols-4 lg:gap-6">
+                <div class="card bg-slate-900/50 border-slate-800 p-6 lg:p-8 border-l-4 border-l-indigo-500 hover:translate-y-[-4px] transition-all">
                     <div class="flex justify-between items-start mb-4">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Tiendas Totales</p>
+                        <p class="text-[9px] lg:text-[10px] font-black text-slate-500 uppercase tracking-widest">Tiendas Totales</p>
                         <div class="p-2 rounded-lg bg-indigo-500/10 text-indigo-400">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                         </div>
                     </div>
-                    <p class="text-5xl font-black text-white" id="super-total-stores">0</p>
-                    <p class="text-[10px] text-indigo-400/60 mt-4 font-bold">Activos en el ecosistema</p>
+                    <p class="text-4xl lg:text-5xl font-black text-white" id="super-total-stores">0</p>
+                    <p class="text-[9px] lg:text-[10px] text-indigo-400/60 mt-4 font-bold">Activos en el ecosistema</p>
                 </div>
-                <div class="card bg-slate-900/50 border-slate-800 p-8 border-l-4 border-l-emerald-500 hover:translate-y-[-4px] transition-all">
+                <div class="card bg-slate-900/50 border-slate-800 p-6 lg:p-8 border-l-4 border-l-emerald-500 hover:translate-y-[-4px] transition-all">
                     <div class="flex justify-between items-start mb-4">
-                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Pedidos Totales</p>
+                        <p class="text-[9px] lg:text-[10px] font-black text-slate-500 uppercase tracking-widest">Pedidos Totales</p>
                         <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
                             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                         </div>
                     </div>
-                    <p class="text-5xl font-black text-white" id="super-total-orders">0</p>
-                    <p class="text-[10px] text-emerald-400/60 mt-4 font-bold">Transacciones exitosas</p>
+                    <p class="text-4xl lg:text-5xl font-black text-white" id="super-total-orders">0</p>
+                    <p class="text-[9px] lg:text-[10px] text-emerald-400/60 mt-4 font-bold">Transacciones exitosas</p>
                 </div>
             </div>
         </div>
 
         <!-- Stores Management Section -->
-        <div id="section-super-stores" class="fade-in space-y-8" style="display: none;">
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+        <div id="section-super-stores" class="fade-in space-y-6 lg:space-y-8" style="display: none;">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-6">
                 <div>
-                    <h2 class="text-3xl font-black text-white mb-2">Gestión de Tiendas</h2>
-                    <p class="text-slate-500 text-sm">Configura planes, activa servicios y elimina locales.</p>
+                    <h2 class="text-2xl lg:text-3xl font-black text-white mb-1 lg:mb-2">Gestión de Tiendas</h2>
+                    <p class="text-slate-500 text-xs lg:text-sm">Configura planes, activa servicios y elimina locales.</p>
                 </div>
-                <div class="flex gap-4 w-full lg:w-auto">
+                <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                     <div class="relative flex-1 lg:min-w-[300px]">
-                        <input type="text" id="search-global-stores" placeholder="Buscar por nombre o ID..." class="input !pl-10 !bg-slate-900/50 !border-slate-800" oninput="filterGlobalStores(this.value)">
-                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" id="search-global-stores" placeholder="Buscar por nombre o ID..." class="input !pl-10 !bg-slate-900/50 !border-slate-800 !py-3 font-medium" oninput="filterGlobalStores(this.value)">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     </div>
-                    <button class="btn btn-primary !rounded-xl" onclick="openStoreModal()">+ Nueva</button>
+                    <button class="btn btn-primary !rounded-xl !py-3 px-6 whitespace-nowrap" onclick="openStoreModal()">+ Nueva Tienda</button>
                 </div>
             </div>
 
-            <div class="card bg-slate-900/50 border-slate-800 overflow-hidden shadow-2xl">
-                <div class="px-8 py-6 border-b border-white/5 bg-slate-800/30 flex justify-between items-center">
-                    <h3 class="text-[12px] font-black text-white uppercase tracking-widest">Ecosistema StoreClick</h3>
+            <div class="card !p-0 bg-slate-900/50 border-slate-800 overflow-hidden shadow-2xl">
+                <div class="px-5 lg:px-8 py-4 lg:py-6 border-b border-white/5 bg-slate-800/30 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <h3 class="text-[11px] lg:text-[12px] font-black text-white uppercase tracking-widest">Ecosistema StoreClick</h3>
                     <div class="flex gap-4">
-                        <span class="text-[10px] font-bold text-slate-500 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> Activas</span>
-                        <span class="text-[10px] font-bold text-slate-500 flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-slate-500"></div> Inactivas</span>
+                        <span class="text-[9px] lg:text-[10px] font-bold text-slate-500 flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div> Activas</span>
+                        <span class="text-[9px] lg:text-[10px] font-bold text-slate-500 flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div> Inactivas</span>
                     </div>
                 </div>
                 <div id="super-stores-list" class="divide-y divide-white/5">
                     <!-- Inyectado dinámicamente -->
-                    <div class="p-20 text-center text-slate-500">
-                        <div class="spinner mb-4"></div>
-                        <p class="text-sm">Cargando ecosistema de tiendas...</p>
+                    <div class="p-10 lg:p-20 text-center text-slate-500">
+                        <div class="spinner mb-4 mx-auto"></div>
+                        <p class="text-xs lg:text-sm">Cargando ecosistema de tiendas...</p>
                     </div>
                 </div>
             </div>

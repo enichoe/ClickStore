@@ -907,41 +907,41 @@ async function fetchGlobalStores() {
             const planName = s.plan === 'pro' ? 'PROFESIONAL' : (s.plan === 'base' ? 'ESCENCIAL' : 'GRATUITO');
             
             return `
-            <div data-store-name="${s.name}" data-store-slug="${s.slug}" class="p-8 border-b border-white/5 flex flex-col lg:flex-row justify-between lg:items-center bg-slate-900/40 hover:bg-slate-800/20 transition-all gap-8">
-                <div class="flex items-center gap-6">
-                    <div class="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center overflow-hidden border border-white/5 shrink-0">
-                        ${s.logo_url ? `<img src="${s.logo_url}" class="w-full h-full object-cover">` : `<span class="text-2xl">🏬</span>`}
+            <div data-store-name="${s.name}" data-store-slug="${s.slug}" class="p-6 lg:p-8 border-b border-white/5 flex flex-col lg:flex-row justify-between lg:items-center bg-slate-900/40 hover:bg-slate-800/20 transition-all gap-6 lg:gap-8">
+                <div class="flex items-start lg:items-center gap-4 lg:gap-6">
+                    <div class="w-12 h-12 lg:w-16 lg:h-16 rounded-xl lg:rounded-2xl bg-slate-800 flex items-center justify-center overflow-hidden border border-white/5 shrink-0">
+                        ${s.logo_url ? `<img src="${s.logo_url}" class="w-full h-full object-cover">` : `<span class="text-xl lg:text-2xl">🏬</span>`}
                     </div>
                     <div>
-                        <div class="flex items-center gap-3 mb-2">
-                            <h4 class="text-xl font-black text-white">${s.name}</h4>
-                            <span class="px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${s.active ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
-                                ${s.active ? 'SISTEMA ACTIVO' : 'SISTEMA PAUSADO'}
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                            <h4 class="text-lg lg:text-xl font-black text-white truncate max-w-[200px] sm:max-w-none">${s.name}</h4>
+                            <span class="inline-flex px-2 py-0.5 rounded-md text-[8px] font-black uppercase tracking-widest ${s.active ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'} w-fit">
+                                ${s.active ? 'ACTIVA' : 'PAUSADA'}
                             </span>
                         </div>
-                        <p class="text-sm text-slate-500 font-medium">
-                            URL: <strong class="text-indigo-300">/${s.slug || 'sin-slug'}</strong> | 
-                            WhatsApp: <span class="text-slate-300 font-bold">${s.whatsapp_phone || 'Pendiente'}</span>
+                        <p class="text-xs lg:text-sm text-slate-500 font-medium">
+                            <span class="text-indigo-300">/${s.slug || 'sin-slug'}</span> • 
+                            <span class="text-slate-400">${s.whatsapp_phone || 'Sin WhatsApp'}</span>
                         </p>
-                        <div class="flex gap-2 mt-4">
-                            <div class="px-3 py-1 rounded-lg ${planColor} text-[9px] font-black tracking-widest uppercase">
-                                PLAN ${planName}
+                        <div class="flex gap-2 mt-3">
+                            <div class="px-2 lg:px-3 py-1 rounded-lg ${planColor} text-[8px] lg:text-[9px] font-black tracking-widest uppercase">
+                                ${planName}
                             </div>
-                            <div class="px-3 py-1 rounded-lg bg-white/5 text-[9px] font-black tracking-widest uppercase text-slate-400">
-                                ID: ${s.id.slice(0, 8)}...
+                            <div class="px-2 lg:px-3 py-1 rounded-lg bg-white/5 text-[8px] lg:text-[9px] font-black tracking-widest uppercase text-slate-500">
+                                ID: ${s.id.slice(0, 8)}
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="flex items-center gap-3 w-full lg:w-auto mt-4 lg:mt-0 pt-6 lg:pt-0 border-t lg:border-t-0 border-white/5">
-                    <button class="btn btn-secondary btn-sm flex-1 lg:flex-none py-3 px-6 !rounded-xl" onclick="toggleStoreActive('${s.id}', ${s.active})">
-                        ${s.active ? 'Suspender' : 'Reactivar'}
+                <div class="grid grid-cols-2 sm:flex sm:items-center gap-2 lg:gap-3 w-full lg:w-auto mt-2 lg:mt-0 pt-4 lg:pt-0 border-t lg:border-t-0 border-white/5">
+                    <button class="btn btn-secondary !py-2.5 px-4 !text-[11px] !rounded-xl" onclick="toggleStoreActive('${s.id}', ${s.active})">
+                        ${s.active ? 'Suspender' : 'Activar'}
                     </button>
-                    <button class="btn btn-ghost btn-sm flex-1 lg:flex-none py-3 px-6 !rounded-xl text-white hover:bg-slate-700" onclick="editStoreByAdmin('${s.id}')">
+                    <button class="btn btn-ghost !py-2.5 px-4 !text-[11px] !rounded-xl text-white bg-white/5 hover:bg-slate-700" onclick="editStoreByAdmin('${s.id}')">
                         Configurar
                     </button>
-                    <button class="btn btn-danger btn-sm flex-1 lg:flex-none py-3 px-6 !rounded-xl" onclick="deleteStoreByAdmin('${s.id}')">
+                    <button class="btn btn-danger !py-2.5 px-4 !text-[11px] !rounded-xl col-span-2 sm:col-auto" onclick="deleteStoreByAdmin('${s.id}')">
                        Eliminar
                     </button>
                 </div>
