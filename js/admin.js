@@ -150,15 +150,22 @@ function renderCategories() {
 
     if (!list) return;
     
-    if (appState.categories.length === 0) {
-        list.innerHTML = '<div class="card">No hay categorías.</div>';
+    if (!appState.categories || appState.categories.length === 0) {
+        list.innerHTML = '<div class="card bg-slate-900 border-slate-800 text-slate-500 text-center py-10 italic">No hay categorías. Crea una arriba.</div>';
         return;
     }
 
-    list.innerHTML = appState.categories.map(c => `
-        <div class="card" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; margin-bottom: 8px;">
-            <span style="font-weight: 600;">${c.name}</span>
-            <button class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')">Eliminar</button>
+    list.innerHTML = (appState.categories || []).map(c => `
+        <div class="card flex justify-between items-center p-4 mb-3 bg-slate-900 border-slate-800 group hover:border-indigo-500/50 transition-all gap-4">
+            <div class="flex items-center gap-4 min-w-0">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 font-black shrink-0">
+                    ${c.name ? c.name[0].toUpperCase() : '?'}
+                </div>
+                <span class="text-white font-bold text-base md:text-lg truncate">${c.name}</span>
+            </div>
+            <button class="w-11 h-11 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all active:scale-95 shrink-0" onclick="deleteCategory('${c.id}')">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
         </div>
     `).join('');
 }
@@ -202,6 +209,9 @@ function renderProducts() {
     grid.innerHTML = '';
 
     appState.products.forEach(p => {
+        const cat = (appState.categories || []).find(c => c.id === p.category_id);
+        const catName = cat ? cat.name : (p.category_id ? 'Categoría no encontrada' : 'Sin Categoría');
+
         const card = document.createElement('div');
         card.className = 'product-card group';
         card.innerHTML = `
@@ -217,12 +227,12 @@ function renderProducts() {
                 </div>
                 ${!p.active ? '<span class="absolute top-3 left-3 px-2 py-1 bg-red-500 text-white text-[8px] font-black uppercase rounded-md shadow-lg">Inactivo</span>' : ''}
             </div>
-            <div class="p-4 bg-slate-900">
+            <div class="p-4 bg-slate-900 group-hover:bg-slate-800 transition-colors">
                 <div class="flex justify-between items-start mb-1">
                     <h4 class="text-sm font-black text-white truncate pr-2">${p.name}</h4>
                     <span class="text-sm font-black text-indigo-400">S/${parseFloat(p.price).toFixed(2)}</span>
                 </div>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">${p.category_id || 'Sin Categoría'}</p>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${catName}</p>
             </div>
         `;
         grid.appendChild(card);
