@@ -1,304 +1,99 @@
-<!DOCTYPE html><html><head>
-<meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
-<title>Kit de Contenido StoreClick - 2026</title>
-<style>.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 24px 40px;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    }
-.chart-container {
-    position: relative;
-    margin: 3em auto;
-    max-width: 700px;
-    min-height: 200px;
-    max-height: 400px;
-    width: 100%;
-    height: auto;
-    overflow: visible;
-    }
-img {
-    display: block;
-    overflow: hidden;
-    max-width: 100%;
-    max-height: 280px;
-    margin: 1em auto;
-    border-radius: 8px;
-    }
-h4 {
-    font-size: 18px;
-    }
-h5 {
-    font-size: 16px;
-    }
-body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    color: #333;
-    max-width: None;
-    margin: 0 24px 0 24px;
-    padding: 0;
-    background-color: #f9f9f9;
-    font-size: 16px;
-    }
-h1 {
-    color: #2c3e50;
-    border-bottom: 2px solid #e67e22;
-    padding-bottom: 10px;
-    text-align: center;
-    font-size: 28px;
-    margin-top: 24px;
-    margin-bottom: 20px;
-    }
-h2 {
-    color: #e67e22;
-    margin-top: 40px;
-    border-left: 5px solid #e67e22;
-    padding-left: 15px;
-    font-size: 22px;
-    }
-h3 {
-    color: #2980b9;
-    margin-top: 25px;
-    font-size: 20px;
-    }
-p {
-    margin-bottom: 15px;
-    }
-ul {
-    margin-bottom: 20px;
-    }
-li {
-    margin-bottom: 8px;
-    }
-strong {
-    color: #2c3e50;
-    }
-.highlight {
-    background-color: #fff3e0;
-    padding: 15px;
-    border-radius: 5px;
-    border-left: 4px solid #ff9800;
-    }
-.emoji-title {
-    font-size: 1.2em;
-    }
-@media only screen and (max-device-width: 768px) {
-            body {
-                padding: 0;
-                margin: 0;
-                font-family: PingFang SC;
-                font-size: 15px;
-                line-height: 1.5;
-            }
+<div id="view-faq" style="display: none;">
+    <!-- Modern Glassmorphism Nav -->
+    <nav class="nav-saas">
+        <div class="nav-saas-inner">
+            <div class="flex items-center gap-3 text-2xl font-black tracking-tight text-white group cursor-pointer" onclick="showView('view-landing')">
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative p-2.5 rounded-xl bg-slate-900 border border-white/10 shadow-lg flex items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="url(#faq-logo-grad)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="faq-logo-grad" x1="3" y1="2" x2="21" y2="22" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#6366F1"/>
+                                    <stop offset="1" stop-color="#8B5CF6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">StoreClick</span>
+            </div>
+            <div class="flex gap-4">
+                <button class="btn btn-secondary !px-6" onclick="showView('view-landing')">Volver al Inicio</button>
+            </div>
+        </div>
+    </nav>
 
-            .container {
-                padding: 0;
-                margin: 16px 20px 30px;
-                box-shadow: none;
-            }
+    <main class="pt-32 pb-20 px-6 max-w-4xl mx-auto fade-in">
+        <div class="text-center mb-16">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-indigo-400 text-xs font-bold tracking-widest uppercase mb-6">
+                💡 Centro de Ayuda
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black text-white mb-6 leading-tight">Preguntas <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Frecuentes</span></h1>
+            <p class="text-xl text-slate-400 max-w-2xl mx-auto">Resolvemos tus dudas para que puedas empezar a vender hoy mismo.</p>
+        </div>
 
-            h1,
-            h2,
-            h3,
-            h4 {
-                font-family: PingFang SC;
-            }
+        <div class="space-y-6">
+            <!-- FAQ Accordion -->
+            <div class="card bg-slate-900/40 border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                <div class="flex justify-between items-center gap-4">
+                    <h3 class="text-xl font-bold text-white">¿Es realmente gratis?</h3>
+                    <svg class="text-indigo-400 transition-transform duration-300" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="faq-answer hidden mt-6 text-slate-400 leading-relaxed pt-6 border-t border-white/5 animate-slide-up">
+                    ¡Claro que sí! Tenemos un <strong class="text-white">Plan Free</strong> diseñado para que los emprendedores peruanos empiecen sin gastar ni un sol. Puedes crear tu tienda, subir tus productos y recibir pedidos por WhatsApp sin pagar mensualidades. 🎁
+                </div>
+            </div>
 
-            h1 {
-                font-size: 1.87em;
-                line-height: 1.6;
-                margin-bottom: 0.5em;
-                text-align: center;
-            }
+            <div class="card bg-slate-900/40 border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                <div class="flex justify-between items-center gap-4">
+                    <h3 class="text-xl font-bold text-white">¿StoreClick cobra comisiones por mis ventas?</h3>
+                    <svg class="text-indigo-400 transition-transform duration-300" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="faq-answer hidden mt-6 text-slate-400 leading-relaxed pt-6 border-t border-white/5 animate-slide-up">
+                    ¡Para nada! <strong class="text-white">Cobramos 0% de comisión</strong>. Todo el dinero de tus ventas va directo a tu bolsillo o a tu cuenta de Yape/Plin. Nosotros no tocamos tus ganancias. 💰
+                </div>
+            </div>
 
-            h2 {
-                font-size: 1.6em;
-                font-weight: 600;
-                margin-top: 1.3em;
-                margin-bottom: 0.8em;
-                border-bottom: 1px solid #eee;
-                padding-bottom: 0.5em;
-            }
+            <div class="card bg-slate-900/40 border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                <div class="flex justify-between items-center gap-4">
+                    <h3 class="text-xl font-bold text-white">¿Cómo me pagan mis clientes?</h3>
+                    <svg class="text-indigo-400 transition-transform duration-300" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="faq-answer hidden mt-6 text-slate-400 leading-relaxed pt-6 border-t border-white/5 animate-slide-up">
+                    El pago es directo entre tú y tu cliente. Puedes configurar <strong class="text-white">Yape, Plin, transferencia bancaria o pago contra entrega (efectivo)</strong>. Cuando el cliente hace el pedido por StoreClick, te llega un mensaje al WhatsApp con el detalle y tú le confirmas el pago. ¡Tú tienes el control!
+                </div>
+            </div>
 
-            h3 {
-                font-size: 1.2em;
-                font-weight: 600;
-                margin-top: 1em;
-                margin-bottom: 0.6em;
-            }
+            <div class="card bg-slate-900/40 border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                <div class="flex justify-between items-center gap-4">
+                    <h3 class="text-xl font-bold text-white">¿Necesito tener una empresa registrada (RUC) para usarlo?</h3>
+                    <svg class="text-indigo-400 transition-transform duration-300" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="faq-answer hidden mt-6 text-slate-400 leading-relaxed pt-6 border-t border-white/5 animate-slide-up">
+                    No es obligatorio. Puedes empezar como persona natural con DNI. Lo importante es que tengas ganas de vender. Eso sí, conforme vayas creciendo, te recomendamos formalizarte para acceder a más beneficios. 🏛️
+                </div>
+            </div>
 
-            h4 {
-                font-size: 1.1em;
-                font-weight: 500;
-                margin-top: 1em;
-                margin-bottom: 0.5em;
-                font-style: normal;
-            }
+            <div class="card bg-slate-900/40 border-white/5 hover:border-indigo-500/30 transition-all cursor-pointer group" onclick="this.querySelector('.faq-answer').classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                <div class="flex justify-between items-center gap-4">
+                    <h3 class="text-xl font-bold text-white">¿Mis clientes necesitan descargar una App?</h3>
+                    <svg class="text-indigo-400 transition-transform duration-300" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="faq-answer hidden mt-6 text-slate-400 leading-relaxed pt-6 border-t border-white/5 animate-slide-up">
+                    ¡No! Y esa es nuestra mayor ventaja. Tu tienda es <strong class="text-white">100% web</strong>. El cliente solo hace clic en tu link, elige lo que quiere y listo. Funciona perfecto en cualquier celular sin ocupar espacio en su memoria. 📱✨
+                </div>
+            </div>
+        </div>
 
-            h5 {
-                font-size: 1em;
-                font-weight: 500;
-                margin-bottom: 1.2em;
-            }
+        <div class="mt-20 text-center">
+            <h4 class="text-2xl font-bold text-white mb-8">¿Aún tienes dudas?</h4>
+            <button class="btn btn-primary px-12 py-5 text-lg" onclick="window.open('https://wa.me/51987654321', '_blank')">Contactar a Soporte</button>
+        </div>
+    </main>
 
-            ul,
-            ol {
-                font-size: 1em; /* Equivalent to 17.6px if base is 16px */
-                font-weight: 400;
-                margin-bottom: 1.2em;
-                line-height: 1.8;
-            }
-
-            p {
-                font-size: 1em;
-                line-height: 1.8; /* Equivalent to 17.6px if base is 16px */
-                font-weight: 400;
-                margin-top: 0.8em;
-                margin-bottom: 0.8em;
-            }
-
-            blockquote {
-                padding: 1em 1.2em;
-
-            p {
-                margin: 0;
-            }
-        }
-
-        figcaption {
-            margin-top: 0.5em;
-            font-size: 0.8em; /* Equivalent to 17.6px if base is 16px */
-            font-weight: 400;
-            text-align: center;
-            font-style: normal;
-            color: #7F8896;
-        }
-
-        img {
-            display: block;
-            overflow: hidden;
-            max-width: 100%;
-            max-height: 335px;
-            margin: 1em auto;
-            border-radius: 8px;
-        }
-        }</style>
-<link rel="stylesheet" href="https://static.skywork.ai/fe/skywork-site-assets/styles/doc_reference_style.css?v=2036910333658005504">
-</head><body>
-<div class="container" data-cid="kEUbSW">
-<h1 id="section-1" data-cid="5A-6lB">🚀 Kit de Contenido: StoreClick</h1>
-<!-- SECCIÓN 1: CENTRO DE AYUDA -->
-<section id="centro-ayuda" data-cid="IHjGVf">
-<h2 id="section-1" data-cid="qBOsa9">1. Centro de Ayuda (Help Center)</h2>
-<p data-cid="q0M5D0">Bienvenido al corazón de tu negocio digital. Aquí te enseñamos a dominar StoreClick para que tu única preocupación sea preparar los pedidos. ¡Vamos a darle! 💪</p>
-<h3 id="section-1-1" data-cid="bke7au">✨ Guía rápida: "Tus primeros 5 minutos en StoreClick"</h3>
-<p data-cid="Ea524F">¿Acabas de llegar? No te preocupes, configurar tu tienda es más rápido que tomarse un emoliente en la mañana. Sigue estos pasos:</p>
-<ul data-cid="bwOJ6n">
-<li data-cid="tXxTyh"><strong data-cid="K34aCw">Paso 1: Crea tu cuenta.</strong> Regístrate con tu correo y elige el nombre de tu tienda. ¡Ese será tu link oficial! 🔗</li>
-<li data-cid="iHt49x"><strong data-cid="KOt0yz">Paso 2: Personaliza tu vitrina.</strong> Sube tu logo y elige los colores que más te gusten. Haz que tu marca brille.</li>
-<li data-cid="hcAAxq"><strong data-cid="J-_2Zj">Paso 3: Sube tu primer producto.</strong> Dale al botón (+), ponle un nombre llamativo (ej. "Polera Oversize Algodón"), el precio y una foto ganadora.</li>
-<li data-cid="KIV6z5"><strong data-cid="mE36Bc">Paso 4: Configura tu WhatsApp.</strong> Ingresa el número donde quieres recibir los pedidos<em data-skywork="text_badge" data-sk-source-type="image" data-sk-source-text="Ingresa el número donde quieres recibir los pedidos." id="skTag-2036896023661056000" class="sk-source-tag" data-sk-source-id="2036896023661056000" data-sk-source-website-name="" data-sk-source-website-url="https://static-us-img.skywork.ai/prod/analysis/2026-03-25/1910523250036746874/2036895989741694976_3ab8006c323b0ec3d448731847a64695.png" data-sk-source-source-id="2036895989741694976" data-cid="a1teBF" style="--sk-source-display-name: &quot;Ingresa el número donde quieres recibir los pedidos.&quot;;"></em>. ¡Asegúrate de que esté activo! 📱</li>
-<li data-cid="zBNEUB"><strong data-cid="eCgJAS">Paso 5: ¡Lanza y comparte!</strong> Copia tu link y pégalo en tu biografía de Instagram, TikTok o pásalo por tus grupos de WhatsApp. ¡Ya estás vendiendo!</li>
-</ul>
-<h3 id="section-1-2" data-cid="bN3AFe">📸 Cómo optimizar imágenes para que tu tienda cargue "al toque"</h3>
-<p data-cid="FcCgm3">A nadie le gusta esperar, y menos a un cliente con ganas de comprar. Si tus fotos pesan mucho, tu tienda se pondrá lenta. Sigue estos trucos:</p>
-<ul data-cid="0bUGZO">
-<li data-cid="9qcyas"><strong data-cid="IliC3w">Usa luz natural:</strong> No necesitas una cámara profesional, solo pon tu producto cerca de una ventana.</li>
-<li data-cid="2SeVBM"><strong data-cid="7Px9cr">Formato Cuadrado (1:1):</strong> Es el mejor formato para móviles. Mantén el producto al centro.</li>
-<li data-cid="T-SNyr"><strong data-cid="osJ3w2">Comprime sin miedo:</strong> Antes de subir la foto, pásala por herramientas gratuitas como <em data-cid="tMkrFi">TinyJPG</em> o usa el editor de tu celular para bajarle un poco el peso.</li>
-<li data-cid="LABCd7"><strong data-cid="AiAwqJ">Peso ideal:</strong> Intenta que cada foto pese menos de <strong data-cid="9TXndl">500 KB</strong>. Así tu tienda cargará en menos de 2 segundos. ⚡</li>
-</ul>
-<h3 id="section-1-3" data-cid="3LIncC">💰 Configuración de Yape y Plin: Paso a paso para subir tu QR</h3>
-<p data-cid="XcpO0q">Facilítale la vida a tu cliente. Si ven tu QR, te pagarán en un segundo. Aquí te explico cómo ponerlo:</p>
-<ol data-cid="FpaQME">
-<li data-cid="sUt_TB">Entra a tu App de <strong data-cid="tX2OQw">Yape o Plin</strong> y descarga la imagen de tu código QR (o tómale un screenshot y recórtalo).</li>
-<li data-cid="8hhfDQ">En tu panel de StoreClick, ve a la sección <strong data-cid="QsJg52">"Métodos de Pago"</strong>.</li>
-<li data-cid="KnGJjX">Selecciona "Agregar QR" y sube la imagen que guardaste.</li>
-<li data-cid="ziVER5">No olvides poner tu nombre de titular y el número de celular asociado.</li>
-<li data-cid="VGP3gs"><strong data-cid="WOLAvZ">Tip de oro:</strong> Avisa en la descripción de tu tienda que "Aceptamos Yape y Plin" para generar más confianza. 🇵🇪</li>
-</ol>
-<h3 id="section-1-4" data-cid="JMRXWl">📦 Cómo gestionar el stock manualmente desde el celular</h3>
-<p data-cid="F-Fhv3">¿Se te acabó el producto estrella? No dejes que te pidan algo que no tienes. ¡Es súper fácil actualizarlo!</p>
-<ul data-cid="2fuPxj">
-<li data-cid="Uej2Jj">Entra a tu <strong data-cid="322xGw">Dashboard</strong> desde el navegador de tu celular.</li>
-<li data-cid="_0Np6r">Busca la sección <strong data-cid="PMTf-X">"Inventario"</strong> o entra directamente al producto.</li>
-<li data-cid="g4mRrk">Cambia la cantidad disponible en el campo "Stock". Si se acabó, ponle "0" y automáticamente aparecerá como <strong data-cid="3hc8ek">Agotado</strong> en tu tienda.</li>
-<li data-cid="TQ-j5s">¡Listo! El sistema se actualiza al instante. Así evitas quedar mal con tus caseros. 🤝</li>
-</ul>
-</section>
-<hr data-cid="CMIboy">
-<!-- SECCIÓN 2: BLOG Y CONSEJOS -->
-<section id="blog-consejos" data-cid="YfJxfQ">
-<h2 id="section-2" data-cid="8yXmXZ">2. Blog y Consejos (Estrategias de Venta)</h2>
-<p data-cid="QZW2hq">No solo te damos la herramienta, te enseñamos a usarla para que tu negocio crezca de verdad. 📈</p>
-<h3 id="section-2-1" data-cid="h1Ik5o">👕 Artículo 1: "5 Trucos para vender más por WhatsApp en Gamarra"</h3>
-<p data-cid="5QM0iS">Si fabricas o vendes ropa en el emporio comercial más grande del Perú, sabes que la competencia es fuerte. Aquí te digo cómo destacar usando StoreClick:</p>
-<ul data-cid="ylu6NA">
-<li data-cid="qivlqe"><strong data-cid="k0u3pQ">El link es tu mejor vendedor:</strong> En lugar de mandar 50 fotos por chat y saturar el celular del cliente, mándale el link de tu tienda StoreClick. ¡Es más profesional y ordenado!</li>
-<li data-cid="6MXDA5"><strong data-cid="pXl1gS">Paquetes "<em data-skywork="text_badge" data-sk-source-type="image" data-sk-source-text="Paquetes &quot;Mayoristas&quot;: Crea productos especiales en tu tienda llamados &quot;Pack Emprendedor - 12 unidades&quot;." id="skTag-2036896023661056000" class="sk-source-tag" data-sk-source-id="2036896023661056000" data-sk-source-website-name="" data-sk-source-website-url="https://static-us-img.skywork.ai/prod/analysis/2026-03-25/1910523250036746874/2036895989741694976_3ab8006c323b0ec3d448731847a64695.png" data-sk-source-source-id="2036895989741694976" data-cid="3SNpxk" style="--sk-source-display-name: &quot;Paquetes &quot;Mayoristas&quot;: Crea productos especiales en tu tienda llamados &quot;Pack Emprendedor - 12 unidades&quot;.&quot;;"></em>;Mayoristas":</strong> Crea productos especiales en tu tienda llamados "Pack Emprendedor - 12 unidades". Facilita la compra por volumen.</li>
-<li data-cid="n2db6g"><strong data-cid="n7cloI">Rapidez en el cierre:</strong> Cuando el cliente te escriba por WhatsApp desde la tienda, ya vendrá con el pedido listo. Solo confirma el stock y manda tu QR. ¡No pierdas tiempo!</li>
-<li data-cid="himNZb"><strong data-cid="a32uTY">Usa palabras clave:</strong> En las descripciones usa términos que tus clientes buscan: "Algodón reactivo", "No encoge", "Calidad premium".</li>
-<li data-cid="esqlwS"><strong data-cid="hBwzOW">Aprovecha las campañas:</strong> Si es temporada de invierno, cambia la portada de tu tienda StoreClick con tus mejores casacas. ¡Visualmente vende más!</li>
-</ul>
-<h3 id="section-2-2" data-cid="XwuP5w">📲 Artículo 2: "Cómo usar los estados de WhatsApp para llevar tráfico a tu tienda"</h3>
-<p data-cid="BC-E0r">Los estados de WhatsApp son como comerciales de TV gratuitos<em data-skywork="text_badge" data-sk-source-type="image" data-sk-source-text="Los estados de WhatsApp son como comerciales de TV gratuitos." id="skTag-2036896023661056000" class="sk-source-tag" data-sk-source-id="2036896023661056000" data-sk-source-website-name="" data-sk-source-website-url="https://static-us-img.skywork.ai/prod/analysis/2026-03-25/1910523250036746874/2036895989741694976_3ab8006c323b0ec3d448731847a64695.png" data-sk-source-source-id="2036895989741694976" data-cid="9Rku7b" style="--sk-source-display-name: &quot;Los estados de WhatsApp son como comerciales de TV gratuitos.&quot;;"></em>. ¡Úsalos bien!</p>
-<p data-cid="TDS_os"><strong data-cid="KmFOH8">La técnica del 3+1:</strong> Sube 3 fotos de estilo de vida (alguien usando tu producto, el proceso de empaque, un cliente feliz) y el cuarto estado que sea una foto del producto con el texto: <em data-cid="kSJfQP">"Pídelo aquí directamente 👇 [Link de tu tienda]"</em>.</p>
-<p data-cid="DJaqEi"><strong data-cid="ZQSvT_">Crea urgencia:</strong> "¡Solo quedan 3 unidades en stock! Cómpralo antes que se acabe en mi link de la bio". Esto hace que la gente haga clic de inmediato. 🏃‍♂️💨</p>
-<h3 id="section-2-3" data-cid="uGbwbM">🖼️ Artículo 3: "La importancia de una buena foto: Tips de fotografía con celular"</h3>
-<p data-cid="O2Mhda">No necesitas un iPhone 15 para tener fotos increíbles. Tu celular actual es suficiente si sigues esto:</p>
-<ul data-cid="B5Tz4y">
-<li data-cid="jVdme-"><strong data-cid="gV89C_">Limpia el lente:</strong> Parece obvio, pero la grasa de los dedos hace que las fotos salgan nubladas. ¡Pásale un trapito antes de disparar!</li>
-<li data-cid="il3EgX"><strong data-cid="o2x7Iq">Fondo limpio:</strong> Usa una cartulina blanca, una sábana lisa o una pared de un solo color. El protagonista debe ser tu producto.</li>
-<li data-cid="aleLvL"><strong data-cid="z1S3lm">Estabilidad:</strong> Apoya el celular en algo firme o usa un trípode barato. Las fotos movidas espantan a los clientes.</li>
-<li data-cid="s9S_P9"><strong data-cid="j3kwSW">Muestra los detalles:</strong> Si vendes zapatos, toma una foto de la suela y otra de la costura. El cliente quiere "tocar" el producto con la mirada. 👁️</li>
-</ul>
-</section>
-<hr data-cid="mOcbG_">
-<!-- SECCIÓN 3: FAQS -->
-<section id="faqs" data-cid="4EsSN3">
-<h2 id="section-3" data-cid="ZnMT6k">3. FAQs (Preguntas Frecuentes)</h2>
-<p data-cid="gHACE8">¿Tienes dudas? Aquí te las respondemos clarito y sin rodeos. 🧐</p>
-<div class="highlight" data-cid="GyTVCt">
-<p data-cid="8xcR-j"><strong data-cid="fHvZAr">❓ ¿Es realmente gratis?</strong><br data-cid="SkKSsI">
-            ¡Claro que sí! Tenemos un <strong data-cid="8JroIC">Plan Free</strong> diseñado para que los emprendedores peruanos empiecen sin gastar ni un sol. Puedes crear tu tienda, subir tus productos y recibir pedidos por WhatsApp sin pagar mensualidades. 🎁</p>
-<p data-cid="ReW9w4"><strong data-cid="P5OvxD">❓ ¿StoreClick cobra comisiones por mis ventas?</strong><br data-cid="PRzncb"><em data-skywork="text_badge" data-sk-source-type="image" data-sk-source-text="❓ ¿StoreClick cobra comisiones por mis ventas? ¡Para nada!" id="skTag-2036896023661056000" class="sk-source-tag" data-sk-source-id="2036896023661056000" data-sk-source-website-name="" data-sk-source-website-url="https://static-us-img.skywork.ai/prod/analysis/2026-03-25/1910523250036746874/2036895989741694976_3ab8006c323b0ec3d448731847a64695.png" data-sk-source-source-id="2036895989741694976" data-cid="l6hWvM" style="--sk-source-display-name: &quot;❓ ¿StoreClick cobra comisiones por mis ventas? ¡Para nada!&quot;;"></em>
-            ¡Para nada! <strong data-cid="Q3UsEk">Cobramos 0% de comisión</strong>. Todo el dinero de tus ventas va directo a tu bolsillo o a tu cuenta de Yape/Plin. Nosotros no tocamos tus ganancias. 💰</p>
-<p data-cid="FG_-VM"><strong data-cid="iDyH3N">❓ ¿Cómo me pagan mis clientes?</strong><br data-cid="II9MGe">
-            El pago es directo entre tú y tu cliente. Puedes configurar <strong data-cid="lUaiqz">Yape, Plin, transferencia bancaria o pago contra entrega (efectivo)</strong>. Cuando el cliente hace el pedido por StoreClick, te llega un mensaje al WhatsApp con el detalle y tú le confirmas el pago. ¡Tú tienes el control!</p>
-<p data-cid="EzsOyG"><strong data-cid="bKBJ5w">❓ ¿Necesito tener una empresa registrada (RUC) para usarlo?</strong><br data-cid="eIju7N">
-            No es obligatorio. Puedes empezar como persona natural con DNI. Lo importante es que tengas ganas de vender. Eso sí, conforme vayas creciendo, te recomendamos formalizarte para acceder a más beneficios. 🏛️</p>
-<p data-cid="j5Y42Y"><strong data-cid="kxAcpU">❓ ¿Mis clientes necesitan descargar una App?</strong><br data-cid="22rqlk">
-            ¡No! Y esa es nuestra mayor ventaja. Tu tienda es <strong data-cid="bF78Ob">100% web</strong>. El cliente solo hace clic en tu link, elige lo que quiere y listo. Funciona perfecto en cualquier celular sin ocupar espacio en su memoria. 📱✨</p>
+    <footer class="pt-24 pb-10 border-t border-slate-800/60 bg-slate-950 mt-20 text-center">
+        <p class="text-slate-500 text-sm font-medium">© 2026 StoreClick. Todos los derechos reservados.</p>
+    </footer>
 </div>
-</section>
-<p style="text-align: center; margin-top: 50px; font-style: italic; color: #7f8c8d;" data-cid="SHF-kF">
-        StoreClick 2026 - Empoderando al emprendedor peruano con tecnología sencilla y efectiva. 🇵🇪
-    </p>
-<div class="reference-container" data-cid="cqWx0A">
-			<div class="reference-section" data-cid="sm0DEm">
-				<h3 class="reference-title" data-cid="wCntj4">Referencias</h3>
-				<div class="reference-list" data-cid="QYKuii">
-					
-					<div class="reference-item" data-cid="0G67x_">
-						<span class="reference-number" data-cid="klONME">[1]</span>
-						<div class="reference-content" data-cid="U2No1o">
-							<div class="reference-text-container" data-cid="uOJ2Vm">
-								<span class="reference-text" data-cid="VwTDl0">ChatGPT Image 13 mar 2026, 05_43_24 p.m.</span>
-									
-							</div>
-							<a href="https://api.skywork.ai/chat/chat/upload_file?file_id=2036895989741694976" class="reference-link" target="_blank" data-cid="XSp6Yf">
-								https://api.skywork.ai/chat/chat/upload_file?file_id=2036895989741694976
-							</a>
-						</div>
-					</div>
-					
-				</div>
-			</div>
-		</div></div>
-
-
-</body></html>

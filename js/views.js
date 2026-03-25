@@ -11,7 +11,9 @@ const VIEW_FILES = [
     'views/error.html',
     'views/modal-product.html',
     'views/superadmin.html',
-    'views/modals-store.html'
+    'views/modals-store.html',
+    'views/faq.html',
+    'views/manual.html'
 ];
 
 /**
