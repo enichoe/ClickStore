@@ -260,6 +260,23 @@ select.input option {
 .status-completed { background: rgba(16, 185, 129, 0.1); color: #10b981; }
 .status-cancelled { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
 
+/* Order Status Select Colors in Admin Panels */
+.status-select-pending { 
+    background-color: rgba(245, 158, 11, 0.15) !important; 
+    color: #fbbf24 !important; 
+    border-color: rgba(245, 158, 11, 0.3) !important; 
+}
+.status-select-attended { 
+    background-color: rgba(59, 130, 246, 0.15) !important; 
+    color: #60a5fa !important; 
+    border-color: rgba(59, 130, 246, 0.3) !important; 
+}
+.status-select-delivered { 
+    background-color: rgba(16, 185, 129, 0.15) !important; 
+    color: #34d399 !important; 
+    border-color: rgba(16, 185, 129, 0.3) !important; 
+}
+
 /* Skeleton Loader Animation */
 .skeleton {
     background: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
@@ -342,6 +359,14 @@ select.input option {
 
     /* Mobile Specific Tweaks */
     .mobile-simulator { display: none !important; }
+    
+    /* Responsive Buttons - Added for small screens */
+    .btn { 
+        padding: 10px 18px !important; 
+        font-size: 14px !important; 
+        gap: 8px !important;
+        border-radius: 12px !important;
+    }
     
     /* Grid adjustments */
     .grid-admin { grid-template-columns: 1fr; }

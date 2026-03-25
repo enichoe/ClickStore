@@ -457,6 +457,9 @@ function renderOrders() {
 
         const date = new Date(o.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
 
+        const statusValue = (o.status === 'processing') ? 'attended' : (o.status === 'completed' ? 'delivered' : o.status);
+        const statusClass = `status-select-${statusValue}`;
+
         return `
             <div class="p-4 bg-slate-900/40 border border-slate-800 rounded-xl flex flex-col md:flex-row justify-between md:items-center group hover:border-slate-700 transition-all gap-4">
                 <div class="flex items-center gap-4 w-full md:w-auto">
@@ -471,10 +474,10 @@ function renderOrders() {
                 <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end border-t border-slate-800 pt-3 md:border-t-0 md:pt-0">
                     <div class="text-left md:text-right flex flex-col items-start md:items-end w-full max-w-[120px]">
                         <p class="font-bold text-white mb-1">${currency}${parseFloat(o.total || 0).toFixed(2)}</p>
-                        <select class="input !py-1 !px-2 !text-[10px] font-bold uppercase tracking-wider !bg-slate-800 !border-slate-700 !rounded !text-slate-300 w-full" onchange="updateOrderStatus('${o.id}', this.value)">
-                            <option value="pending" ${o.status === 'pending' ? 'selected' : ''}>Pendiente</option>
-                            <option value="attended" ${o.status === 'attended' ? 'selected' : ''}>Atendido</option>
-                            <option value="delivered" ${o.status === 'delivered' ? 'selected' : ''}>Entregado</option>
+                        <select class="input !py-1 !px-2 !text-[10px] font-bold uppercase tracking-wider !rounded w-full ${statusClass}" onchange="updateOrderStatus('${o.id}', this.value)">
+                            <option value="pending" ${statusValue === 'pending' ? 'selected' : ''}>Pendiente</option>
+                            <option value="attended" ${statusValue === 'attended' ? 'selected' : ''}>Atendido</option>
+                            <option value="delivered" ${statusValue === 'delivered' ? 'selected' : ''}>Entregado</option>
                         </select>
                     </div>
                     <button class="btn btn-secondary btn-sm whitespace-nowrap" onclick="viewOrderDetails('${o.id}')">Ver Detalle</button>
@@ -504,7 +507,9 @@ function viewOrderDetails(id) {
     
     const statusSelect = document.getElementById('mo-status');
     if (statusSelect) {
-        statusSelect.value = (o.status === 'processing') ? 'attended' : (o.status === 'completed' ? 'delivered' : o.status);
+        const statusValue = (o.status === 'processing') ? 'attended' : (o.status === 'completed' ? 'delivered' : o.status);
+        statusSelect.value = statusValue;
+        statusSelect.className = `input !py-2 font-bold mb-4 w-full status-select-${statusValue}`;
     }
 
     const itemsDiv = document.getElementById('mo-items');
@@ -556,7 +561,10 @@ async function updateOrderStatus(orderId, newStatus) {
         // Sync modal status if open
         if (currentViewOrderId === orderId) {
             const ms = document.getElementById('mo-status');
-            if (ms) ms.value = newStatus;
+            if (ms) {
+                ms.value = newStatus;
+                ms.className = `input !py-2 font-bold mb-4 w-full status-select-${newStatus}`;
+            }
         }
         
         showToast('✅ Estado actualizado');
