@@ -1,0 +1,80 @@
+<div id="view-terms" style="display: none;">
+    <!-- Modern Glassmorphism Nav -->
+    <nav class="nav-saas">
+        <div class="nav-saas-inner">
+            <div class="flex items-center gap-3 text-2xl font-black tracking-tight text-white group cursor-pointer" onclick="showView('view-landing')">
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative p-2.5 rounded-xl bg-slate-900 border border-white/10 shadow-lg flex items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="url(#trm-logo-grad)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="trm-logo-grad" x1="3" y1="2" x2="21" y2="22" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#6366F1"/>
+                                    <stop offset="1" stop-color="#8B5CF6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">StoreClick</span>
+            </div>
+            <div class="flex gap-4">
+                <button class="btn btn-secondary !px-6" onclick="showView('view-landing')">Volver al Inicio</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-4xl mx-auto fade-in">
+        <header class="mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Términos de <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Servicio</span></h1>
+            <p class="text-slate-500 font-bold uppercase tracking-widest text-xs">Última actualización: 25 de marzo de 2026</p>
+        </header>
+
+        <div class="prose prose-invert max-w-none space-y-12">
+            <section class="card bg-slate-900/40 border-white/5 p-8">
+                <p class="text-slate-400 text-lg leading-relaxed mb-6">Bienvenido a <strong class="text-white">StoreClick</strong>. Los presentes Términos de Servicio rigen el acceso y uso de nuestro software SaaS para la creación de tiendas virtuales y gestión de pedidos a través de WhatsApp.</p>
+                <p class="text-slate-400 text-lg leading-relaxed">Al registrarse o usar StoreClick, el Usuario reconoce haber leído, entendido y aceptado estar sujeto a estos Términos, así como a nuestra Política de Privacidad.</p>
+            </section>
+
+            <section class="space-y-6">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <span class="text-indigo-500">01.</span> Aceptación de los Términos
+                </h2>
+                <div class="p-6 bg-slate-900/60 border border-white/5 rounded-2xl">
+                    <p class="text-slate-400 mb-4 leading-relaxed">Para utilizar StoreClick, el Usuario debe ser mayor de 18 años y contar con plena capacidad legal para contratar según las leyes de la República del Perú.</p>
+                    <p class="text-slate-400 mb-4 leading-relaxed">El uso continuo de la plataforma después de modificaciones implica la aceptación tácita de los nuevos términos.</p>
+                </div>
+            </section>
+
+            <section class="space-y-6">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <span class="text-indigo-500">02.</span> Descripción del Servicio
+                </h2>
+                <p class="text-slate-400 leading-relaxed">StoreClick es una plataforma "No-Code" que facilita la creación de catálogos digitales optimizados para móviles. El servicio incluye la gestión de inventario, carga de fotos y un carrito de compras que centraliza el pedido final en un mensaje directo al número de WhatsApp configurado por el Usuario.</p>
+            </section>
+
+            <section class="space-y-6">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <span class="text-indigo-500">03.</span> Suscripciones y Pagos
+                </h2>
+                <div class="card bg-indigo-500/5 border border-indigo-500/20 p-8 space-y-6">
+                    <p class="text-white font-bold">StoreClick NO es una pasarela de pagos.</p>
+                    <p class="text-slate-400 text-sm italic">Los pagos de las ventas realizadas por el Usuario (Yape, Plin, efectivo, transferencias) se gestionan directamente entre el Usuario y su cliente fuera de la plataforma. StoreClick no percibe comisiones por estas transacciones.</p>
+                    <p class="text-slate-400 text-sm">Debido a la naturaleza digital del servicio SaaS, mantenemos una <strong class="text-indigo-400">política de no reembolso</strong> para periodos ya facturados.</p>
+                </div>
+            </section>
+
+            <section class="space-y-6">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <span class="text-indigo-500">04.</span> Responsabilidad
+                </h2>
+                <p class="text-slate-400 leading-relaxed">StoreClick no interviene en la logística ni entrega de productos vendidos a través del catálogo. No somos responsables por interrupciones derivadas de fallas en proveedores externos como <strong class="text-white text-sm">WhatsApp, Vercel o Supabase</strong>, ni por disputas comerciales entre el vendedor y el comprador final.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer class="pt-24 pb-10 border-t border-slate-800/60 bg-slate-950 mt-20 text-center">
+        <p class="text-slate-500 text-sm font-medium">© 2026 StoreClick Perú. Todos los derechos reservados.</p>
+    </footer>
+</div>

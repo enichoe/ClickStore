@@ -1,0 +1,98 @@
+<div id="view-policies" style="display: none;">
+    <!-- Modern Glassmorphism Nav -->
+    <nav class="nav-saas">
+        <div class="nav-saas-inner">
+            <div class="flex items-center gap-3 text-2xl font-black tracking-tight text-white group cursor-pointer" onclick="showView('view-landing')">
+                <div class="relative">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative p-2.5 rounded-xl bg-slate-900 border border-white/10 shadow-lg flex items-center justify-center">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="url(#pol-logo-grad)" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="pol-logo-grad" x1="3" y1="2" x2="21" y2="22" gradientUnits="userSpaceOnUse">
+                                    <stop stop-color="#6366F1"/>
+                                    <stop offset="1" stop-color="#8B5CF6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">StoreClick</span>
+            </div>
+            <div class="flex gap-4">
+                <button class="btn btn-secondary !px-6" onclick="showView('view-landing')">Volver al Inicio</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-4xl mx-auto fade-in">
+        <header class="mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-6 leading-tight">Política de <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">Privacidad</span></h1>
+            <p class="text-slate-500 font-bold uppercase tracking-widest text-xs">Última actualización: 25 de marzo de 2026</p>
+        </header>
+
+        <div class="prose prose-invert max-w-none space-y-12">
+            <section class="card bg-slate-900/40 border-white/5 p-8">
+                <p class="text-slate-400 text-lg leading-relaxed mb-6">En <strong class="text-white">StoreClick</strong>, valoramos la confianza que depositas en nosotros al compartir tu información. Esta Política de Privacidad describe cómo recopilamos, utilizamos, almacenamos y protegemos tus datos personales, de estricto cumplimiento con la <strong class="text-white">Ley N° 29733, Ley de Protección de Datos Personales</strong> de la República del Perú.</p>
+                <p class="text-slate-400 text-lg leading-relaxed">Al utilizar nuestra plataforma, aceptas las prácticas descritas en este documento. Nos comprometemos a garantizar la confidencialidad y seguridad de tu información mediante estándares técnicos y organizativos de primer nivel.</p>
+            </section>
+
+            <section class="space-y-6">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <span class="text-indigo-500">01.</span> Información que Recopilamos
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-6 bg-slate-900/60 border border-white/5 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">👤</div>
+                        <h3 class="font-bold text-white mb-2">Datos de Registro</h3>
+                        <p class="text-sm text-slate-400">Nombre completo y correo electrónico para la creación y autenticación de tu cuenta.</p>
+                    </div>
+                    <div class="p-6 bg-slate-900/60 border border-white/5 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">🛍️</div>
+                        <h3 class="font-bold text-white mb-2">Información de la Tienda</h3>
+                        <p class="text-sm text-slate-400">Datos públicos de tu negocio y número vinculado a WhatsApp para la recepción de pedidos.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="space-y-6">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <span class="text-indigo-500">02.</span> Finalidad del Tratamiento de Datos
+                </h2>
+                <div class="card bg-slate-900/40 border-white/5 p-8">
+                    <ul class="space-y-6">
+                        <li class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 shrink-0 font-bold text-xs">A</div>
+                            <p class="text-slate-400"><strong class="text-white block">Provisión del Servicio:</strong> Gestionar tu cuenta, alojar tu catálogo digital y permitir pedidos vía WhatsApp.</p>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400 shrink-0 font-bold text-xs">B</div>
+                            <p class="text-slate-400"><strong class="text-white block">Soporte y Mejora:</strong> Analizar el uso para optimizar la plataforma y contactarte en caso de incidencias técnicas.</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="space-y-6">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <span class="text-indigo-500">03.</span> Seguridad de la Información
+                </h2>
+                <p class="text-slate-400 leading-relaxed">StoreClick utiliza infraestructura de vanguardia (<strong class="text-white">Supabase y Vercel</strong>) que cumple con estándares internacionales. Implementamos cifrado SSL/TLS en tránsito y en reposo para proteger tus datos.</p>
+            </section>
+
+            <section class="space-y-6">
+                <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                    <span class="text-indigo-500">04.</span> Derechos ARCO
+                </h2>
+                <div class="p-8 bg-indigo-500/5 border border-indigo-500/20 rounded-3xl">
+                    <p class="text-slate-300 mb-4">Tienes derecho a Acceso, Rectificación, Cancelación y Oposición de tus datos.</p>
+                    <p class="text-slate-400 text-sm italic">Para ejercer estos derechos, envía un correo a <strong class="text-white">hola@StoreClick.com</strong> con copia de tu documento de identidad.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="pt-24 pb-10 border-t border-slate-800/60 bg-slate-950 mt-20 text-center">
+        <p class="text-slate-500 text-sm font-medium">© 2026 StoreClick. Lima, Perú.</p>
+    </footer>
+</div>

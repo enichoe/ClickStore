@@ -13,7 +13,9 @@ const VIEW_FILES = [
     'views/superadmin.html',
     'views/modals-store.html',
     'views/faq.html',
-    'views/manual.html'
+    'views/manual.html',
+    'views/politicas.html',
+    'views/privacidad.html'
 ];
 
 /**

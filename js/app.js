@@ -14,7 +14,7 @@ async function showView(viewId, sectionId = null) {
     console.log(`[Navigation] Switching to: ${viewId}`);
     
     // Elementos principales de vista (No modales)
-    const mainViews = ['view-landing', 'view-admin', 'view-store', 'view-superadmin', 'view-error', 'view-faq', 'view-manual'];
+    const mainViews = ['view-landing', 'view-admin', 'view-store', 'view-superadmin', 'view-error', 'view-faq', 'view-manual', 'view-policies', 'view-terms'];
     const target = document.getElementById(viewId);
     if (!target) return console.error(`View not found: ${viewId}`);
 
@@ -22,7 +22,7 @@ async function showView(viewId, sectionId = null) {
 
     // 1. Gestionar vistas principales
     if (!isTargetModal) {
-        document.querySelectorAll('#view-landing, #view-admin, #view-store, #view-superadmin, #view-error, #view-faq, #view-manual').forEach(el => {
+        document.querySelectorAll('#view-landing, #view-admin, #view-store, #view-superadmin, #view-error, #view-faq, #view-manual, #view-policies, #view-terms').forEach(el => {
             el.style.display = 'none';
         });
         target.style.display = 'block';
