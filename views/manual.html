@@ -1,0 +1,372 @@
+<!DOCTYPE html><html><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Manual de Usuario - StoreClick: Tu Tienda en WhatsApp</title>
+<style>
+        :root {
+            --primary-color: #25D366; /* WhatsApp Green */
+            --secondary-color: #128C7E;
+            --accent-color: #34b7f1;
+            --text-dark: #2c3e50;
+            --text-light: #546e7a;
+            --bg-light: #f4f7f6;
+            --white: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: var(--white);
+            padding: 60px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 8px;
+        }
+
+        header {
+            border-bottom: 3px solid var(--primary-color);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
+
+        .logo-placeholder {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            margin: 10px 0;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+        }
+
+        header p {
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        nav.toc {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 50px;
+        }
+
+        nav.toc h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        nav.toc ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav.toc ul li {
+            margin: 12px 0;
+        }
+
+        nav.toc ul li a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        nav.toc ul li a:hover {
+            color: var(--primary-color);
+        }
+
+        section {
+            margin-bottom: 60px;
+            padding-top: 20px;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            color: var(--secondary-color);
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-top: 30px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .step-box {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.02);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .highlight {
+            background-color: #e8f5e9;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        .pro-tip {
+            background: #fff9c4;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid #fbc02d;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .pro-tip strong {
+            color: #f57f17;
+        }
+
+        .alert-box {
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 5px solid #ef5350;
+            margin: 20px 0;
+        }
+
+        img.screenshot-placeholder {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            margin: 15px 0;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+            min-height: 200px;
+        }
+
+        ul.feature-list {
+            padding-left: 20px;
+        }
+
+        ul.feature-list li {
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            margin-top: 60px;
+        }
+
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; margin: 0; width: 100%; max-width: 100%; }
+            .no-print { display: none; }
+            section { page-break-inside: avoid; }
+        }
+    </style>
+
+</head><body>
+<div class="container" data-cid="EmxpfD">
+<header data-cid="lzvv4B">
+<div class="logo-placeholder" data-cid="Wjf2Qi">STORECLICK</div>
+<h1 id="section-1" data-cid="l-4WOY">Guía Completa para el Emprendedor</h1>
+<p data-cid="NEgFlN">Crea tu tienda virtual en minutos y recibe pedidos directamente a tu WhatsApp<em data-skywork="text_badge" data-sk-source-type="image" data-sk-source-text="Crea tu tienda virtual en minutos y recibe pedidos directamente a tu WhatsApp" id="skTag-2036896023661056000" class="sk-source-tag" data-sk-source-id="2036896023661056000" data-sk-source-website-name="" data-sk-source-website-url="https://static-us-img.skywork.ai/prod/analysis/2026-03-25/1910523250036746874/2036895989741694976_3ab8006c323b0ec3d448731847a64695.png" data-sk-source-source-id="2036895989741694976" data-cid="NxOcVa" style="--sk-source-display-name: &quot;Crea tu tienda virtual en minutos y recibe pedidos directamente a tu WhatsApp&quot;;"></em></p>
+</header>
+<nav class="toc" data-cid="ZoKDlT">
+<h2 id="section-1" data-cid="X69xL6">Contenido del Manual</h2>
+<ul data-cid="4WI3Qo">
+<li data-cid="J9d_uz"><a href="#registro" data-cid="tydrE9">1. Registro de Usuario: Primeros Pasos</a></li>
+<li data-cid="Zn3Vfl"><a href="#configuracion" data-cid="XiGXh0">2. Configuración Maestro de la Tienda</a></li>
+<li data-cid="njT-pQ"><a href="#productos" data-cid="AYU9v9">3. Gestión de Inventario: Subida de Productos</a></li>
+<li data-cid="d1gGP6"><a href="#compartir" data-cid="9roX0v">4. Difusión: Cómo Compartir tu Link</a></li>
+<li data-cid="niThkL"><a href="#compra" data-cid="icC6HA">5. El Proceso de Venta: Experiencia del Cliente</a></li>
+</ul>
+</nav>
+<!-- SECCIÓN 1: REGISTRO -->
+<section id="registro" data-cid="03hlQs">
+<h2 id="section-2" data-cid="mwyLkS">1. Registro de Usuario</h2>
+<p data-cid="Cq_fUn">Bienvenido a la revolución digital para tu negocio. StoreClick ha sido diseñado para que no pierdas tiempo en configuraciones técnicas complejas<em data-skywork="text_badge" data-sk-source-type="web_search" data-sk-source-text="StoreClick ha sido diseñado para que no pierdas tiempo en configuraciones técnicas complejas." id="skTag-2036883508326240258" class="sk-source-tag" data-sk-source-id="2036883508326240258" data-sk-source-website-name="tiktok.com" data-sk-source-website-url="https://www.tiktok.com/@ganventapp/video/7495790330176867590" data-sk-source-source-id="2036883508312637445" data-cid="CEOYe-" style="--sk-source-display-name: &quot;tiktok.com&quot;;"></em>. El registro es el primer paso para profesionalizar tus ventas.</p>
+<div class="step-box" data-cid="J8x47R">
+<span class="step-number" data-cid="dXvhl8">1</span>
+<strong data-cid="8zLHQD">Acceso a la Plataforma:</strong> Ingresa a nuestra landing page oficial. En la parte superior derecha o en el centro de la pantalla principal, verás un botón llamativo que dice <span class="highlight" data-cid="Iex1Sl">"Empezar Gratis"</span>.
+        </div>
+<div class="step-box" data-cid="elLrlu">
+<span class="step-number" data-cid="RmwKm7">2</span>
+<strong data-cid="kMKDVW">Formulario de Registro:</strong> Al hacer clic, se abrirá un formulario sencillo. Deberás ingresar:
+            <ul class="feature-list" data-cid="rrkZ8b">
+<li data-cid="AW7mgw">Un correo electrónico válido (donde recibirás notificaciones importantes).<em data-skywork="text_badge" data-sk-source-type="url" data-sk-source-text="Un correo electrónico válido (donde recibirás notificaciones importantes)." id="skTag-2036894995706880000" class="sk-source-tag" data-sk-source-id="2036894995706880000" data-sk-source-website-name="" data-sk-source-website-url="https://www.facebook.com/profile.php?id=61585579774980&amp;locale=es_LA" data-sk-source-source-id="2036894977148628992" data-cid="sg2Yve" style="--sk-source-display-name: &quot;Un correo electrónico válido (donde recibirás notificaciones importantes).&quot;;"></em></li>
+<li data-cid="gE_f33">Una contraseña segura (mínimo 8 caracteres).<em data-skywork="text_badge" data-sk-source-type="url" data-sk-source-text="Una contraseña segura (mínimo 8 caracteres)." id="skTag-2036894995706880000" class="sk-source-tag" data-sk-source-id="2036894995706880000" data-sk-source-website-name="" data-sk-source-website-url="https://www.facebook.com/profile.php?id=61585579774980&amp;locale=es_LA" data-sk-source-source-id="2036894977148628992" data-cid="_ilcXV" style="--sk-source-display-name: &quot;Una contraseña segura (mínimo 8 caracteres).&quot;;"></em></li>
+</ul>
+</div>
+<div class="step-box" data-cid="UT1KL6">
+<span class="step-number" data-cid="Jhu9ZL">3</span>
+<strong data-cid="jm8lRU">Confirmación:</strong> StoreClick utiliza <strong data-cid="d-Lhs8">Supabase</strong> para garantizar que tus datos estén protegidos. Una vez completes el registro, revisa tu bandeja de entrada para confirmar tu cuenta y acceder directamente al panel de control (Dashboard).
+        </div>
+<div class="pro-tip" data-cid="HY7lXI">
+<strong data-cid="1OSiFg">💡 Pro-Tip:</strong> No necesitas tarjeta de crédito para comenzar. Nuestro modelo está enfocado en que pruebes la potencia de vender por WhatsApp sin barreras de entrada.
+        </div>
+</section>
+<!-- SECCIÓN 2: CONFIGURACIÓN -->
+<section id="configuracion" data-cid="MN19EH">
+<h2 id="section-3" data-cid="w3U5uX">2. Configuración de la Tienda</h2>
+<p data-cid="s4Xd1p">Una tienda sin identidad es solo una lista de productos. En esta sección personalizaremos tu vitrina para que tus clientes confíen en tu marca desde el primer segundo.</p>
+<h3 id="section-3-1" data-cid="0rJ7E2">Identidad de Marca</h3>
+<div class="step-box" data-cid="IA4SWV">
+<span class="step-number" data-cid="4MzBre">1</span>
+<strong data-cid="TS2gjI">Nombre de la Tienda:</strong> Este será el nombre público que verán tus clientes. Elige un nombre corto y fácil de recordar.
+        </div>
+<div class="step-box" data-cid="3BlwVU">
+<span class="step-number" data-cid="-g8Xjf">2</span>
+<strong data-cid="mTAVgq">Subida de Logo:</strong> Haz clic en el área de carga de imagen. Te recomendamos usar un logo en formato cuadrado (PNG o JPG) para que se visualice correctamente en dispositivos móviles.
+        </div>
+<h3 id="section-3-2" data-cid="wqzz9k">Canales de Venta y Pago</h3>
+<div class="step-box" data-cid="6JrWO5">
+<span class="step-number" data-cid="WtMhIq">3</span>
+<strong data-cid="fjcDDz">Número de WhatsApp:</strong> Este es el paso más importante. Ingresa tu número de celular con el código de país (Ejemplo: <span class="highlight" data-cid="f44jI3">+51 987 654 321</span>). A este número llegarán todos los pedidos detallados.
+        </div>
+<div class="step-box" data-cid="EGYPEW">
+<span class="step-number" data-cid="S7Q4fg">4</span>
+<strong data-cid="l-OF_X">Códigos QR (Yape / Plin):</strong> Para facilitar el pago, sube las capturas de pantalla de tus códigos QR de Yape y Plin. StoreClick mostrará estos códigos al finalizar la compra para que el cliente te pague al instante.
+        </div>
+<div class="alert-box" data-cid="qw7-V4">
+<strong data-cid="4OCV8-">⚠️ Atención:</strong> Asegúrate de que el número de WhatsApp sea el correcto y esté activo, de lo contrario, los clientes no podrán enviarte sus pedidos.
+        </div>
+</section>
+<!-- SECCIÓN 3: SUBIDA DE PRODUCTOS -->
+<section id="productos" data-cid="vv62Tg">
+<h2 id="section-4" data-cid="z6ZuWj">3. Subida de Productos</h2>
+<p data-cid="6j4Klu">Tu catálogo es el corazón de tu negocio. Sigue estos pasos para crear una vitrina atractiva y organizada.</p>
+<div class="step-box" data-cid="Vpyalz">
+<span class="step-number" data-cid="zbgTRI">1</span>
+<strong data-cid="c-oE5y">Añadir Nuevo Producto:</strong> Dentro de tu panel, busca el botón <span class="highlight" data-cid="RBu4XQ">+ Nuevo Producto</span>. Se desplegará una ventana con los campos necesarios.
+        </div>
+<div class="step-box" data-cid="PYzPvX">
+<span class="step-number" data-cid="rX-E6k">2</span>
+<strong data-cid="nPhn7-">Información Básica:</strong>
+<ul class="feature-list" data-cid="Vbia9h">
+<li data-cid="RmTaQd"><strong data-cid="KhsFP2">Nombre del Producto:</strong> Sé descriptivo (Ej: "Zapatillas Urbanas Blancas Talla 40").</li>
+<li data-cid="2iKClm"><strong data-cid="jOIdus">Precio en Soles:</strong> Ingresa solo números. El sistema añadirá automáticamente el símbolo de <strong data-cid="rl1PkQ">S/</strong>.</li>
+<li data-cid="AwdEC_"><strong data-cid="mHeAyb">Categoría:</strong> Organiza tus productos (Ej: Calzado, Ropa, Tecnología) para que el cliente pueda filtrar fácilmente.</li>
+</ul>
+</div>
+<div class="step-box" data-cid="uj1zes">
+<span class="step-number" data-cid="yDIyUL">3</span>
+<strong data-cid="V0NMkt">Imagen y Descripción:</strong> Sube una foto nítida de tu producto con buena iluminación. En la descripción, detalla materiales, tallas disponibles o beneficios del producto.
+        </div>
+<div class="pro-tip" data-cid="T4bojL">
+<strong data-cid="26u2HJ">📸 Consejo de Oro:</strong> Las fotos con fondo blanco o en ambientes iluminados aumentan la tasa de conversión en un 40%. ¡Tómate un minuto extra para una buena foto!
+        </div>
+</section>
+<!-- SECCIÓN 4: COMPARTIR LINK -->
+<section id="compartir" data-cid="iln6Xe">
+<h2 id="section-5" data-cid="UOfK7Z">4. Compartir el Link de tu Tienda</h2>
+<p data-cid="cBQwkv">Una vez configurada, es hora de que el mundo conozca tu tienda. StoreClick genera un enlace único para tu negocio.</p>
+<div class="step-box" data-cid="22T3aO">
+<span class="step-number" data-cid="RLCrUG">1</span>
+<strong data-cid="4B_w0e">Obtener tu Enlace:</strong> En la parte superior de tu Dashboard, verás un enlace similar a: <br data-cid="lv-Deb">
+<code data-cid="KeQeqH">https://click-store-weld.vercel.app/?store=nombre-de-tu-tienda</code>
+</div>
+<div class="step-box" data-cid="loR2nW">
+<span class="step-number" data-cid="KuI7Uw">2</span>
+<strong data-cid="0ilOyj">Copiar y Difundir:</strong> Haz clic en el botón "Copiar Link". Ahora puedes pegarlo en:
+            <ul class="feature-list" data-cid="Ye_KKE">
+<li data-cid="WcGiA8"><strong data-cid="MkwrR3">Instagram:</strong> En el enlace de tu biografía (Link in Bio).</li>
+<li data-cid="pblG9M"><strong data-cid="bv3881">Facebook:</strong> En tus publicaciones o en el botón "Comprar" de tu Fan Page.</li>
+<li data-cid="JBN4_n"><strong data-cid="diSwNQ">Estados de WhatsApp:</strong> Compártelo diariamente con tus contactos.</li>
+<li data-cid="SutJd1"><strong data-cid="CIMph0">TikTok:</strong> En la descripción de tu perfil para dirigir el tráfico.</li>
+</ul>
+</div>
+</section>
+<!-- SECCIÓN 5: PROCESO DE COMPRA -->
+<section id="compra" data-cid="smOToO">
+<h2 id="section-6" data-cid="gXjwWs">5. Proceso de Compra para el Cliente Final</h2>
+<p data-cid="p7ZuS1">Es vital que entiendas cómo vive la experiencia tu cliente para que puedas asistirlo si tiene dudas. El flujo es rápido, intuitivo y sin fricciones.</p>
+<div class="step-box" data-cid="PWyjmL">
+<span class="step-number" data-cid="CqQn4g">1</span>
+<strong data-cid="Vlwbb_">Entrada a la Tienda:</strong> El cliente hace clic en tu link y ve tu catálogo optimizado para celular. Puede navegar por categorías y ver fotos de alta calidad.
+        </div>
+<div class="step-box" data-cid="0wvDlt">
+<span class="step-number" data-cid="UEUOWB">2</span>
+<strong data-cid="cPBCz8">Carrito de Compras:</strong> El cliente selecciona los productos que desea, elige la cantidad y hace clic en <span class="highlight" data-cid="o_FjHq">"Añadir al Carrito"</span>.
+        </div>
+<div class="step-box" data-cid="trgduY">
+<span class="step-number" data-cid="pjte9J">3</span>
+<strong data-cid="apPy5W">Datos de Entrega:</strong> Al finalizar, el cliente debe llenar un pequeño formulario con su nombre, dirección y celular para el delivery.
+        </div>
+<div class="step-box" data-cid="DMDk1g">
+<span class="step-number" data-cid="GALEUW">4</span>
+<strong data-cid="X_gbh1">Método de Pago:</strong> El sistema mostrará tus opciones configuradas. El cliente verá tus códigos de <strong data-cid="oTz2ze">Yape o Plin</strong> para realizar la transferencia en ese momento.
+        </div>
+<div class="step-box" data-cid="XEi_yU">
+<span class="step-number" data-cid="AkFZCX">5</span>
+<strong data-cid="3_DnT6">Envío por WhatsApp:</strong> Este es el momento mágico. El cliente hace clic en "Finalizar Pedido" y StoreClick abre automáticamente su WhatsApp con un <strong data-cid="CyYpEa">mensaje pre-escrito</strong> que contiene:
+            <ul class="feature-list" data-cid="5gCdx5">
+<li data-cid="QDi0GK">Lista de productos y precios.</li>
+<li data-cid="gLst-t">Monto total a pagar.</li>
+<li data-cid="rYR9Jr">Dirección de entrega.</li>
+<li data-cid="HATQSR">Captura o aviso del pago realizado.</li>
+</ul>
+</div>
+<div class="pro-tip" data-cid="LB3YQK">
+<strong data-cid="V_S3o5">✅ Ventaja:</strong> Como vendedor, recibes el pedido ordenado. Ya no tienes que preguntar "¿Qué producto quieres?" o "¿Cuál es tu dirección?". ¡Todo llega listo para despachar!
+        </div>
+</section>
+<footer data-cid="Qoyd8i">
+<p data-cid="pDn0Uc">© 2026 StoreClick - Potenciando el comercio local en Perú.</p>
+<p data-cid="4qLVin">Desarrollado con tecnología de alta velocidad para que tu negocio nunca se detenga.<em data-skywork="text_badge" data-sk-source-type="image" data-sk-source-text="Desarrollado con tecnología de alta velocidad para que tu negocio nunca se detenga." id="skTag-2036896023661056000" class="sk-source-tag" data-sk-source-id="2036896023661056000" data-sk-source-website-name="" data-sk-source-website-url="https://static-us-img.skywork.ai/prod/analysis/2026-03-25/1910523250036746874/2036895989741694976_3ab8006c323b0ec3d448731847a64695.png" data-sk-source-source-id="2036895989741694976" data-cid="tPr2nk" style="--sk-source-display-name: &quot;Desarrollado con tecnología de alta velocidad para que tu negocio nunca se detenga.&quot;;"></em></p>
+</footer>
+</div>
+
+
+</body></html>
