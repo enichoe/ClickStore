@@ -10,6 +10,20 @@ let appState = {
 };
 
 // ======================= VIEW CONTROLLER =======================
+/**
+ * Controla la visibilidad del botón flotante de WhatsApp.
+ * Solo debe ser visible en la landing page.
+ */
+function syncWhatsAppButton(viewId) {
+    const waBtn = document.querySelector('.whatsapp-float');
+    if (!waBtn) return;
+    if (viewId === 'view-landing') {
+        waBtn.style.display = '';   // Restaurar display original (flex)
+    } else {
+        waBtn.style.display = 'none';
+    }
+}
+
 async function showView(viewId, sectionId = null) {
     console.log(`[Navigation] Switching to: ${viewId}`);
     
@@ -26,6 +40,8 @@ async function showView(viewId, sectionId = null) {
             el.style.display = 'none';
         });
         target.style.display = 'block';
+        // Sincronizar botón flotante de WhatsApp: solo en landing
+        syncWhatsAppButton(viewId);
     }
 
     // 2. Gestionar Modales

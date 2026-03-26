@@ -954,3 +954,49 @@ select.input option {
         height: 56px;
     }
 }
+
+/* =============================================
+   Store Name – Mobile Overflow Fix
+   ============================================= */
+
+/* Hero title: reduce size on small screens and allow word-wrap */
+#store-title-main {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+@media (max-width: 480px) {
+    #store-title-main {
+        font-size: 2rem !important;   /* ~32px, legible sin romper layout */
+        line-height: 1.15;
+        /* 2-line ellipsis as fallback for very long names */
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+    #store-title-main {
+        font-size: 2.5rem !important;  /* ~40px */
+        line-height: 1.15;
+    }
+}
+
+/* Nav title: prevent long names from pushing nav icons off-screen */
+#store-title-nav {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 140px;  /* Desktop safe - hidden on sm anyway */
+}
+
+@media (min-width: 640px) and (max-width: 900px) {
+    /* Visible only on sm+, but on tablets the name can still overflow */
+    #store-title-nav {
+        max-width: 180px;
+    }
+}
