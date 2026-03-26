@@ -1000,3 +1000,52 @@ select.input option {
         max-width: 180px;
     }
 }
+
+/* =============================================
+   Testimonial Logo Styles
+   ============================================= */
+
+/* Contenedor cuadrado con borde sutil para logos transparentes o con fondo */
+.testimonial-logo-wrap {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Imagen del logo: llena el contenedor sin distorsionarse */
+.testimonial-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    padding: 4px;   /* Pequeño margen interno para logos con padding propio */
+    display: block;
+}
+
+/* Fallback: inicial de color cuando la imagen no carga */
+.testimonial-logo-fallback {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 1.25rem;
+}
+
+/* Responsive: el wrapper escala ligeramente en mobile para mejor visibilidad */
+@media (max-width: 480px) {
+    .testimonial-logo-wrap {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+    }
+}
