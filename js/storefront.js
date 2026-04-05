@@ -389,7 +389,7 @@ function renderProductGrid() {
             <div class="px-6 pb-6 flex flex-col flex-1">
                 <h4 class="text-lg font-black text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2">${p.name}</h4>
                 <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">${p.description || 'Sin descripción adicional'}</p>
-                <button type="button" class="w-full mt-4 bg-indigo-600 text-white font-black rounded-xl py-3 hover:bg-indigo-700 active:scale-95 transition-all md:hidden" onclick="addToCart('${p.id}')">
+                <button type="button" class="w-full mt-4 bg-indigo-600 text-white font-black rounded-xl py-3 hover:bg-indigo-700 active:scale-95 transition-all" onclick="addToCart('${p.id}')">
                     Agregar ${currencySymbol}${parseFloat(p.price).toFixed(2)}
                 </button>
             </div>
@@ -600,7 +600,7 @@ function setPaymentMethod(method) {
 
     const digitalInfo = document.getElementById('payment-digital-info');
     const methodName = document.getElementById('payment-method-name');
-    const digitalContainer = digitalInfo?.querySelector('.bg-slate-50');
+    const digitalContainer = digitalInfo?.querySelector('div.border'); // Primer div hijo con clase border
     
     if (method === 'cash') {
         digitalInfo.classList.add('hidden');
@@ -610,8 +610,8 @@ function setPaymentMethod(method) {
         
         // Actualizar colores según método
         if (digitalContainer) {
-            digitalContainer.classList.remove('bg-slate-50', 'border-slate-200');
-            methodName.classList.remove('text-slate-900');
+            digitalContainer.classList.remove('bg-slate-50', 'bg-purple-50', 'bg-teal-50', 'border-slate-200', 'border-purple-200', 'border-teal-200');
+            methodName.classList.remove('text-slate-900', 'text-purple-700', 'text-teal-700');
             
             if (method === 'yape') {
                 // Morado
@@ -621,6 +621,9 @@ function setPaymentMethod(method) {
                 // Celeste/Teal
                 digitalContainer.classList.add('bg-teal-50', 'border-teal-200');
                 methodName.classList.add('text-teal-700');
+            } else {
+                digitalContainer.classList.add('bg-slate-50', 'border-slate-200');
+                methodName.classList.add('text-slate-900');
             }
         }
         
