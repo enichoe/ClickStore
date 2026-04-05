@@ -384,11 +384,6 @@ function renderProductGrid() {
                     <img src="${p.image || ''}" alt="${p.name}" class="w-full h-full object-cover" ${p.image ? '' : 'style="display: none;"'}>
                     <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-5xl" ${p.image ? 'style="display: none;"' : ''}>📦</div>
                     <div class="product-price-badge">${currencySymbol}${parseFloat(p.price).toFixed(2)}</div>
-                    <div class="product-add-overlay">
-                        <button type="button" class="product-add-btn" onclick="addToCart('${p.id}')">
-                            Agregar ${currencySymbol}${parseFloat(p.price).toFixed(2)}
-                        </button>
-                    </div>
                 </div>
             </div>
             <div class="px-6 pb-6 flex flex-col flex-1">
@@ -605,6 +600,7 @@ function setPaymentMethod(method) {
 
     const digitalInfo = document.getElementById('payment-digital-info');
     const methodName = document.getElementById('payment-method-name');
+    const digitalContainer = digitalInfo?.querySelector('.bg-slate-50');
     
     if (method === 'cash') {
         digitalInfo.classList.add('hidden');
@@ -612,18 +608,31 @@ function setPaymentMethod(method) {
         digitalInfo.classList.remove('hidden');
         methodName.innerText = `Paga con ${method.toUpperCase()}`;
         
-        // Cargar QR y número
+        // Actualizar colores según método
+        if (digitalContainer) {
+            digitalContainer.classList.remove('bg-slate-50', 'border-slate-200');
+            methodName.classList.remove('text-slate-900');
+            
+            if (method === 'yape') {
+                // Morado
+                digitalContainer.classList.add('bg-purple-50', 'border-purple-200');
+                methodName.classList.add('text-purple-700');
+            } else if (method === 'plin') {
+                // Celeste/Teal
+                digitalContainer.classList.add('bg-teal-50', 'border-teal-200');
+                methodName.classList.add('text-teal-700');
+            }
+        }
+        
+        // Cargar QR 
         const qrUrl = appState.tenant[`${method}_qr_url`];
         const qrImg = document.getElementById('pay-qr-img');
-        const qrPlc = document.getElementById('pay-qr-placeholder');
         
         if (qrUrl && qrImg) {
             qrImg.src = qrUrl;
             qrImg.classList.remove('hidden');
-            if (qrPlc) qrPlc.classList.add('hidden');
         } else {
             if (qrImg) qrImg.classList.add('hidden');
-            if (qrPlc) qrPlc.classList.remove('hidden');
         }
 
         document.getElementById('pay-phone-label').innerText = appState.tenant.whatsapp_phone || 'Pendiente Configurar';

@@ -479,13 +479,10 @@
                         <!-- Digital Payment Details -->
                         <div id="payment-digital-info" class="hidden animate-slide-up">
                             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center">
-                                <p id="payment-method-name" class="font-black text-slate-900 uppercase tracking-widest mb-2">Paga con Yape</p>
-                                <div class="bg-white p-3 rounded-xl border border-slate-100 inline-block mb-3 shadow-sm overflow-hidden">
+                                <p id="payment-method-name" class="font-black text-slate-900 uppercase tracking-widest mb-4">Paga con Yape</p>
+                                <div class="bg-white p-3 rounded-xl border border-slate-100 inline-block mb-4 shadow-sm overflow-hidden">
                                     <div id="pay-qr-container" class="w-32 h-32 flex items-center justify-center text-slate-200">
                                         <img id="pay-qr-img" src="" class="w-full h-full object-contain hidden border-none">
-                                        <div id="pay-qr-placeholder">
-                                            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M20 8h.01M4 8h.01M4 16h.01M4 20h4M4 4h4v4H4V4zm12 0h4v4h-4V4zM4 16h4v4H4v-4z"/></svg>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="flex flex-col items-center gap-2">
@@ -495,7 +492,7 @@
                                 
                                 <!-- Voucher Upload -->
                                 <div class="mt-6 border-t border-slate-200 pt-6 text-left">
-                                    <label class="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2 block">📸 Sube tu comprobante (Opcional)</label>
+                                    <label class="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2 block">Sube tu comprobante (Opcional)</label>
                                     <input type="file" id="pay-voucher-file" class="hidden" accept="image/*" onchange="previewVoucher(event)">
                                     <div class="voucher-upload-preview" onclick="document.getElementById('pay-voucher-file').click()">
                                         <div id="voucher-placeholder" class="text-center">
