@@ -226,9 +226,9 @@ function renderSocialLinks() {
                 a.className = 'social-btn-hero';
                 a.dataset.network = item.key;
                 a.dataset.tooltip = item.name;
-                // Renderizar icono gris por defecto (los colores de marca se aplican en hover con CSS)
+                // Iconos con color de marca por defecto
                 a.innerHTML = `
-                    <span class="social-icon" style="transition: transform 0.3s;">${item.icon}</span>
+                    <span class="social-icon" style="color: ${BRAND_COLORS[item.key]}; transition: transform 0.3s;">${item.icon}</span>
                     ${item.key === 'whatsapp' ? '<span class="wsp-label-badge">Escríbenos</span>' : ''}
                 `;
 
