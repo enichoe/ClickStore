@@ -45,6 +45,40 @@ function syncWhatsAppButton(viewId) {
  * @param {string} viewId - ID de la vista a mostrar (ej: 'view-store', 'view-admin')
  * @param {string} sectionId - (Opcional) Sección específica dentro de la vista (ej: 'products', 'settings')
  */
+function showView(viewId, sectionId = null) {
+    console.log(`[showView] Mostrando vista: ${viewId}`, sectionId ? `(sección: ${sectionId})` : '');
+    
+    // Hide all main views
+    const mainViews = ['view-landing', 'view-store', 'view-admin', 'view-superadmin', 'view-auth'];
+    mainViews.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Show requested view
+    const targetView = document.getElementById(viewId);
+    if (targetView) {
+        targetView.style.display = 'block';
+    } else {
+        // Fallback: if view-register not found, try view-auth
+        if (viewId === 'view-register') {
+            const authView = document.getElementById('view-auth');
+            if (authView) authView.style.display = 'block';
+        }
+        return;
+    }
+
+    // Sync WhatsApp button (only visible on landing)
+    syncWhatsAppButton(viewId);
+
+    // Show section if specified
+    if (sectionId) {
+        if (viewId === 'view-admin') showAdminSection(sectionId);
+        else if (viewId === 'view-superadmin') showSuperAdminSection(sectionId);
+        else if (viewId === 'view-auth') showAuthSection(sectionId);
+    }
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 function showAdminSection(section) {
@@ -210,4 +244,3 @@ window.addEventListener('error', (event) => {
 });
 
 // Note: checkSession is now called by views.js after dynamic views are loaded.
-
