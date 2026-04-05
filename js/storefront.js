@@ -82,71 +82,183 @@ function renderStorefront() {
 
     // Header Nav Logo
     if (appState.tenant.logo_url) {
-        logoImgNav.src = appState.tenant.logo_url;
-        logoImgNav.classList.remove('hidden');
-        logoPlaceholderNav.classList.add('hidden');
+        if (logoImgNav) {
+            logoImgNav.src = appState.tenant.logo_url;
+            logoImgNav.classList.remove('hidden');
+        }
+        if (logoPlaceholderNav) logoPlaceholderNav.classList.add('hidden');
     } else {
-        logoImgNav.classList.add('hidden');
-        logoPlaceholderNav.classList.remove('hidden');
-        logoPlaceholderNav.innerText = initial;
+        if (logoImgNav) logoImgNav.classList.add('hidden');
+        if (logoPlaceholderNav) {
+            logoPlaceholderNav.classList.remove('hidden');
+            logoPlaceholderNav.innerText = initial;
+        }
     }
 
     // Hero Logo
     if (appState.tenant.logo_url) {
-        logoImgHero.src = appState.tenant.logo_url;
-        logoImgHero.classList.remove('hidden');
-        logoPlaceholderHero.classList.add('hidden');
+        if (logoImgHero) {
+            logoImgHero.src = appState.tenant.logo_url;
+            logoImgHero.classList.remove('hidden');
+            logoImgHero.style.display = 'block'; // Ensure it's visible if it was hidden
+        }
+        if (logoPlaceholderHero) logoPlaceholderHero.style.display = 'none';
     } else {
-        logoImgHero.classList.add('hidden');
-        logoPlaceholderHero.classList.remove('hidden');
-        logoPlaceholderHero.innerText = initial;
+        if (logoImgHero) logoImgHero.style.display = 'none';
+        if (logoPlaceholderHero) {
+            logoPlaceholderHero.style.display = 'flex';
+            logoPlaceholderHero.innerText = initial;
+            // Use accent color for placeholder if available
+            if (appState.tenant.accent_color) {
+                logoPlaceholderHero.style.backgroundColor = appState.tenant.accent_color;
+            }
+        }
     }
 
-    document.getElementById('store-title-nav').innerText = appState.tenant.name;
-    document.getElementById('store-title-main').innerText = appState.tenant.name;
-    document.getElementById('store-tagline').innerText = appState.tenant.description || 'Bienvenido a nuestra tienda virtual.';
+    const titleNav = document.getElementById('store-title-nav');
+    const titleMain = document.getElementById('store-title-main');
+    const tagline = document.getElementById('store-tagline');
+
+    if (titleNav) titleNav.innerText = appState.tenant.name;
+    if (titleMain) titleMain.innerText = appState.tenant.name;
+    if (tagline) tagline.innerText = appState.tenant.description || 'Bienvenido a nuestra tienda virtual.';
+
+    // 1.5. Configuración del Banner
+    const heroBanner = document.querySelector('.store-hero-banner');
+    const bannerImg = document.getElementById('store-banner-img');
+    const bannerOverlay = document.getElementById('store-banner-overlay');
+
+    if (heroBanner) {
+        const bgImg = appState.tenant.store_banner_bg;
+        const accent = appState.tenant.accent_color || '#4f46e5';
+
+        if (bgImg) {
+            if (bannerImg) {
+                bannerImg.src = bgImg;
+                bannerImg.classList.remove('hidden');
+            }
+            if (bannerOverlay) bannerOverlay.classList.remove('hidden');
+            heroBanner.style.background = '#000'; // Dark base for loading
+        } else {
+            if (bannerImg) bannerImg.classList.add('hidden');
+            if (bannerOverlay) bannerOverlay.classList.add('hidden');
+            
+            // Dynamic Gradient based on accent color
+            // We create a gradient from a darker version to a slightly lighter version or viceversa
+            heroBanner.style.background = `linear-gradient(135deg, ${accent}, ${adjustColor(accent, -20)})`;
+        }
+    }
 
     // 2. Redes Sociales
-    const socialDiv = document.getElementById('store-social-links');
-    if (socialDiv) {
-        socialDiv.innerHTML = '';
-        const links = [
-            { id: 'facebook_url', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>' },
-            { id: 'instagram_url', icon: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="4"/><circle cx="12" cy="12" r="3"/><path d="M16.5 7.5v.01"/></svg>' },
-            { id: 'tiktok_url', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.1-3.44-3.37-3.5-5.75-.12-2.13.86-4.23 2.49-5.59 1.49-1.28 3.4-1.91 5.35-1.65v4.26c-.99-.25-2.09.08-2.81.84-.54.53-.83 1.29-.81 2.04.01.76.35 1.51.94 2.01.61.48 1.41.67 2.17.51.98-.16 1.83-.93 2.03-1.91.07-.36.07-.74.07-1.11V0z"/></svg>' },
-            { id: 'whatsapp_url', icon: '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 21l1.65-3.8a9 9 0 113.4 2.9L3 21z"/><path d="M9 10a.5.5 0 001 0V9a.5.5 0 00-1 0v1zm0 0l1 1m3.5-.5a.5.5 0 00-1 0v1a.5.5 0 001 0v-1zm0 0l-1 1"/></svg>' }
-        ];
-
-        links.forEach(link => {
-            const url = appState.tenant[link.id];
-            if (url) {
-                const a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank';
-                a.className = 'text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 p-2 rounded-xl border border-slate-100';
-                a.innerHTML = link.icon;
-                socialDiv.appendChild(a);
-            }
-        });
-    }
-
+    renderSocialLinks();
+    
     // 3. Categorías
     renderCategoryFilter();
     
-    // 3. Grid de Productos
+    // 4. Grid de Productos
     renderProductGrid();
+
+    // 5. Efecto Scroll Nav
+    handleNavScroll();
 }
+
+function handleNavScroll() {
+    const nav = document.getElementById('main-nav');
+    window.onscroll = () => {
+        if (window.scrollY > 80) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    };
+}
+
+function renderSocialLinks() {
+    const navSocialDiv = document.getElementById('store-social-links');
+    const heroSocialDiv = document.getElementById('hero-social-links');
+    
+    if (!navSocialDiv && !heroSocialDiv) return;
+
+    const SOCIAL_DATA = [
+        { id: 'whatsapp_url', key: 'whatsapp', name: 'WhatsApp', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.32 0-4.591.536-6.613 1.558l-.48.243-3.23-.847.86 3.149-.265.424A8.441 8.441 0 0 0 1.05 14.77c0 4.654 3.786 8.441 8.44 8.441a8.412 8.412 0 0 0 5.969-2.473l.53-.53 3.32.87-1.02-3.14 1.25-1.95a8.41 8.41 0 0 0 1.94-5.32c0-4.654-3.786-8.441-8.44-8.441ZM24 12c0 6.627-5.373 12-12 12A11.91 11.91 0 0 1 5.969 22.483L0 24l1.517-5.541A11.894 11.894 0 0 1 0 12C0 5.373 5.373 0 12 0s12 5.373 12 12Z"/></svg>' },
+        { id: 'instagram_url', key: 'instagram', name: 'Instagram', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.919-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849C1.721 3.842 3.23 2.3 6.485 2.163 7.751 2.112 8.132 2.1 11.336 2.1h.664zM12 0C8.741 0 8.332.013 7.052.072 2.695.272.273 2.69.073 7.052.013 8.332 0 8.741 0 12c0 3.259.013 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.013 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4.162 4.162 0 1 1 0-8.324A4.162 4.162 0 0 1 12 16zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>' },
+        { id: 'facebook_url', key: 'facebook', name: 'Facebook', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>' },
+        { id: 'tiktok_url', key: 'tiktok', name: 'TikTok', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.1-3.44-3.37-3.5-5.75-.12-2.13.86-4.23 2.49-5.59 1.49-1.28 3.4-1.91 5.35-1.65v4.26c-.99-.25-2.09.08-2.81.84-.54.53-.83 1.29-.81 2.04.01.76.35 1.51.94 2.01.61.48 1.41.67 2.17.51.98-.16 1.83-.93 2.03-1.91.07-.36.07-.74.07-1.11V0z"/></svg>' },
+        { id: 'youtube_url', key: 'youtube', name: 'YouTube', icon: '<svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>' },
+    ];
+
+    const BRAND_COLORS = {
+        whatsapp: '#25D366',
+        instagram: '#E4405F',
+        facebook: '#1877F2',
+        tiktok: '#000000',
+        youtube: '#FF0000'
+    };
+
+    if (navSocialDiv) navSocialDiv.innerHTML = '';
+    if (heroSocialDiv) heroSocialDiv.innerHTML = '';
+
+    // Ordenar: WhatsApp siempre primero
+    const sortedData = [...SOCIAL_DATA].sort((a, b) => {
+        if (a.key === 'whatsapp') return -1;
+        if (b.key === 'whatsapp') return 1;
+        return 0;
+    });
+
+    sortedData.forEach((item, index) => {
+        const url = appState.tenant[item.id];
+        if (url) {
+            // Render Nav Links (SOLO HASTA 2)
+            if (navSocialDiv && index < 2) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.className = 'text-slate-400 hover:text-indigo-600 transition-colors bg-slate-50 p-2 rounded-xl border border-slate-100 flex items-center justify-center';
+                a.innerHTML = item.icon;
+                navSocialDiv.appendChild(a);
+            }
+
+            // Render Hero Links
+            if (heroSocialDiv) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.className = 'social-btn-hero';
+                a.dataset.tooltip = item.name;
+                // Use brand color for icon by default
+                a.innerHTML = `
+                    <span class="social-icon" style="color: ${BRAND_COLORS[item.key]}; transition: transform 0.3s;">${item.icon}</span>
+                    ${item.key === 'whatsapp' ? '<span class="wsp-label-badge">Escríbenos</span>' : ''}
+                `;
+
+                heroSocialDiv.appendChild(a);
+            }
+        }
+    });
+}
+
+// Utility to darken/lighten color
+function adjustColor(hex, percent) {
+    var num = parseInt(hex.replace("#",""),16),
+    amt = Math.round(2.55 * percent),
+    R = (num >> 16) + amt,
+    G = (num >> 8 & 0x00FF) + amt,
+    B = (num & 0x0000FF) + amt;
+    return "#" + (0x1000000 + (R<255?R<0?0:R:255)*0x10000 + (G<255?G<0?0:G:255)*0x100 + (B<255?B<0?0:B:255)).toString(16).slice(1);
+}
+
+
 
 function renderCategoryFilter() {
     const bar = document.getElementById('category-filter-bar');
     if (!bar) return;
 
     if (appState.categories.length === 0) {
-        bar.parentElement.classList.add('hidden');
+        bar.parentElement.parentElement.classList.add('hidden');
         return;
     }
 
-    bar.parentElement.classList.remove('hidden');
+    bar.parentElement.parentElement.classList.remove('hidden');
     
     // Lista de iconos para rotar
     const icons = ['✨', '📦', '🔥', '💎', '🌈', '🍀', '🍎', '👕', '🍔', '📱'];
@@ -162,7 +274,7 @@ function renderCategoryFilter() {
 
     const allBtn = `
         <button class="cat-btn ${appState.selectedCategory === 'all' ? 'active' : ''}" onclick="filterByCategory('all')">
-            <span class="text-lg">🎯</span>
+            <span>🎯</span>
             Todos
             <span class="ml-1 opacity-50 px-1.5 py-0.5 rounded-full bg-slate-100 text-[10px] text-slate-800 font-bold">${totalCount}</span>
         </button>`;
@@ -171,7 +283,7 @@ function renderCategoryFilter() {
         const count = counts[c.id] || 0;
         return `
             <button class="cat-btn ${appState.selectedCategory === c.id ? 'active' : ''}" onclick="filterByCategory('${c.id}')">
-                <span class="text-lg">${icons[idx % icons.length]}</span>
+                <span>${icons[idx % icons.length]}</span>
                 ${c.name}
                 <span class="ml-1 opacity-50 px-1.5 py-0.5 rounded-full bg-slate-100 text-[10px] text-slate-800 font-bold">${count}</span>
             </button>
@@ -179,6 +291,9 @@ function renderCategoryFilter() {
     }).join('');
 
     bar.innerHTML = allBtn + catBtns;
+    
+    // Actualizar visibilidad de botones de scroll
+    setTimeout(() => checkScroll(), 10);
 }
 
 function filterByCategory(id) {
@@ -190,6 +305,50 @@ function filterStoreProducts() {
     const searchVal = document.getElementById('store-search').value || document.getElementById('store-search-mobile').value || '';
     appState.searchQuery = searchVal.toLowerCase().trim();
     renderProductGrid();
+}
+
+function scrollCategories(direction) {
+    const bar = document.getElementById('category-filter-bar');
+    if (!bar) return;
+    
+    const scrollAmount = 250;
+    if (direction === 'left') {
+        bar.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+        bar.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+    
+    setTimeout(() => checkScroll(), 100);
+}
+
+function checkScroll() {
+    const bar = document.getElementById('category-filter-bar');
+    const btnLeft = document.getElementById('scroll-left');
+    const btnRight = document.getElementById('scroll-right');
+    
+    if (!bar || !btnLeft || !btnRight) return;
+    
+    const hasOverflow = bar.scrollWidth > bar.clientWidth;
+    
+    if (!hasOverflow) {
+        btnLeft.classList.remove('active');
+        btnRight.classList.remove('active');
+        return;
+    }
+    
+    // Mostrar botón izquierdo solo si no estamos al inicio
+    if (bar.scrollLeft > 0) {
+        btnLeft.classList.add('active');
+    } else {
+        btnLeft.classList.remove('active');
+    }
+    
+    // Mostrar botón derecho solo si hay más contenido a la derecha
+    if (bar.scrollLeft < bar.scrollWidth - bar.clientWidth - 10) {
+        btnRight.classList.add('active');
+    } else {
+        btnRight.classList.remove('active');
+    }
 }
 
 function renderProductGrid() {
@@ -220,21 +379,23 @@ function renderProductGrid() {
 
     grid.innerHTML = prods.map(p => `
         <div class="product-card-premium stagger-in group">
-            <div class="product-image-container p-4">
-                <div class="product-image-inner shadow-sm rounded-3xl overflow-hidden aspect-square bg-slate-50 flex items-center justify-center">
-                    <img src="${p.image || 'https://via.placeholder.com/400'}" alt="${p.name}" class="w-full h-full object-contain p-2">
+            <div class="product-image-container relative p-4">
+                <div class="product-image-inner">
+                    <img src="${p.image || ''}" alt="${p.name}" class="w-full h-full object-cover" ${p.image ? '' : 'style="display: none;"'}>
+                    <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-5xl" ${p.image ? 'style="display: none;"' : ''}>📦</div>
+                    <div class="product-price-badge">${currencySymbol}${parseFloat(p.price).toFixed(2)}</div>
+                    <div class="product-add-overlay">
+                        <button type="button" class="product-add-btn" onclick="addToCart('${p.id}')">
+                            Agregar ${currencySymbol}${parseFloat(p.price).toFixed(2)}
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="px-6 pb-6 pt-2 flex flex-col flex-1">
-                <div class="flex justify-between items-start mb-2">
-                    <h4 class="text-lg md:text-xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors truncate pr-4">${p.name}</h4>
-                    <span class="text-xl font-black text-indigo-600 shrink-0">${currencySymbol}${parseFloat(p.price).toFixed(2)}</span>
-                </div>
-                <p class="text-sm text-slate-500 line-clamp-2 mb-6 leading-relaxed flex-1">${p.description || 'Sin descripción adicional'}</p>
-                
-                <button class="w-full bg-slate-900 text-white rounded-2xl py-4 font-black flex items-center justify-center gap-3 hover:bg-indigo-600 active:scale-95 transition-all shadow-xl shadow-slate-900/10" onclick="addToCart('${p.id}')">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-                    <span>Añadir al Carrito</span>
+            <div class="px-6 pb-6 flex flex-col flex-1">
+                <h4 class="text-lg font-black text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2">${p.name}</h4>
+                <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">${p.description || 'Sin descripción adicional'}</p>
+                <button type="button" class="w-full mt-4 bg-indigo-600 text-white font-black rounded-xl py-3 hover:bg-indigo-700 active:scale-95 transition-all md:hidden" onclick="addToCart('${p.id}')">
+                    Agregar ${currencySymbol}${parseFloat(p.price).toFixed(2)}
                 </button>
             </div>
         </div>
@@ -276,6 +437,15 @@ function addToCart(id) {
     }
 
     updateCartBadge();
+    
+    // Animación Bounce en Carrito
+    const cartBtn = document.getElementById('cart-count');
+    if (cartBtn) {
+        cartBtn.classList.remove('cart-bounce');
+        void cartBtn.offsetWidth; // Force reflow
+        cartBtn.classList.add('cart-bounce');
+    }
+
     showToast(`✅ ${product.name} añadido`);
     
     // Auto abrir carrito si es la primera vez o para feedback
@@ -631,5 +801,22 @@ function getCurrentLocation() {
 
 // Initializer context check for storefront
 document.addEventListener('DOMContentLoaded', () => {
-    // Add any necessary event listeners for search if needed outside rendering
+    // Event listeners para scroll de categorías
+    const bar = document.getElementById('category-filter-bar');
+    if (bar) {
+        bar.addEventListener('scroll', checkScroll);
+        bar.addEventListener('scrollend', checkScroll);
+    }
+    
+    // Detectar cambios en tamaño de ventana
+    window.addEventListener('resize', () => setTimeout(checkScroll, 100));
+    
+    // Ejecutar checkScroll cuando las categorías se renderizan
+    const observer = new MutationObserver(() => {
+        setTimeout(checkScroll, 50);
+    });
+    
+    if (bar) {
+        observer.observe(bar, { childList: true });
+    }
 });

@@ -156,35 +156,111 @@ select.input option {
 .modal { 
     position: fixed; 
     inset: 0; 
-    background: rgba(0, 0, 0, 0.85); 
-    backdrop-filter: blur(12px); 
+    background: rgba(0, 0, 0, 0.7); 
+    backdrop-filter: blur(4px); 
     display: none; 
     align-items: center; 
     justify-content: center; 
     z-index: 1000; 
     padding: 16px; 
-    overflow-y: auto;
+    transition: all 0.3s ease-out;
 }
 
-.modal.active { display: flex; }
+.modal.active { 
+    display: flex; 
+}
 
 /* Modal Content (Centered) */
 .modal-content { 
-    background: var(--bg-sec); 
+    background: white; 
     width: 100%; 
-    max-width: 550px; 
-    border-radius: 28px; 
+    max-width: 600px; 
+    border-radius: 32px; 
     padding: 32px; 
     position: relative; 
     max-height: 90vh;
     overflow-y: auto;
-    border: 1px solid var(--border);
-    animation: modal-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+    animation: modal-slide-up 300ms ease-out forwards;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99, 102, 241, 0.3) transparent;
 }
 
-@keyframes modal-up {
-    from { opacity: 0; transform: translateY(30px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.5);
+}
+
+@keyframes modal-slide-up {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+    .modal-content {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 24px 24px 0 0;
+        max-height: 90vh;
+        padding: 24px;
+        animation: modal-slide-up-mobile 300ms ease-out forwards;
+    }
+}
+
+@keyframes modal-slide-up-mobile {
+    from { opacity: 0; transform: translateY(100%); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Close Button Utility */
+.modal-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    color: #64748b;
+    background: transparent;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    z-index: 50;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #0f172a;
+    transform: scale(1.05);
+}
+.dark-modal .modal-close-btn {
+    color: #e2e8f0;
+}
+.dark-modal .modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
 }
 
 .drawer {
@@ -196,10 +272,10 @@ select.input option {
     height: 100vh;
     height: -webkit-fill-available;
     background: white;
-    box-shadow: -10px 0 50px rgba(0,0,0,0.1);
+    box-shadow: -15px 0 60px rgba(0,0,0,0.15);
     z-index: 1100;
     transform: translateX(100%);
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
 }
@@ -211,12 +287,12 @@ select.input option {
 .drawer-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.5);
     backdrop-filter: blur(4px);
     z-index: 1050;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .drawer-overlay.active {
@@ -226,7 +302,10 @@ select.input option {
 
 .modal-content.dark-modal {
     background: #0f172a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f1f5f9;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.7);
 }
 
 /* === Usage Progress Bar === */
@@ -487,9 +566,9 @@ select.input option {
 
 .product-card-premium {
     background: white;
-    border-radius: 32px;
+    border-radius: 48px;
     overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid #f1f5f9;
     position: relative;
     display: flex;
@@ -498,32 +577,108 @@ select.input option {
 }
 
 .product-card-premium:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 60px -12px rgba(15, 23, 42, 0.08);
-    border-color: rgba(99, 102, 241, 0.1);
+    transform: translateY(-4px);
+    box-shadow: 0 30px 80px -12px rgba(99, 102, 241, 0.25);
+    border-color: rgba(99, 102, 241, 0.15);
 }
 
 .product-image-inner {
     width: 100%;
     aspect-ratio: 1/1;
-    border-radius: 20px;
+    border-radius: 32px;
     overflow: hidden;
-    background: #ffffff;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .product-image-inner img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    padding: 10px;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    object-fit: cover;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-image-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.3));
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: 32px;
+}
+
+.product-card-premium:hover .product-image-inner::before {
+    opacity: 1;
 }
 
 .product-card-premium:hover .product-image-inner img {
-    transform: scale(1.08);
+    transform: scale(1.05);
+}
+
+.product-price-badge {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: #6366f1;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 13px;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    transition: all 0.3s ease-out;
+}
+
+.product-card-premium:hover .product-price-badge {
+    transform: scale(1.05);
+}
+
+.product-add-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.product-card-premium:hover .product-add-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.product-add-btn {
+    background: #6366f1;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 9999px;
+    font-weight: 900;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+
+}
+
+.product-add-btn:hover {
+    background: #4f46e5;
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(99, 102, 241, 0.6);
+}
+
+.product-add-btn:active {
+    transform: scale(0.95);
 }
 
 .btn-add-cart-mini {
@@ -537,6 +692,14 @@ select.input option {
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transition: all 0.2s;
+}
+
+/* Mobile product button always visible, desktop hover-only */
+@media (max-width: 768px) {
+    .product-add-overlay {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+    }
 }
 
 .btn-add-cart-mini:hover {
@@ -646,45 +809,45 @@ select.input option {
 
 /* === Category Filter Premium === */
 .cat-btn {
-    padding: 10px 24px;
-    background: white;
-    color: #475569; 
-    border: 1px solid #e2e8f0; 
-    border-radius: 100px;
-    font-size: 14px;
+    padding: 8px 20px;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 9999px;
+    font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    flex-shrink: 0;
 }
 
-@media (min-width: 768px) {
-    .cat-btn {
-        color: #0f172a;
-        border-color: #cbd5e1;
-    }
+.cat-btn span:first-child {
+    font-size: 1.2em;
+    line-height: 1;
 }
 
 .cat-btn:hover {
-    background: #f8fafc;
-    border-color: #e2e8f0;
-    transform: translateY(-2px);
-    color: #0f172a;
+    background: #e2e8f0;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+    color: #1e293b;
 }
 
 .cat-btn.active {
-    background: var(--grad-primary);
+    background: #6366f1;
     color: white;
     border-color: transparent;
-    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .cat-btn.active:hover {
-    transform: translateY(-2px) scale(1.02);
+    background: #4f46e5;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
 }
 
 #category-filter-bar {
@@ -702,12 +865,50 @@ select.input option {
     padding: 0 24px;
 }
 
+.category-scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #64748b;
+    transition: all 0.2s ease;
+    z-index: 20;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.category-scroll-btn:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+
+.category-scroll-btn.active {
+    display: flex;
+}
+
+.category-scroll-btn.left {
+    left: 0;
+}
+
+.category-scroll-btn.right {
+    right: 0;
+}
+
 .category-scroll-container::after {
     content: '';
     position: absolute;
     top: 0;
     right: 0;
-    width: 60px;
+    width: 80px;
     height: 100%;
     background: linear-gradient(to left, white, transparent);
     pointer-events: none;
@@ -719,12 +920,12 @@ select.input option {
     position: absolute;
     top: 0;
     left: 0;
-    width: 60px;
+    width: 80px;
     height: 100%;
     background: linear-gradient(to right, white, transparent);
     pointer-events: none;
     z-index: 10;
-    opacity: 0; /* Show on scroll with JS if needed, but for now fixed */
+    opacity: 0;
 }
 
 /* Spinner SM */
