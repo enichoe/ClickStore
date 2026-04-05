@@ -143,9 +143,8 @@ function renderStorefront() {
             if (bannerImg) bannerImg.classList.add('hidden');
             if (bannerOverlay) bannerOverlay.classList.add('hidden');
             
-            // Dynamic Gradient based on accent color
-            // We create a gradient from a darker version to a slightly lighter version or viceversa
-            heroBanner.style.background = `linear-gradient(135deg, ${accent}, ${adjustColor(accent, -20)})`;
+            // Usar solo CSS: background blanco con diseño limpio
+            // (la línea de gradiente dinámico fue reemplazada por estilos CSS en el <style>)
         }
     }
 
