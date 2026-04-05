@@ -2,24 +2,31 @@
     <style>
         .store-hero-banner {
             position: relative;
-            min-height: 45vh;
+            min-height: auto;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: linear-gradient(135deg, #4338ca, #6366f1);
+            background: white;
+            border-b: 1px solid #e2e8f0;
             transition: all 0.5s ease;
+            padding-top: 128px;
+            padding-bottom: 48px;
         }
         @media (min-width: 768px) {
             .store-hero-banner {
-                min-height: 60vh;
+                padding-top: 96px;
+                padding-bottom: 64px;
+            }
+        }
+        @media (max-width: 767px) {
+            .store-hero-banner {
+                padding-top: 100px;
+                padding-bottom: 40px;
             }
         }
         .banner-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
-            z-index: 1;
+            display: none;
         }
         #store-banner-img {
             position: absolute;
@@ -38,71 +45,122 @@
         }
         
         #store-logo-hero, #store-logo-hero-placeholder {
-            width: 128px;
-            height: 128px;
+            width: 112px;
+            height: 112px;
             border-radius: 9999px;
-            border: 4px solid white !important;
-            box-shadow: 0 0 40px rgba(255,255,255,0.7), 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             object-fit: cover;
             margin: 0 auto;
             background: white;
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: block;
         }
         #store-logo-hero:hover {
             transform: scale(1.05);
         }
         @media (max-width: 767px) {
             #store-logo-hero, #store-logo-hero-placeholder {
-                width: 64px;
-                height: 64px;
-                border-width: 3px !important;
+                width: 80px;
+                height: 80px;
+                border-width: 1px;
             }
         }
 
         #store-title-main {
-            text-shadow: 0 4px 15px rgba(0,0,0,0.5);
             font-weight: 900;
+            color: #1e293b;
+            line-height: 1.2;
         }
         #store-tagline {
-            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
             font-weight: 500;
+            color: #64748b;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             line-clamp: 2;
             -webkit-box-orient: vertical;
-
             overflow: hidden;
         }
 
         /* Redes Sociales Hero */
         .social-btn-hero {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 9999px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
+            background: #f1f5f9;
+            border: none;
+            color: #64748b;
             transition: all 0.3s ease;
             position: relative;
+            flex-shrink: 0;
         }
-        .social-btn-hero:hover {
-            background: rgba(255,255,255,0.4);
+        
+        /* WhatsApp */
+        .social-btn-hero[data-network="whatsapp"]:hover {
+            background: #25D366;
+            color: white;
             transform: translateY(-5px);
-            border-color: rgba(255,255,255,0.6);
         }
+        
+        /* Instagram */
+        .social-btn-hero[data-network="instagram"]:hover {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        /* Facebook */
+        .social-btn-hero[data-network="facebook"]:hover {
+            background: #1877F2;
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        /* Twitter */
+        .social-btn-hero[data-network="twitter"]:hover {
+            background: #1DA1F2;
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        /* TikTok */
+        .social-btn-hero[data-network="tiktok"]:hover {
+            background: #000000;
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        /* LinkedIn */
+        .social-btn-hero[data-network="linkedin"]:hover {
+            background: #0A66C2;
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        /* YouTube */
+        .social-btn-hero[data-network="youtube"]:hover {
+            background: #FF0000;
+            color: white;
+            transform: translateY(-5px);
+        }
+        
+        .social-btn-hero svg {
+            width: 20px;
+            height: 20px;
+        }
+        
         .wsp-label-badge {
             position: absolute;
-            top: -10px;
-            right: -10px;
+            top: -8px;
+            right: -8px;
             background: #25D366;
             color: white;
             font-size: 8px;
             font-weight: 900;
-            padding: 3px 8px;
+            padding: 2px 6px;
             border-radius: 20px;
             text-transform: uppercase;
             box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4);
@@ -305,20 +363,20 @@
     <!-- Store Hero -->
     <header class="store-hero-banner">
         <img id="store-banner-img" src="" class="hidden">
-        <div id="store-banner-overlay" class="banner-overlay hidden"></div>
+        <div id="store-banner-overlay" class="banner-overlay"></div>
         
         <div class="hero-content text-center stagger-in">
             <div class="relative inline-block mb-6">
-                <img id="store-logo-hero" src="" class="hidden">
-                <div id="store-logo-hero-placeholder" class="bg-indigo-500 text-white flex items-center justify-center text-4xl font-black uppercase">
+                <img id="store-logo-hero" src="">
+                <div id="store-logo-hero-placeholder" class="bg-slate-200 text-slate-700 flex items-center justify-center text-4xl font-black uppercase">
                 </div>
             </div>
             
-            <h1 id="store-title-main" class="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight drop-shadow-xl">Cargando...</h1>
-            <p id="store-tagline" class="text-white/90 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">Personaliza esta descripción en tu panel de control.</p>
+            <h1 id="store-title-main" class="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Cargando...</h1>
+            <p id="store-tagline" class="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">Personaliza esta descripción en tu panel de control.</p>
             
             <!-- Redes Sociales en el Hero -->
-            <div id="hero-social-links" class="flex items-center justify-center gap-5">
+            <div id="hero-social-links" class="flex items-center justify-center gap-3">
                 <!-- Inyectado por JS -->
             </div>
         </div>
