@@ -602,23 +602,48 @@ async function saveProduct(e) {
             throw new Error('No hay tienda definida. Refresca e intenta de nuevo.');
         }
         if (file) {
-            // Comprimir imagen antes de subir (Max 1000px, 80% calidad)
-            const compressedFile = await compressImage(file, 1000, 1000, 0.8);
+            // ✅ VALIDAR Y OPTIMIZAR IMAGEN CON SEGURIDAD
+            const imageOptimizer = new ImageOptimizer();
             
-            const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
-            const { data: uploadData, error: uploadError } = await supabase.storage
-                .from('product-images')
-                .upload(fileName, compressedFile);
-            if (uploadError) {
-                console.warn('Upload error:', uploadError);
-                throw uploadError;
+            // Validar archivo
+            imageOptimizer.validateFile(file);
+            console.log('✅ Imagen validada');
+            
+            // Generar variantes optimizadas (thumbnail, preview, full)
+            const variants = await imageOptimizer.generateVariants(file);
+            const hash = await imageOptimizer.calculateHash(variants.full);
+            const timestamp = Date.now();
+            
+            // Preparar rutas con deduplicación por hash
+            const paths = {
+                full: `products/${appState.tenant.id}/full/${hash}_${timestamp}.webp`,
+                preview: `products/${appState.tenant.id}/preview/${hash}_${timestamp}.webp`,
+                thumbnail: `products/${appState.tenant.id}/thumbs/${hash}_${timestamp}.webp`
+            };
+            
+            // Subir variantes en paralelo
+            console.log('📤 Subiendo variantes de imagen...');
+            const uploadPromises = Object.entries(variants).map(([type, blob]) =>
+                supabase.storage
+                    .from('product-images')
+                    .upload(paths[type], blob, { upsert: false })
+            );
+            
+            const uploadResults = await Promise.all(uploadPromises);
+            
+            // Verificar errores
+            const uploadErrors = uploadResults.filter((r) => r.error);
+            if (uploadErrors.length > 0) {
+                throw new Error(`Error subiendo imagen: ${uploadErrors[0].error.message}`);
             }
-
+            
+            // Obtener URL pública de la versión full
             const { data: { publicUrl } } = supabase.storage
                 .from('product-images')
-                .getPublicUrl(fileName);
-
+                .getPublicUrl(paths.full);
+            
             imageUrl = publicUrl;
+            showToast(`✅ Imagen optimizada y subida (${(variants.full.size / 1024).toFixed(1)}KB)`, 'success');
         } else if (editingProductId) {
              // Mantener imagen anterior si estamos editando y no subimos nueva
              const oldProd = appState.products.find(p => p.id === editingProductId);

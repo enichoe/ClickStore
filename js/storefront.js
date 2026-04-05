@@ -700,26 +700,23 @@ async function handleCheckout(e) {
             }
         }
 
-        // Crear pedido en DB
+        // Crear pedido usando la función segura
         const itemsForRpc = appState.cart.map(i => ({ id: i.id, qty: i.qty, name: i.name, price: i.price }));
         
-        // Generar una referencia única local para el mensaje (el cliente no tiene permiso para leer el ID real)
+        // Generar una referencia única local para el mensaje
         const orderRef = 'CMD-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-        const { error } = await supabase.from('orders').insert([{
-            store_id: appState.tenant.id,
-            customer_name: customerName,
-            whatsapp: customerWhatsapp,
-            items: JSON.stringify(itemsForRpc),
-            total: isNaN(total) ? 0 : total,
-            status: 'pending',
-            delivery_address: customerAddress || null,
-            delivery_selected: deliverySelected,
-            payment_method: appState.paymentMethod,
-            voucher_url: voucherUrl
-        }]);
+        // Usar createOrderSecure en lugar de insert directo
+        const orderResult = await createOrderSecure(
+            appState.tenant.id,
+            appState.cart,
+            customerName,
+            customerWhatsapp
+        );
 
-        if (error) throw error;
+        if (!orderResult.success) {
+            throw new Error(orderResult.error || 'Error creating order');
+        }
 
         // RECONSTRUCCIÓN DEL MENSAJE DE WHATSAPP (FIX CRÍTICO)
         const currency = getCurrencySymbol(appState.tenant.currency);

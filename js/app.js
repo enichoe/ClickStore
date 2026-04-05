@@ -1,65 +1,50 @@
-// ======================= CORE DATA =======================
+// ==================================================================================
+// APP.JS - CONTROLADOR PRINCIPAL DE NAVEGACIÓN Y GESTIÓN DE VISTAS
+// ==================================================================================
+// Este archivo es el corazón de la aplicación. Gestiona:
+// - Cambio entre vistas principales (landing, admin, tienda pública, etc.)
+// - Visibilidad de modales y formularios
+// - Sincronización de secciones dentro de cada vista
+// - Estado visual de componentes de navegación
+// ==================================================================================
+
+// ======================= ESTADO GLOBAL DE LA APLICACIÓN =======================
+// Almacena toda la información que necesita la app: sesión, datos del tenant, 
+// productos, carrito, preferencias del usuario, etc.
 let appState = {
-    session: null,
-    tenant: null, // Info de la tienda
-    products: [],
-    categories: [],
-    cart: [],
-    selectedCategory: 'all',
-    deliveryOption: 'pickup'
+    session: null,                  // Datos de sesión del usuario (si está logueado)
+    tenant: null,                   // Información de la tienda: nombre, logo, colores, URLs
+    products: [],                   // Lista de productos de la tienda
+    categories: [],                 // Categorías de productos
+    cart: [],                       // Carrito de compras del cliente
+    selectedCategory: 'all',        // Categoría actualmente filtrada
+    deliveryOption: 'pickup'        // Opción elegida: 'pickup' o 'delivery'
 };
 
-// ======================= VIEW CONTROLLER =======================
+// ======================= GESTOR DE VISTAS PRINCIPAL =======================
 /**
- * Controla la visibilidad del botón flotante de WhatsApp.
- * Solo debe ser visible en la landing page.
+ * syncWhatsAppButton() - Controla la visibilidad del botón flotante de WhatsApp
+ * El botón solo debe verse en la landing page. En otras vistas queda oculto.
+ * @param {string} viewId - ID de la vista actual
  */
 function syncWhatsAppButton(viewId) {
     const waBtn = document.querySelector('.whatsapp-float');
     if (!waBtn) return;
     if (viewId === 'view-landing') {
-        waBtn.style.display = '';   // Restaurar display original (flex)
+        waBtn.style.display = '';   // Mostrar botón en landing
     } else {
-        waBtn.style.display = 'none';
+        waBtn.style.display = 'none'; // Ocultar en otras vistas
     }
 }
 
-async function showView(viewId, sectionId = null) {
-    console.log(`[Navigation] Switching to: ${viewId}`);
-    
-    // Elementos principales de vista (No modales)
-    const mainViews = ['view-landing', 'view-admin', 'view-store', 'view-superadmin', 'view-error', 'view-faq', 'view-manual', 'view-policies', 'view-terms'];
-    const target = document.getElementById(viewId);
-    if (!target) return console.error(`View not found: ${viewId}`);
-
-    const isTargetModal = target.classList.contains('modal');
-
-    // 1. Gestionar vistas principales
-    if (!isTargetModal) {
-        document.querySelectorAll('#view-landing, #view-admin, #view-store, #view-superadmin, #view-error, #view-faq, #view-manual, #view-policies, #view-terms').forEach(el => {
-            el.style.display = 'none';
-        });
-        target.style.display = 'block';
-        // Sincronizar botón flotante de WhatsApp: solo en landing
-        syncWhatsAppButton(viewId);
-    }
-
-    // 2. Gestionar Modales
-    document.querySelectorAll('.modal').forEach(el => {
-        if (el.id === viewId) {
-            el.classList.add('active');
-        } else if (!isTargetModal || el.id !== 'view-landing') {
-            // Si el target NO es un modal, cerramos todos los modales.
-            // Si el target ES un modal, cerramos el resto (excepto si queremos overlays anidados, pero aquí no)
-            el.classList.remove('active');
-        }
-    });
-
-    if (viewId === 'view-admin') {
-        localStorage.setItem('clickSaaS_lastView', viewId);
-        if (sectionId) localStorage.setItem('clickSaaS_lastSection', sectionId);
-        showAdminSection(sectionId || 'dash');
-    }
+/**
+ * showView() - Cambiar entre vistas principales de la aplicación
+ * Gestiona la visibilidad de vistas completas y modales.
+ * Rutas principales: Landing → Tienda Pública → Admin → Super Admin
+ * 
+ * @param {string} viewId - ID de la vista a mostrar (ej: 'view-store', 'view-admin')
+ * @param {string} sectionId - (Opcional) Sección específica dentro de la vista (ej: 'products', 'settings')
+ */
 }
 
 function showAdminSection(section) {
