@@ -119,8 +119,6 @@ function renderStorefront() {
     const titleMain = document.getElementById('store-title-main');
     const tagline = document.getElementById('store-tagline');
 
-    if (titleNav) titleNav.innerText = appState.tenant.name;
-    if (titleMain) titleMain.innerText = appState.tenant.name;
     if (tagline) tagline.innerText = appState.tenant.description || 'Bienvenido a nuestra tienda virtual.';
 
     // 1.5. Configuración del Banner
@@ -142,9 +140,6 @@ function renderStorefront() {
         } else {
             if (bannerImg) bannerImg.classList.add('hidden');
             if (bannerOverlay) bannerOverlay.classList.add('hidden');
-            
-            // Usar solo CSS: background blanco con diseño limpio
-            // (la línea de gradiente dinámico fue reemplazada por estilos CSS en el <style>)
         }
     }
 
@@ -157,7 +152,23 @@ function renderStorefront() {
     // 4. Grid de Productos
     renderProductGrid();
 
-    // 5. Efecto Scroll Nav
+    // 5. SEO / Document Update
+    if (appState.tenant) {
+        document.title = `🛍️ ${appState.tenant.name} - StoreClick`;
+        
+        // Update Meta Tags (Best effort for browsers)
+        const metaOgTitle = document.querySelector('meta[property="og:title"]');
+        const metaOgDesc = document.querySelector('meta[property="og:description"]');
+        const metaOgImg = document.querySelector('meta[property="og:image"]');
+        const metaTwitterTitle = document.querySelector('meta[name="twitter:title"]');
+        
+        if (metaOgTitle) metaOgTitle.setAttribute('content', `${appState.tenant.name} - Tienda Oficial`);
+        if (metaOgDesc) metaOgDesc.setAttribute('content', appState.tenant.description || 'Haz tu pedido por WhatsApp en nuestra tienda.');
+        if (metaOgImg && appState.tenant.logo_url) metaOgImg.setAttribute('content', appState.tenant.logo_url);
+        if (metaTwitterTitle) metaTwitterTitle.setAttribute('content', `${appState.tenant.name} en StoreClick`);
+    }
+
+    // 6. Efecto Scroll Nav
     handleNavScroll();
 }
 
