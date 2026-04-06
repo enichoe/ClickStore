@@ -22,17 +22,28 @@
 
 <!-- Registro (Onboarding) -->
 <div id="view-register" class="modal" onclick="if(event.target === this) showView('view-landing')">
-    <div class="modal-content dark-modal" style="max-width: 600px;">
+    <div class="modal-content dark-modal" style="max-width: 620px;">
         <button class="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors" onclick="showView('view-landing')">
             <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
-        <h2 class="text-white text-2xl mb-2">Crea tu Tienda</h2>
-        <p class="text-slate-400 text-sm mb-8">Configura tu negocio en minutos.</p>
-        
+        <h2 class="text-white text-2xl mb-1">Crea tu Tienda</h2>
+        <p class="text-slate-400 text-sm mb-6">Configura tu negocio en minutos.</p>
+
+        <!-- URL Preview Card -->
+        <div class="mb-6 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
+            <p class="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-2">🔗 Tu enlace de tienda</p>
+            <div class="flex items-center gap-2 bg-slate-950/60 rounded-xl px-4 py-3 border border-slate-700/50 overflow-hidden">
+                <span class="text-slate-500 text-sm font-mono shrink-0">storesclick.site/?store=</span>
+                <span id="reg-slug-preview" class="text-indigo-300 font-black font-mono text-sm truncate">tu-tienda</span>
+            </div>
+            <p class="text-[10px] text-slate-500 mt-2">Puedes personalizar tu enlace en el campo de abajo ↓</p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="input-group">
-                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Nombre de tu Tienda</label>
-                <input type="text" id="reg-store-name" class="input" placeholder="Ej: Pizza Don Luis">
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Nombre de tu Tienda *</label>
+                <input type="text" id="reg-store-name" class="input" placeholder="Ej: Pizza Don Luis"
+                    oninput="syncRegSlugFromName(this.value)">
             </div>
             <div class="input-group">
                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Tipo de Negocio</label>
@@ -49,23 +60,41 @@
                 </select>
             </div>
         </div>
+
+        <!-- Slug editable -->
+        <div class="input-group mt-4">
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">
+                Personaliza tu Enlace
+                <span class="text-indigo-400 ml-1 normal-case font-medium">· Editable</span>
+            </label>
+            <div class="flex items-stretch rounded-xl overflow-hidden border border-white/10 bg-slate-900/80 focus-within:border-indigo-500/60 transition-colors">
+                <span class="flex items-center px-3 text-slate-600 text-xs font-mono bg-slate-900/50 border-r border-white/5 shrink-0 whitespace-nowrap">?store=</span>
+                <input type="text" id="reg-slug" class="flex-1 bg-transparent px-3 py-3 text-indigo-300 font-mono text-sm outline-none placeholder-slate-600"
+                    placeholder="pizza-don-luis"
+                    oninput="sanitizeSlugInput(this)">
+            </div>
+            <p id="reg-slug-hint" class="text-[10px] text-slate-600 mt-1.5 flex items-center gap-1">
+                <span>Solo letras, números y guiones. Sin espacios ni caracteres especiales.</span>
+            </p>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div class="input-group">
                 <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Tu Nombre</label>
                 <input type="text" id="reg-owner" class="input" placeholder="Tu nombre">
             </div>
             <div class="input-group">
-                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Email</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Email *</label>
                 <input type="email" id="reg-email" class="input" placeholder="tu@email.com">
             </div>
         </div>
         <div class="input-group" style="margin-top: 16px;">
-            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Contraseña</label>
-            <input type="password" id="reg-pass" class="input">
+            <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Contraseña *</label>
+            <input type="password" id="reg-pass" class="input" placeholder="Mínimo 6 caracteres">
         </div>
-        
+
         <button class="btn btn-primary w-full mt-8" onclick="handleRegister(this)">
-            Crear mi Tienda
+            🚀 Crear mi Tienda
         </button>
         <p class="mt-6 text-center text-slate-400 text-sm">
             ¿Ya tienes tienda? <a class="text-indigo-400 font-bold cursor-pointer hover:underline" onclick="switchAuth('view-login')">Inicia Sesión</a>

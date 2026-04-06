@@ -121,16 +121,16 @@ async function handleRegister(btn) {
     const email     = document.getElementById('reg-email').value.trim();
     const pass      = document.getElementById('reg-pass').value;
     const storeType = document.getElementById('reg-type')?.value || 'Tienda';
+    // Usar el slug editado por el usuario (o generarlo desde el nombre)
+    const slugInput  = document.getElementById('reg-slug')?.value.trim();
+    const slugBase   = slugInput && slugInput.length > 0
+        ? generateSlug(slugInput)
+        : generateSlug(storeName);
 
     if (!storeName || !email || !pass) return showToast('⚠️ Completa todos los campos obligatorios.', 'error');
     if (pass.length < 6) return showToast('⚠️ La contraseña debe tener al menos 6 caracteres.', 'error');
-    
-    // Generar slug base (limpio, sin número al final)
-    const slugBase = storeName.toLowerCase().trim()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quitar acentos
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+    if (slugBase.length < 2) return showToast('⚠️ El enlace de la tienda es muy corto. Escribe un nombre más largo.', 'error');
+    if (slugBase.length > 60) return showToast('⚠️ El enlace es demasiado largo. Máximo 60 caracteres.', 'error');
 
     if (btn) setLoading(btn, true);
     try {
@@ -258,3 +258,95 @@ async function logout() {
 function switchAuth(view) {
     showView(view);
 }
+
+// ============================================================
+// SLUG UTILITIES
+// ============================================================
+
+/**
+ * Genera un slug limpio y URL-friendly desde cualquier texto.
+ * Maneja: acentos, apóstrofes, emojis, espacios, caracteres especiales.
+ * Ejemplos:
+ *   "Pizza Don Luis"    → "pizza-don-luis"
+ *   "Tech Store's"      → "tech-stores"
+ *   "Café & Panadería"  → "cafe-panaderia"
+ *   "Ropa 🔥 By Ximena" → "ropa-by-ximena"
+ */
+function generateSlug(text) {
+    return text
+        .toLowerCase()
+        .trim()
+        // Remover emojis y símbolos Unicode no latinos
+        .replace(/[\u{1F600}-\u{1F64F}|\u{1F300}-\u{1F5FF}|\u{1F680}-\u{1F6FF}|\u{2600}-\u{26FF}|\u{2700}-\u{27BF}|\u{1F900}-\u{1F9FF}|\u{1FA00}-\u{1FA6F}]/gu, '')
+        // Normalizar acentos (á→a, é→e, ñ→n, etc.)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        // Reemplazar ñ como caso especial (después de NFD queda como n + combining)
+        .replace(/ñ/g, 'n')
+        // Apóstrofes y comillas: eliminar (tech store's → tech stores, no tech-store-s)
+        .replace(/['''`"]/g, '')
+        // Ampersand → 'y'
+        .replace(/&/g, 'y')
+        // Reemplazar cualquier char que no sea a-z, 0-9 → guión
+        .replace(/[^a-z0-9]+/g, '-')
+        // Eliminar guiones al inicio y al final
+        .replace(/^-+|-+$/g, '')
+        // Máx 60 caracteres
+        .slice(0, 60);
+}
+
+/**
+ * Se llama en tiempo real al escribir el nombre de la tienda.
+ * Sincroniza el preview y el campo slug (si el usuario no lo ha editado manualmente).
+ */
+function syncRegSlugFromName(storeName) {
+    const slugField = document.getElementById('reg-slug');
+    const slugPreview = document.getElementById('reg-slug-preview');
+
+    const generated = generateSlug(storeName) || 'tu-tienda';
+
+    // Solo auto-sync si el usuario no ha editado el slug manualmente
+    if (slugField && !slugField.dataset.manualEdit) {
+        slugField.value = generated;
+    }
+
+    // Preview siempre se actualiza
+    const currentSlug = (slugField && slugField.dataset.manualEdit)
+        ? (slugField.value || generated)
+        : generated;
+
+    if (slugPreview) slugPreview.textContent = currentSlug || 'tu-tienda';
+    updateSlugHint(currentSlug);
+}
+
+/**
+ * Limpia el input del slug en tiempo real y actualiza el preview.
+ */
+function sanitizeSlugInput(input) {
+    // Marcar que el usuario editó manualmente
+    input.dataset.manualEdit = 'true';
+
+    // Limpiar en tiempo real: solo permitir a-z, 0-9, guiones
+    const clean = generateSlug(input.value);
+    input.value = clean;
+
+    const preview = document.getElementById('reg-slug-preview');
+    if (preview) preview.textContent = clean || 'tu-tienda';
+    updateSlugHint(clean);
+}
+
+/**
+ * Actualiza el hint debajo del campo slug con feedback visual.
+ */
+function updateSlugHint(slug) {
+    const hint = document.getElementById('reg-slug-hint');
+    if (!hint) return;
+    if (!slug || slug.length < 2) {
+        hint.innerHTML = '<span class="text-yellow-500">⚠️ El enlace es muy corto.</span>';
+    } else if (slug.length > 50) {
+        hint.innerHTML = `<span class="text-yellow-500">⚠️ Muy largo (${slug.length}/60 chars).</span>`;
+    } else {
+        hint.innerHTML = `<span class="text-emerald-500">✓ Enlace válido · ${slug.length} caracteres</span>`;
+    }
+}
+
