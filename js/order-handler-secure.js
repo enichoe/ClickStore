@@ -392,11 +392,15 @@ function clearSensitiveData() {
 }
 
 // ============================================================
-// INTEGRACIÓN CON EVENTO GLOBAL DE CHECKOUT
+// INTEGRACIÓN CON EVENTO GLOBAL DE CHECKOUT (versión RPC pura)
+// NOTA: La función principal handleCheckout() vive en storefront.js
+// Esta versión alternativa es para uso directo por RPC sin WhatsApp form
 // ============================================================
 
-async function handleCheckout() {
-  const storeId = appState.tenant.id;
+async function handleCheckoutSecureRPC() {
+  const storeId = appState.tenant?.id;
+  if (!storeId) { showToast('❌ No hay tienda activa', 'error'); return; }
+  
   const cart = appState.cart;
   const customerName = document.getElementById('customer-name')?.value;
   const whatsapp = document.getElementById('whatsapp')?.value;
@@ -410,8 +414,10 @@ async function handleCheckout() {
     // Mostrar confirmación
     const modal = document.getElementById('modal-order-success');
     if (modal) {
-      document.getElementById('order-id').textContent = result.orderId.slice(0, 8);
-      document.getElementById('order-total').textContent = `S/. ${result.total.toFixed(2)}`;
+      const orderIdEl = document.getElementById('order-id');
+      const orderTotalEl = document.getElementById('order-total');
+      if (orderIdEl) orderIdEl.textContent = result.orderId?.slice(0, 8) || '';
+      if (orderTotalEl) orderTotalEl.textContent = `S/. ${(result.total || 0).toFixed(2)}`;
       modal.style.display = 'flex';
     }
 

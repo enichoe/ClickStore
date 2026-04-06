@@ -49,22 +49,32 @@ function showView(viewId, sectionId = null) {
     console.log(`[showView] Mostrando vista: ${viewId}`, sectionId ? `(sección: ${sectionId})` : '');
     
     // Hide all main views
-    const mainViews = ['view-landing', 'view-store', 'view-admin', 'view-superadmin', 'view-auth'];
+    const mainViews = [
+        'view-landing', 'view-store', 'view-admin', 'view-superadmin', 'view-auth',
+        'view-policies', 'view-faq', 'view-manual', 'view-error'
+    ];
     mainViews.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
 
+    // Modales independientes (login / registro)
+    ['view-login', 'view-register'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+    });
+
     // Show requested view
     const targetView = document.getElementById(viewId);
     if (targetView) {
-        targetView.style.display = 'block';
-    } else {
-        // Fallback: if view-register not found, try view-auth
-        if (viewId === 'view-register') {
-            const authView = document.getElementById('view-auth');
-            if (authView) authView.style.display = 'block';
+        // Si es un modal (login/registro), activarlo en vez de display block
+        if (viewId === 'view-login' || viewId === 'view-register') {
+            targetView.classList.add('active');
+        } else {
+            targetView.style.display = 'block';
         }
+    } else {
+        console.warn('[showView] Vista no encontrada:', viewId);
         return;
     }
 
