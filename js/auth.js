@@ -141,6 +141,17 @@ async function handleRegister(btn) {
         });
         if (authError) {
             console.error('Detalle error Auth:', authError);
+            // Caso especial: el email ya tiene cuenta registrada
+            if (authError.message?.toLowerCase().includes('already registered') ||
+                authError.message?.toLowerCase().includes('user already') ||
+                authError.status === 422) {
+                showToast('⚠️ Este email ya tiene una cuenta. Inicia sesión directamente.', 'warning');
+                // Pre-rellenar el email en el login para facilitar el acceso
+                const loginEmailInput = document.getElementById('login-email');
+                if (loginEmailInput) loginEmailInput.value = email;
+                showView('view-login');
+                return;
+            }
             throw authError;
         }
 
@@ -194,7 +205,7 @@ async function handleRegister(btn) {
         appState.session = session;
         appState.tenant  = storeData;
         
-        alert('¡Tienda creada con éxito! Tu enlace es: ' + window.location.origin + '?store=' + finalSlug);
+        showToast('🎉 ¡Tienda creada! Tu enlace: ' + window.location.origin + '?store=' + finalSlug, 'success');
         
         if (typeof initializeAdminUI === 'function') initializeAdminUI();
         
@@ -207,7 +218,19 @@ async function handleRegister(btn) {
         }
     } catch (err) {
         console.error('Excepción en handleRegister:', err);
-        showToast('❌ Error en el registro: ' + (err.description || err.message), 'error');
+        // Mensajes de error amigables según el tipo
+        let userMsg = err.message || 'Error desconocido';
+        if (userMsg.includes('already registered') || userMsg.includes('already exists')) {
+            userMsg = 'Este email ya tiene una cuenta. Usa Iniciar Sesión.';
+            showToast('⚠️ ' + userMsg, 'warning');
+            showView('view-login');
+        } else if (userMsg.includes('invalid email')) {
+            showToast('❌ El email no es válido.', 'error');
+        } else if (userMsg.includes('Password should be')) {
+            showToast('❌ La contraseña debe tener al menos 6 caracteres.', 'error');
+        } else {
+            showToast('❌ Error en el registro: ' + userMsg, 'error');
+        }
     } finally {
         if (btn) setLoading(btn, false);
     }
