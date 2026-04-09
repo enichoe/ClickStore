@@ -10,16 +10,16 @@
 
 class OrderValidator {
   // Límites de seguridad
-  static MAX_ORDER_ITEMS = 100;
-  static MAX_ORDER_TOTAL = 1000000;
-  static MIN_CUSTOMER_NAME_LENGTH = 3;
-  static MAX_CUSTOMER_NAME_LENGTH = 255;
-  static WHATSAPP_REGEX = /^\+?[1-9]\d{1,14}$/;
+  MAX_ORDER_ITEMS = 100;
+  MAX_ORDER_TOTAL = 1000000;
+  MIN_CUSTOMER_NAME_LENGTH = 3;
+  MAX_CUSTOMER_NAME_LENGTH = 255;
+  WHATSAPP_REGEX = /^\+?[1-9]\d{1,14}$/;
 
   /**
    * Validar estructura del carrito
    */
-  static validateCart(items) {
+  validateCart(items) {
     const errors = [];
 
     if (!Array.isArray(items)) {
@@ -63,7 +63,7 @@ class OrderValidator {
   /**
    * Validar información del cliente
    */
-  static validateCustomer(customerName, whatsapp) {
+  validateCustomer(customerName, whatsapp) {
     const errors = [];
 
     if (!customerName || typeof customerName !== 'string') {
@@ -109,7 +109,7 @@ class OrderValidator {
   /**
    * Validar total calculado
    */
-  static validateTotal(total) {
+  validateTotal(total) {
     const errors = [];
 
     if (typeof total !== 'number' || total < 0) {
@@ -131,7 +131,7 @@ class OrderValidator {
   /**
    * Validar payload completo de orden
    */
-  static validateOrderPayload(orderData) {
+  validateOrderPayload(orderData) {
     const errors = [];
 
     if (!orderData) {
@@ -161,7 +161,7 @@ class OrderValidator {
   /**
    * Detectar patrones sospechosos (inyección, XSS)
    */
-  static containsSuspiciousPatterns(input) {
+  containsSuspiciousPatterns(input) {
     const suspiciousPatterns = [
       /(<|>|&lt;|&gt;|<script|javascript:|onclick|onerror)/gi, // XSS
       /(["']|--|;|\*|DROP|DELETE|UPDATE|INSERT|SELECT)/gi, // SQL injection
@@ -174,7 +174,7 @@ class OrderValidator {
   /**
    * Validar UUID v4
    */
-  static isValidUUID(uuid) {
+  isValidUUID(uuid) {
     if (typeof uuid !== 'string') return false;
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
   }
@@ -182,7 +182,7 @@ class OrderValidator {
   /**
    * Sanitizar entrada (básico)
    */
-  static sanitizeString(input, maxLength = 255) {
+  sanitizeString(input, maxLength = 255) {
     if (typeof input !== 'string') return '';
 
     return input
