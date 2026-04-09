@@ -402,9 +402,19 @@ function renderProductGrid() {
             <div class="px-6 pb-6 flex flex-col flex-1">
                 <h4 class="text-lg font-black text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2">${p.name}</h4>
                 <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">${p.description || 'Sin descripción adicional'}</p>
-                <button type="button" class="w-full mt-4 bg-indigo-600 text-white font-black rounded-xl py-3 hover:bg-indigo-700 active:scale-95 transition-all" onclick="addToCart('${p.id}')">
-                    Agregar ${currencySymbol}${parseFloat(p.price).toFixed(2)}
-                </button>
+                
+                ${p.track_stock && p.stock <= 0 ? `
+                    <button type="button" class="w-full mt-4 bg-slate-200 text-slate-500 font-black rounded-xl py-3 cursor-not-allowed" disabled>
+                        Agotado
+                    </button>
+                ` : `
+                    <div class="flex flex-col gap-1 mt-4">
+                        <button type="button" class="w-full bg-indigo-600 text-white font-black rounded-xl py-3 hover:bg-indigo-700 active:scale-95 transition-all" onclick="addToCart('${p.id}')">
+                            Agregar ${currencySymbol}${parseFloat(p.price).toFixed(2)}
+                        </button>
+                        ${p.track_stock ? `<p class="text-[10px] text-center font-bold text-slate-400 uppercase tracking-widest">${p.stock} disponibles</p>` : ''}
+                    </div>
+                `}
             </div>
         </div>
     `).join('');
@@ -433,8 +443,18 @@ function addToCart(id) {
 
     const existing = appState.cart.find(c => c.id === id);
     if (existing) {
+        // Validar stock antes de incrementar
+        if (product.track_stock && existing.qty >= product.stock) {
+            showToast(`⚠️ Solo quedan ${product.stock} unidades disponibles`, 'warning');
+            return;
+        }
         existing.qty++;
     } else {
+        // Validar stock antes de agregar
+        if (product.track_stock && product.stock <= 0) {
+            showToast(`❌ Producto agotado`, 'error');
+            return;
+        }
         appState.cart.push({
             id: product.id,
             name: product.name,
@@ -489,7 +509,9 @@ function renderCartContent() {
         `;
     } else {
         const currency = getCurrencySymbol(appState.tenant.currency);
-        itemsDiv.innerHTML = appState.cart.map(i => `
+        itemsDiv.innerHTML = appState.cart.map(i => {
+            const product = appState.products.find(p => p.id === i.id) || {};
+            return `
             <div class="flex gap-4 group p-4 bg-white rounded-3xl border border-slate-50 shadow-sm mb-4">
                 <div class="w-20 h-20 rounded-2xl overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-100 shadow-inner">
                     <img src="${i.image || 'https://via.placeholder.com/100'}" class="w-full h-full object-cover">
@@ -510,9 +532,11 @@ function renderCartContent() {
                         <span class="text-xs font-bold w-6 text-center text-slate-800">${i.qty}</span>
                         <button type="button" class="qty-btn" onclick="changeQty('${i.id}', 1)">+</button>
                     </div>
+                    ${product.track_stock && i.qty > product.stock ? `<p class="text-[9px] font-bold text-red-500 mt-2 uppercase">⚠️ Supera el stock disponible (${product.stock})</p>` : ''}
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     updateTotals();
@@ -573,6 +597,15 @@ function updateTotals() {
 function changeQty(id, delta) {
     const item = appState.cart.find(c => c.id === id);
     if (!item) return;
+
+    if (delta > 0) {
+        const product = appState.products.find(p => p.id === id);
+        if (product && product.track_stock && item.qty >= product.stock) {
+            showToast(`⚠️ No hay más stock disponible`, 'warning');
+            return;
+        }
+    }
+
     item.qty += delta;
     if (item.qty <= 0) {
         removeFromCart(id);

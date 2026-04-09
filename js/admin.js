@@ -232,14 +232,16 @@ function renderProducts() {
                     <h4 class="text-sm font-black text-white truncate pr-2">${p.name}</h4>
                     <span class="text-sm font-black text-indigo-400">S/${parseFloat(p.price).toFixed(2)}</span>
                 </div>
-                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${catName}</p>
+                <div class="flex justify-between items-center">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${catName}</p>
+                    ${p.track_stock ? `<span class="text-[9px] font-black ${p.stock <= 0 ? 'text-red-500' : 'text-slate-500'} uppercase">Stock: ${p.stock}</span>` : ''}
+                </div>
             </div>
         `;
         grid.appendChild(card);
     });
 }
 
-// Abre el modal para CREAR un producto nuevo (limpia el estado anterior)
 function openNewProductModal() {
     editingProductId = null;
     const form = document.getElementById('form-product');
@@ -253,8 +255,24 @@ function openNewProductModal() {
     if (simImg) { simImg.src = ''; simImg.classList.add('hidden'); }
     if (simPlc) { simPlc.classList.remove('hidden'); }
 
+    // Reset inventory
+    const trackStock = document.getElementById('p-track-stock');
+    if (trackStock) trackStock.checked = false;
+    toggleStockInput();
+    const stockInput = document.getElementById('p-stock');
+    if (stockInput) stockInput.value = '';
+
     openModal('modal-product');
     syncProductPreview();
+}
+
+function toggleStockInput() {
+    const track = document.getElementById('p-track-stock');
+    const container = document.getElementById('stock-input-container');
+    if (track && container) {
+        if (track.checked) container.classList.remove('hidden');
+        else container.classList.add('hidden');
+    }
 }
 
 function openEditProduct(id) {
@@ -269,6 +287,16 @@ function openEditProduct(id) {
     document.getElementById('p-description').value = p.description || '';
     document.getElementById('p-category').value = p.category_id || '';
     document.getElementById('p-active').checked = p.active;
+    
+    const trackStock = document.getElementById('p-track-stock');
+    if (trackStock) {
+        trackStock.checked = p.track_stock === true;
+        toggleStockInput();
+    }
+    const stockInput = document.getElementById('p-stock');
+    if (stockInput) {
+        stockInput.value = p.stock || 0;
+    }
 
     // Reset image input
     document.getElementById('p-image-file').value = '';
@@ -309,10 +337,24 @@ function syncProductPreview() {
     const simName = document.getElementById('sim-p-name');
     const simPrice = document.getElementById('sim-p-price');
     const simDesc = document.getElementById('sim-p-desc');
+    const simStock = document.getElementById('sim-p-stock');
     
     if (simName) simName.innerText = name;
     if (simPrice) simPrice.innerText = `S/ ${parseFloat(price || 0).toFixed(2)}`;
     if (simDesc) simDesc.innerText = desc;
+
+    if (simStock) {
+        const isTracking = document.getElementById('p-track-stock')?.checked;
+        const stockVal = document.getElementById('p-stock')?.value || 0;
+        if (isTracking) {
+            simStock.innerText = `Stock: ${stockVal}`;
+            simStock.classList.remove('hidden');
+            if (stockVal <= 0) simStock.classList.add('text-red-500');
+            else simStock.classList.remove('text-red-500');
+        } else {
+            simStock.classList.add('hidden');
+        }
+    }
 }
 
 function previewImage(event) {
@@ -657,6 +699,8 @@ async function saveProduct(e) {
             category_id: document.getElementById('p-category').value || null,
             description: document.getElementById('p-description').value,
             active: document.getElementById('p-active').checked,
+            track_stock: document.getElementById('p-track-stock').checked,
+            stock: Number(document.getElementById('p-stock').value || 0),
             image: imageUrl
         };
 
