@@ -65,7 +65,9 @@ async function createOrderSecure(storeId, cart, customerName, whatsapp, address 
       p_whatsapp: whatsapp.trim(),
       p_items: cart.map((item) => ({
         id: item.id,
-        qty: item.qty
+        qty: item.qty,
+        name: item.displayName || item.name,
+        price: item.price
       })),
       p_address: address,
       p_coordinates: coordinates

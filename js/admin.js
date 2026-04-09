@@ -612,9 +612,13 @@ function viewOrderDetails(id) {
         const currencySymbol = getCurrencySymbol(appState.tenant.currency);
         
         itemsDiv.innerHTML = items.map(i => {
-            const product = appState.products.find(p => p.id === i.id) || {};
-            const name = product.name || 'Producto Desconocido';
-            const price = product.price || 0;
+            // Extraer ID original (quitar sufijo de variante si existe)
+            const originalId = i.id.includes('_') ? i.id.split('_')[0] : i.id;
+            const product = appState.products.find(p => p.id === originalId) || {};
+            
+            // Si el item tiene un nombre guardado (o el del producto)
+            const name = i.name || product.name || 'Producto Desconocido';
+            const price = i.price || product.price || 0;
             const img = product.image || '';
             
             return `
