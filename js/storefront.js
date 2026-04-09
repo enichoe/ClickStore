@@ -119,6 +119,8 @@ function renderStorefront() {
     const titleMain = document.getElementById('store-title-main');
     const tagline = document.getElementById('store-tagline');
 
+    if (titleNav) titleNav.innerText = appState.tenant.name;
+    if (titleMain) titleMain.innerText = appState.tenant.name;
     if (tagline) tagline.innerText = appState.tenant.description || 'Bienvenido a nuestra tienda virtual.';
 
     // 1.5. Configuración del Banner
