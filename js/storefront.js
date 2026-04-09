@@ -833,7 +833,9 @@ async function handleCheckout(e) {
             appState.tenant.id,
             appState.cart,
             customerName,
-            customerWhatsapp
+            customerWhatsapp,
+            customerAddress,
+            appState.userLocation || null
         );
 
         if (!orderResult.success) {
@@ -907,6 +909,8 @@ function getCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
         (position) => {
             const { latitude, longitude } = position.coords;
+            appState.userLocation = { lat: latitude, lng: longitude }; // Guardamos coordenadas reales
+            
             const addressInput = document.getElementById('cust-address');
             const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
             

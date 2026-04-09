@@ -580,7 +580,20 @@ function viewOrderDetails(id) {
     
     document.getElementById('mo-customer').innerText = o.customer_name;
     document.getElementById('mo-whatsapp').innerText = o.whatsapp || 'No proporcionado';
-    document.getElementById('mo-address').innerText = o.delivery_address || 'No proporcionado'; // address is not in DB originally, keep as fallback
+    
+    // Nueva lógica de dirección y mapa
+    const addressEl = document.getElementById('mo-address');
+    const mapContainer = document.getElementById('mo-map-container');
+    const mapLink = document.getElementById('mo-map-link');
+    
+    addressEl.innerText = o.address || o.delivery_address || 'No proporcionado';
+    
+    if (o.coordinates && typeof o.coordinates === 'object' && o.coordinates.lat) {
+        mapContainer.classList.remove('hidden');
+        mapLink.href = `https://www.google.com/maps?q=${o.coordinates.lat},${o.coordinates.lng}`;
+    } else {
+        mapContainer.classList.add('hidden');
+    }
     
     // Add date
     const date = new Date(o.created_at).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' });

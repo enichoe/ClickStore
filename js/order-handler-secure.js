@@ -12,7 +12,7 @@
 /**
  * Crear orden con todas las validaciones de seguridad
  */
-async function createOrderSecure(storeId, cart, customerName, whatsapp) {
+async function createOrderSecure(storeId, cart, customerName, whatsapp, address = null, coordinates = null) {
   try {
     // 0. RATE LIMITING LOCAL
     const endpoint = `create-order:${storeId}`;
@@ -66,7 +66,9 @@ async function createOrderSecure(storeId, cart, customerName, whatsapp) {
       p_items: cart.map((item) => ({
         id: item.id,
         qty: item.qty
-      }))
+      })),
+      p_address: address,
+      p_coordinates: coordinates
     };
 
     // 3. DETECTAR ANOMALÍAS
@@ -375,6 +377,7 @@ async function handleCheckoutResponse(orderId, paymentStatus) {
 function clearSensitiveData() {
   // Limpiar carrito inmediatamente
   appState.cart = [];
+  appState.userLocation = null;
 
   // Limpiar formulario
   const formInputs = ['customer-name', 'whatsapp', 'delivery-address'];
