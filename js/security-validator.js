@@ -172,11 +172,12 @@ class OrderValidator {
   }
 
   /**
-   * Validar UUID v4
+   * Validar UUID v4 (Permite sufijos de variantes)
    */
   isValidUUID(uuid) {
     if (typeof uuid !== 'string') return false;
-    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
+    // Regex flexible que permite el UUID v4 estándar y opcionalmente un sufijo de variante (_nombre)
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}(_.*)?$/i.test(uuid);
   }
 
   /**
