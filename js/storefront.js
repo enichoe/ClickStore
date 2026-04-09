@@ -370,16 +370,24 @@ function renderProductGrid() {
 
     const currencySymbol = getCurrencySymbol(appState.tenant.currency);
     
+    console.log(`[Storefront] Preparando para renderizar ${appState.products.length} productos.`);
+
     // Filtrado
-    let prods = appState.products.filter(p => p.active !== false);
+    let prods = appState.products.filter(p => p.active !== false && p.active !== 'false');
     
     if (appState.selectedCategory !== 'all') {
         prods = prods.filter(p => p.category_id === appState.selectedCategory);
     }
     
     if (appState.searchQuery) {
-        prods = prods.filter(p => p.name.toLowerCase().includes(appState.searchQuery) || (p.description && p.description.toLowerCase().includes(appState.searchQuery)));
+        const q = appState.searchQuery.toLowerCase();
+        prods = prods.filter(p => 
+            p.name.toLowerCase().includes(q) || 
+            (p.description && p.description.toLowerCase().includes(q))
+        );
     }
+
+    console.log(`[Storefront] Mostrando ${prods.length} productos tras filtros.`);
 
     if (prods.length === 0) {
         grid.innerHTML = `
@@ -390,34 +398,42 @@ function renderProductGrid() {
         return;
     }
 
-    grid.innerHTML = prods.map(p => `
-        <div class="product-card-premium stagger-in group">
-            <div class="product-image-container relative p-4">
-                <div class="product-image-inner">
-                    <img src="${p.image || ''}" alt="${p.name}" class="w-full h-full object-cover" ${p.image ? '' : 'style="display: none;"'}>
-                    <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-5xl" ${p.image ? 'style="display: none;"' : ''}>📦</div>
-                    <div class="product-price-badge">${currencySymbol}${parseFloat(p.price).toFixed(2)}</div>
-                </div>
-            </div>
-            <div class="px-6 pb-6 flex flex-col flex-1">
-                <h4 class="text-lg font-black text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2">${p.name}</h4>
-                <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">${p.description || 'Sin descripción adicional'}</p>
-                
-                ${p.track_stock && p.stock <= 0 ? `
-                    <button type="button" class="w-full mt-4 bg-slate-200 text-slate-500 font-black rounded-xl py-3 cursor-not-allowed" disabled>
-                        Agotado
-                    </button>
-                ` : `
-                    <div class="flex flex-col gap-1 mt-4">
-                        <button type="button" class="w-full bg-indigo-600 text-white font-black rounded-xl py-3 hover:bg-indigo-700 active:scale-95 transition-all" onclick="addToCart('${p.id}')">
-                            Agregar ${currencySymbol}${parseFloat(p.price).toFixed(2)}
-                        </button>
-                        ${p.track_stock ? `<p class="text-[10px] text-center font-bold text-slate-400 uppercase tracking-widest">${p.stock} disponibles</p>` : ''}
+    grid.innerHTML = prods.map(p => {
+        try {
+            return `
+                <div class="product-card-premium stagger-in group">
+                    <div class="product-image-container relative p-4">
+                        <div class="product-image-inner">
+                            <img src="${p.image || ''}" alt="${p.name}" class="w-full h-full object-cover" ${p.image ? '' : 'style="display: none;"'}>
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-400 text-5xl" ${p.image ? 'style="display: none;"' : ''}>📦</div>
+                            <div class="product-price-badge">${currencySymbol}${parseFloat(p.price || 0).toFixed(2)}</div>
+                        </div>
                     </div>
-                `}
-            </div>
-        </div>
-    `).join('');
+                    <div class="px-6 pb-6 flex flex-col flex-1">
+                        <h4 class="text-lg font-black text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 mb-2">${p.name}</h4>
+                        <p class="text-sm text-slate-500 line-clamp-2 leading-relaxed flex-1">${p.description || 'Sin descripción adicional'}</p>
+                        
+                        ${p.track_stock && p.stock <= 0 ? `
+                            <button type="button" class="w-full mt-4 bg-slate-200 text-slate-500 font-black rounded-xl py-3 cursor-not-allowed" disabled>
+                                Agotado
+                            </button>
+                        ` : `
+                            <div class="flex flex-col gap-1 mt-4">
+                                <button type="button" class="w-full bg-indigo-600 text-white font-black rounded-xl py-3 hover:bg-indigo-700 active:scale-95 transition-all" onclick="addToCart('${p.id}')">
+                                    Agregar ${currencySymbol}${parseFloat(p.price || 0).toFixed(2)}
+                                </button>
+                                ${p.track_stock ? `<p class="text-[10px] text-center font-bold text-slate-400 uppercase tracking-widest">${p.stock} disponibles</p>` : ''}
+                                ${p.has_variants ? `<p class="text-[9px] text-center font-black text-indigo-500 uppercase tracking-widest mt-1">✨ Varias opciones disponibles</p>` : ''}
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        } catch (err) {
+            console.error("Error renderizando producto:", p.id, err);
+            return '';
+        }
+    }).join('');
 }
 
 // ======================= DRAWER & CART =======================
