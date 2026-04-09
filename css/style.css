@@ -799,6 +799,35 @@ select.input option {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Variantes UI - Premium Button Options */
+.variant-opt-btn {
+    padding: 1rem;
+    border-radius: 1.5rem;
+    border: 2px solid #f1f5f9;
+    background: white;
+    color: #475569;
+    font-weight: 700;
+    font-size: 0.875rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+    width: 100%;
+}
+
+.variant-opt-btn:hover {
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.variant-opt-btn.active {
+    border-color: #6366f1;
+    background: #eef2ff;
+    color: #6366f1;
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
+    transform: translateY(-2px);
+}
+
+
 #store-social-links a:hover {
     color: #6366f1;
     background: #ffffff;

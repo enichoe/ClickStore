@@ -453,6 +453,26 @@
     <!-- Carrito Drawer Overlay -->
     <div id="drawer-overlay" class="drawer-overlay" onclick="closeDrawer('drawer-cart')"></div>
 
+    <!-- Modal de Selección de Variantes (Premium) -->
+    <div id="modal-variants" class="modal" style="display: none; z-index: 200;">
+        <div class="modal-content dark-modal !max-w-sm !rounded-[40px] p-8">
+            <div class="text-center mb-6">
+                <div class="w-16 h-1 w-8 bg-slate-700 rounded-full mx-auto mb-6"></div>
+                <h3 class="text-2xl font-black text-white mb-2">Selecciona una opción</h3>
+                <p id="mv-product-name" class="text-slate-400 text-sm font-bold uppercase tracking-widest">Nombre del Producto</p>
+            </div>
+            
+            <div id="mv-variants-list" class="grid grid-cols-2 gap-3 mb-8">
+                <!-- Variantes inyectadas por JS -->
+            </div>
+
+            <div class="flex gap-3">
+                <button type="button" class="btn btn-secondary flex-1 py-4" onclick="closeModal('modal-variants')">Cancelar</button>
+                <button type="button" id="btn-confirm-variant" class="btn btn-primary flex-1 py-4 font-black" disabled onclick="confirmVariantSelection()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Carrito Drawer Sidebar -->
     <div id="drawer-cart" class="drawer bg-white">
         <div class="cart-drawer-header">

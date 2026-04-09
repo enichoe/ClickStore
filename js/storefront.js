@@ -441,6 +441,62 @@ function addToCart(id) {
     const product = appState.products.find(p => p.id === id);
     if (!product) return;
 
+    // Si tiene variantes y no se ha seleccionado una todavía
+    if (product.has_variants && product.variants && product.variants.length > 0) {
+        openVariantsModal(product);
+        return;
+    }
+
+    processAddToCart(product);
+}
+
+let selectedProductForVariant = null;
+let selectedVariantName = null;
+
+function openVariantsModal(product) {
+    selectedProductForVariant = product;
+    selectedVariantName = null;
+    
+    document.getElementById('mv-product-name').innerText = product.name;
+    const list = document.getElementById('mv-variants-list');
+    const btnConfirm = document.getElementById('btn-confirm-variant');
+    
+    btnConfirm.disabled = true;
+    list.innerHTML = product.variants.map(v => `
+        <button type="button" class="variant-opt-btn" onclick="selectVariant(this, '${v}')">
+            ${v}
+        </button>
+    `).join('');
+    
+    const modal = document.getElementById('modal-variants');
+    if (modal) modal.style.display = 'flex';
+}
+
+function selectVariant(el, name) {
+    document.querySelectorAll('.variant-opt-btn').forEach(btn => btn.classList.remove('active'));
+    el.classList.add('active');
+    selectedVariantName = name;
+    document.getElementById('btn-confirm-variant').disabled = false;
+}
+
+function confirmVariantSelection() {
+    if (!selectedProductForVariant || !selectedVariantName) return;
+    
+    const productWithVariant = {
+        ...selectedProductForVariant,
+        id: `${selectedProductForVariant.id}_${selectedVariantName}`,
+        variantName: selectedVariantName,
+        displayName: `${selectedProductForVariant.name} (${selectedVariantName})`
+    };
+    
+    processAddToCart(productWithVariant);
+    
+    const modal = document.getElementById('modal-variants');
+    if (modal) modal.style.display = 'none';
+}
+
+function processAddToCart(product) {
+    const id = product.id;
     const existing = appState.cart.find(c => c.id === id);
     if (existing) {
         // Validar stock antes de incrementar
@@ -457,10 +513,12 @@ function addToCart(id) {
         }
         appState.cart.push({
             id: product.id,
-            name: product.name,
+            originalId: product.originalId || product.id.split('_')[0],
+            name: product.displayName || product.name,
             price: parseFloat(product.price),
             image: product.image,
-            qty: 1
+            qty: 1,
+            variant: product.variantName || null
         });
     }
 
@@ -599,7 +657,9 @@ function changeQty(id, delta) {
     if (!item) return;
 
     if (delta > 0) {
-        const product = appState.products.find(p => p.id === id);
+        // Encontrar producto original para validar stock
+        const originalId = item.originalId || item.id.split('_')[0];
+        const product = appState.products.find(p => p.id === originalId);
         if (product && product.track_stock && item.qty >= product.stock) {
             showToast(`⚠️ No hay más stock disponible`, 'warning');
             return;
@@ -779,11 +839,13 @@ async function handleCheckout(e) {
         message += `━━━━━━━━━━━━━━━━━━%0A`;
         message += `📦 *PRODUCTOS:*%0A`;
 
-        appState.cart.forEach(i => {
-            message += `• ${i.qty}x ${i.name} (${currency}${i.price.toFixed(2)})%0A`;
-        });
+     const itemsText = appState.cart.map(i => {
+        const variantText = i.variant ? ` [${i.variant}]` : '';
+        return `• ${i.qty}x ${i.name}${variantText} - ${currency}${ (i.price * i.qty).toFixed(2) }`;
+    }).join('%0A');
 
-        message += `━━━━━━━━━━━━━━━━━━%0A`;
+        message += itemsText;
+        message += `%0A━━━━━━━━━━━━━━━━━━%0A`;
         message += `💵 *SUBTOTAL:* ${currency}${subtotal.toFixed(2)}%0A`;
         if (deliveryFee > 0) message += `🚚 *ENVÍO:* ${currency}${deliveryFee.toFixed(2)}%0A`;
         message += `💰 *TOTAL A PAGAR: ${currency}${total.toFixed(2)}*%0A`;

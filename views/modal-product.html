@@ -34,6 +34,19 @@
                                 <input type="number" id="p-stock" class="input" placeholder="0" min="0" oninput="syncProductPreview()">
                             </div>
                         </div>
+
+                        <!-- SECCIÓN DE VARIANTES -->
+                        <div class="space-y-4 pt-4 border-t border-slate-800">
+                            <div class="flex items-center gap-3">
+                                <input type="checkbox" id="p-has-variants" class="w-5 h-5 rounded border-slate-700 bg-slate-950 text-indigo-500" onchange="toggleVariantsUI()">
+                                <label for="p-has-variants" class="text-xs font-bold text-slate-300">Este producto tiene variantes (Tallas, Colores...)</label>
+                            </div>
+                            <div id="variants-container" class="hidden space-y-3">
+                                <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest block">Opciones (Separa con comas)</label>
+                                <input type="text" id="p-variants-input" class="input" placeholder="Ej: S, M, L, XL" oninput="renderVariantTags()">
+                                <div id="variant-tags-list" class="flex flex-wrap gap-2"></div>
+                            </div>
+                        </div>
                     </div>
                     
                     <div>

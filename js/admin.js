@@ -262,6 +262,14 @@ function openNewProductModal() {
     const stockInput = document.getElementById('p-stock');
     if (stockInput) stockInput.value = '';
 
+    // Reset variants
+    const hasVariants = document.getElementById('p-has-variants');
+    if (hasVariants) hasVariants.checked = false;
+    const variantsInput = document.getElementById('p-variants-input');
+    if (variantsInput) variantsInput.value = '';
+    if (typeof renderVariantTags === 'function') renderVariantTags();
+    if (typeof toggleVariantsUI === 'function') toggleVariantsUI();
+
     openModal('modal-product');
     syncProductPreview();
 }
@@ -273,6 +281,28 @@ function toggleStockInput() {
         if (track.checked) container.classList.remove('hidden');
         else container.classList.add('hidden');
     }
+}
+
+function toggleVariantsUI() {
+    const check = document.getElementById('p-has-variants');
+    const container = document.getElementById('variants-container');
+    if (check && container) {
+        if (check.checked) container.classList.remove('hidden');
+        else container.classList.add('hidden');
+    }
+}
+
+function renderVariantTags() {
+    const input = document.getElementById('p-variants-input');
+    const list = document.getElementById('variant-tags-list');
+    if (!input || !list) return;
+
+    const values = input.value.split(',').map(v => v.trim()).filter(v => v !== '');
+    list.innerHTML = values.map(v => `
+        <span class="px-3 py-1 bg-indigo-500/10 text-indigo-400 text-[10px] font-black uppercase rounded-full border border-indigo-500/20">
+            ${v}
+        </span>
+    `).join('');
 }
 
 function openEditProduct(id) {
@@ -296,6 +326,15 @@ function openEditProduct(id) {
     const stockInput = document.getElementById('p-stock');
     if (stockInput) {
         stockInput.value = p.stock || 0;
+    }
+
+    const hasVariants = document.getElementById('p-has-variants');
+    const variantsInput = document.getElementById('p-variants-input');
+    if (hasVariants && variantsInput) {
+        hasVariants.checked = p.has_variants === true;
+        variantsInput.value = Array.isArray(p.variants) ? p.variants.join(', ') : '';
+        toggleVariantsUI();
+        renderVariantTags();
     }
 
     // Reset image input
@@ -701,6 +740,8 @@ async function saveProduct(e) {
             active: document.getElementById('p-active').checked,
             track_stock: document.getElementById('p-track-stock').checked,
             stock: Number(document.getElementById('p-stock').value || 0),
+            has_variants: document.getElementById('p-has-variants').checked,
+            variants: document.getElementById('p-variants-input').value.split(',').map(v => v.trim()).filter(v => v !== ''),
             image: imageUrl
         };
 
