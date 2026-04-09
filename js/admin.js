@@ -251,9 +251,14 @@ function openNewProductModal() {
     
     // Reset simulator preview
     const simImg = document.getElementById('sim-p-image');
-    const simPlc = document.getElementById('sim-p-placeholder');
-    if (simImg) { simImg.src = ''; simImg.classList.add('hidden'); }
-    if (simPlc) { simPlc.classList.remove('hidden'); }
+    const simPlc = document.getElementById('sim-p-placeholder') || document.getElementById('sim-p-image-placeholder');
+    if (simImg) { 
+        simImg.src = ''; 
+        simImg.style.display = 'none'; 
+    }
+    if (simPlc) { 
+        simPlc.style.display = 'flex'; 
+    }
 
     // Reset inventory
     const trackStock = document.getElementById('p-track-stock');
@@ -357,11 +362,11 @@ function openEditProduct(id) {
     const simPlc = document.getElementById('sim-p-placeholder') || document.getElementById('sim-p-image-placeholder');
     if (p.image && simImg) {
         simImg.src = p.image;
-        simImg.classList.remove('hidden');
-        if (simPlc) simPlc.classList.add('hidden');
+        simImg.style.display = 'block';
+        if (simPlc) simPlc.style.display = 'none';
     } else {
-        if (simImg) simImg.classList.add('hidden');
-        if (simPlc) simPlc.classList.remove('hidden');
+        if (simImg) simImg.style.display = 'none';
+        if (simPlc) simPlc.style.display = 'flex';
     }
 
     openModal('modal-product');
@@ -416,8 +421,8 @@ function previewImage(event) {
         const simPlc = document.getElementById('sim-p-placeholder') || document.getElementById('sim-p-image-placeholder');
         if (simImg) {
             simImg.src = e.target.result;
-            simImg.classList.remove('hidden');
-            if (simPlc) simPlc.classList.add('hidden');
+            simImg.style.display = 'block';
+            if (simPlc) simPlc.style.display = 'none';
         }
     };
     reader.readAsDataURL(file);
